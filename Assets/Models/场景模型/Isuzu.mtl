@@ -1,0 +1,110 @@
+# OBJ Material Export by Luxion KeyShot
+
+newmtl Cast Iron
+Kd 0 0 0
+
+newmtl Chrome bright #2
+Kd 0 0 0
+Ks 0.941176 0.941176 0.941176
+
+newmtl Chrome bright
+Kd 0 0 0
+Ks 0.941176 0.941176 0.941176
+
+newmtl Mold-Tech-14153 #1
+Kd 0.0196078 0.0196078 0.0196078
+Ks 1 1 1
+
+newmtl Default #3
+Kd 0.835294 0.533333 0.443137
+Ks 1 1 1
+
+newmtl Glass basic white
+Kd 0 0 0
+
+newmtl Default #4
+Kd 0.541176 0.286275 0.286275
+Ks 1 1 1
+
+newmtl Targa #0
+Kd 0.278431 0.266667 0.266667
+Ks 0 0 0
+
+newmtl Targa #1
+Kd 0.380392 0.34902 0.34902
+Ks 0 0 0
+
+newmtl Default #5
+Kd 0.819608 0.580392 0.411765
+Ks 0 0 0
+
+newmtl Anodized black #2
+Kd 0 0 0
+Ks 0 0 0
+
+newmtl Material__9 #0
+Kd 0.639216 0.54902 0.192157
+Ks 0 0 0
+
+newmtl Aluminum polished #1
+Kd 0 0 0
+Ks 0.764706 0.764706 0.764706
+
+newmtl Default #7
+Kd 0.141176 0.298039 0.113725
+Ks 0 0 0
+
+newmtl Default #8
+Kd 0.254902 0.247059 0.247059
+Ks 0 0 0
+
+newmtl Default #9
+Kd 0.494118 0.239216 0.239216
+Ks 0 0 0
+
+newmtl Default #10
+Kd 0.286275 0.278431 0.278431
+Ks 0 0 0
+
+newmtl Pl2 #0
+Kd 0.654902 0.196078 0.196078
+Ks 0 0 0
+
+newmtl PL1 #0
+Kd 0.45098 0.392157 0.392157
+Ks 0 0 0
+
+newmtl Default #11
+Kd 0.827451 0.490196 0.490196
+Ks 0 0 0
+
+newmtl Default #12
+Kd 0.737255 0.552941 0.552941
+Ks 0 0 0
+
+newmtl Paint - metallic blue
+Kd 0.00784314 0.145098 0.498039
+Ks 0.0156863 0.137255 0.25
+
+newmtl Paint - metallic jet black
+Kd 0 0 0
+Ks 0.156863 0.156863 0.156863
+
+newmtl Bombay Blue_741795
+Kd 0 0 0
+
+newmtl CAB #1
+Kd 0.745098 0.745098 0.745098
+Ks 0.156863 0.156863 0.156863
+
+newmtl beer
+Kd 0 0 0
+Ks 1 1 1
+
+newmtl CAB #3
+Kd 0.337255 0.337255 0.564706
+Ks 1 1 1
+
+newmtl Anodized black
+Kd 0 0 0
+Ks 0 0 0

@@ -1,0 +1,174 @@
+fileFormatVersion: 2
+guid: 700337fb70c59684a876229b5cdb1324
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Armature_RM_3
+    100002: Bone
+    100004: Bone_001
+    100006: Bone_002
+    100008: Bone_003
+    100010: Bone_004
+    100012: Bone_004_end
+    100014: Bone_004_end_end
+    100016: Bone_005
+    100018: Bone_006
+    100020: Bone_006_end
+    100022: Bone_006_end_end
+    100024: Bone_007
+    100026: Bone_008
+    100028: Bone_010
+    100030: Bone_011
+    100032: Bone_011_end
+    100034: Bone_011_end_end
+    100036: Bone_012
+    100038: Bone_013
+    100040: Bone_013_end
+    100042: Bone_013_end_end
+    100044: Bone_014
+    100046: Bone_015
+    100048: Bone_015_end
+    100050: Bone_015_end_end
+    100052: //RootNode
+    100054: SK_RM_3_LOD0
+    100056: SK_RM_3_LOD1
+    100058: SK_RM_3_LOD2
+    100060: SK_RM_3_LOD3
+    400000: Armature_RM_3
+    400002: Bone
+    400004: Bone_001
+    400006: Bone_002
+    400008: Bone_003
+    400010: Bone_004
+    400012: Bone_004_end
+    400014: Bone_004_end_end
+    400016: Bone_005
+    400018: Bone_006
+    400020: Bone_006_end
+    400022: Bone_006_end_end
+    400024: Bone_007
+    400026: Bone_008
+    400028: Bone_010
+    400030: Bone_011
+    400032: Bone_011_end
+    400034: Bone_011_end_end
+    400036: Bone_012
+    400038: Bone_013
+    400040: Bone_013_end
+    400042: Bone_013_end_end
+    400044: Bone_014
+    400046: Bone_015
+    400048: Bone_015_end
+    400050: Bone_015_end_end
+    400052: //RootNode
+    400054: SK_RM_3_LOD0
+    400056: SK_RM_3_LOD1
+    400058: SK_RM_3_LOD2
+    400060: SK_RM_3_LOD3
+    2100000: M_RM_3_Inst
+    4300000: SK_RM_3_LOD1
+    4300002: SK_RM_3_LOD2
+    4300004: SK_RM_3_LOD0
+    4300006: SK_RM_3_LOD3
+    7400000: Armature_RM_3|Unreal Take|Base Layer
+    9500000: //RootNode
+    13700000: SK_RM_3_LOD0
+    13700002: SK_RM_3_LOD1
+    13700004: SK_RM_3_LOD2
+    13700006: SK_RM_3_LOD3
+    20500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RM_3_Inst
+    second: {fileID: 2100000, guid: 611d100840b9d2e4ca1f2fcf0cce1ad2, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages:
+    - 0.25
+    - 0.125
+    - 0.0625
+    - 0.01
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
