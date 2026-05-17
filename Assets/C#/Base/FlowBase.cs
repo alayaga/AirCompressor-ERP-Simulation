@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+ 
 
 /// <summary>
 /// 流程基类
@@ -9,10 +10,12 @@ public abstract class FlowBase
 {
     public event Action OnFlowStart;
     public event Action OnFlowEnd;
-
     protected bool _isRunning = false;
     private Coroutine _currentCoroutine = null;
     private MonoBehaviour _coroutineRunner = null;
+
+    private FlowRunner _safeRunner;
+    protected bool _allowSafeStop = true;
 
     public bool IsRunning => _isRunning;
 
@@ -54,7 +57,12 @@ public abstract class FlowBase
         }
 
         Debug.Log($"停止流程: {GetType().Name}");
-        
+
+        if (_allowSafeStop && _safeRunner != null)
+        {
+            _safeRunner.Stop();
+        }
+
         if (_currentCoroutine != null && _coroutineRunner != null)
         {
             _coroutineRunner.StopCoroutine(_currentCoroutine);
@@ -79,7 +87,7 @@ public abstract class FlowBase
                 return playerObject.AddComponent<MonoBehaviourHelper>();
             }
         }
-        
+
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
@@ -87,11 +95,11 @@ public abstract class FlowBase
             if (behaviour != null) return behaviour;
             return player.AddComponent<MonoBehaviourHelper>();
         }
-        
+
         Debug.LogError("未找到合适的协程运行器");
         return null;
     }
-    
+
     private class MonoBehaviourHelper : MonoBehaviour { }
 
     protected IEnumerator WaitForSeconds(float seconds)
@@ -117,22 +125,22 @@ public abstract class FlowBase
     protected IEnumerator WaitForPlayerReachPosition(Vector3 targetPosition, float tolerance = 1.5f)
     {
         Debug.Log($"等待玩家到达: {targetPosition}");
-        
+
         GameObject playerObject = ObjectManager.Instance?.GetObject(ObjectManager.ObjectType.Player);
         if (playerObject == null)
         {
             Debug.LogWarning("未找到玩家对象");
             yield break;
         }
-        
+
         PlayerController playerController = playerObject.GetComponent<PlayerController>();
         playerController?.SetPlayerInputEnabled(true);
-        
+
         while (Vector3.Distance(playerObject.transform.position, targetPosition) > tolerance)
         {
             yield return null;
         }
-        
+
         playerController?.SetPlayerInputEnabled(false);
         Debug.Log($"玩家已到达: {targetPosition}");
     }
@@ -143,5 +151,25 @@ public abstract class FlowBase
         _isRunning = false;
         _currentCoroutine = null;
         OnFlowEnd?.Invoke();
+    }
+
+    protected FlowRunner GetSafeRunner()
+    {
+        if (_safeRunner == null)
+        {
+            var runner = GetCoroutineRunner();
+            if (runner != null)
+                _safeRunner = new FlowRunner(runner);
+        }
+        return _safeRunner;
+    }
+
+    protected IEnumerator SafeWait(IEnumerator routine)
+    {
+        if (_allowSafeStop && _safeRunner != null)
+        {
+            return GetSafeRunner().RunSafe(routine);
+        }
+        return routine;
     }
 }

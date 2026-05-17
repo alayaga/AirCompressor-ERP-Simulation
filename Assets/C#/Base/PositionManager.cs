@@ -39,11 +39,14 @@ public class PositionManager : MonoBehaviour
         位置5,
         位置6,
         进货位置,
-        卡车视角
+        卡车视角,
+        PMC
     }
 
     private Dictionary<PositionType, Transform> _positionDictionary = new Dictionary<PositionType, Transform>();
+    private Dictionary<string, Transform> _namePositionMap = new Dictionary<string, Transform>();
     private bool _isInitialized = false;
+    private bool _allowDynamicRegister = true;
 
     private void Awake()
     {
@@ -63,8 +66,10 @@ public class PositionManager : MonoBehaviour
         if (_isInitialized) return;
 
         _positionDictionary.Clear();
+        _namePositionMap.Clear();
+
         int childCount = transform.childCount;
-        
+
         for (int i = 0; i < childCount; i++)
         {
             Transform child = transform.GetChild(i);
@@ -72,6 +77,7 @@ public class PositionManager : MonoBehaviour
             {
                 PositionType posType = (PositionType)i;
                 _positionDictionary.Add(posType, child);
+                _namePositionMap[posType.ToString()] = child;
                 Debug.Log($"位置初始化: {posType} -> {child.name}");
             }
         }
@@ -83,8 +89,20 @@ public class PositionManager : MonoBehaviour
         if (!_isInitialized) InitializePositions();
         if (_positionDictionary.TryGetValue(positionType, out Transform t))
             return t.position;
-        
+
         Debug.LogError($"找不到位置: {positionType}");
+        return Vector3.zero;
+    }
+
+    public Vector3 GetPosition(string name)
+    {
+        if (_namePositionMap.TryGetValue(name, out var t))
+            return t.position;
+
+        Debug.LogWarning($"未找到名称位置: {name}，尝试枚举映射");
+        if (Enum.TryParse<PositionType>(name, out var enumType))
+            return GetPosition(enumType);
+
         return Vector3.zero;
     }
 
@@ -93,7 +111,7 @@ public class PositionManager : MonoBehaviour
         if (!_isInitialized) InitializePositions();
         if (_positionDictionary.TryGetValue(positionType, out Transform t))
             return t.rotation;
-        
+
         Debug.LogError($"找不到位置: {positionType}");
         return Quaternion.identity;
     }
@@ -103,7 +121,7 @@ public class PositionManager : MonoBehaviour
         if (!_isInitialized) InitializePositions();
         if (_positionDictionary.TryGetValue(positionType, out Transform t))
             return t;
-        
+
         Debug.LogError($"找不到位置: {positionType}");
         return null;
     }
@@ -126,5 +144,26 @@ public class PositionManager : MonoBehaviour
         }
         else
             Debug.LogError($"找不到位置: {positionType}");
+    }
+
+    public void RegisterPosition(string name, Transform position)
+    {
+        if (!_allowDynamicRegister) return;
+
+        if (string.IsNullOrEmpty(name) || position == null)
+        {
+            Debug.LogError("注册位置参数无效");
+            return;
+        }
+
+        _namePositionMap[name] = position;
+        Debug.Log($"位置动态注册: {name}");
+    }
+
+    public void RegisterPositions(Dictionary<string, Transform> positions)
+    {
+        if (!_allowDynamicRegister) return;
+        foreach (var kv in positions)
+            RegisterPosition(kv.Key, kv.Value);
     }
 }
