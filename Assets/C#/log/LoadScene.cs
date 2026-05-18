@@ -10,7 +10,7 @@ public class LoadScene : MonoBehaviour
     async void Start()
     {
         // 2. 异步加载主场景
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("主场景");
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("新主场景");
         asyncOperation.allowSceneActivation = false;
 
         // 3. 等待加载完成

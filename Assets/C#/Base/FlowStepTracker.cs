@@ -10,7 +10,7 @@ public static class FlowStepTracker
     {
         FlowTaskIntegration.Instance?.CompleteCurrentStep();
     }
-    
+
     public static void StartFlow(FlowBase flow)
     {
         FlowTaskIntegration.Instance?.StartFlowWithUI(flow);
@@ -26,7 +26,7 @@ public static class FlowBaseExtensions
     {
         FlowStepTracker.StartFlow(flow);
     }
-    
+
     public static IEnumerator CompleteStepWithUI(this FlowBase flow, float delay = 0.3f)
     {
         FlowStepTracker.CompleteStep();

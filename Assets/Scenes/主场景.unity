@@ -18651,7 +18651,7 @@ PrefabInstance:
     - target: {fileID: 3923301075665571706, guid: b01e1a49c97487c4596f24573438aeac,
         type: 3}
       propertyPath: m_Text
-      value: "\u4ED3\u5E93\u4E3B\u7BA1\u529E\u516C\u5BA4"
+      value: "\u529E\u516C\u5BA4"
       objectReference: {fileID: 0}
     - target: {fileID: 3923301076009018938, guid: b01e1a49c97487c4596f24573438aeac,
         type: 3}
@@ -36746,6 +36746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audio: {fileID: 1513150488}
+  selectionMenu: {fileID: 0}
 --- !u!4 &724402965
 Transform:
   m_ObjectHideFlags: 0
