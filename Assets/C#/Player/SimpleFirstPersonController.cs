@@ -34,10 +34,12 @@ public class SimpleFirstPersonController : MonoBehaviour
 
     [Header("Optional")]
     public bool lockCursorOnStart = true;
-    
+
     [Header("Collision Check")]
     public LayerMask standCheckMask = ~0;
 
+    // ? 新增：输入控制字段
+    private bool _isInputEnabled = true;
 
     private float pitch = 0f;
     private float verticalVelocity = 0f;
@@ -66,7 +68,7 @@ public class SimpleFirstPersonController : MonoBehaviour
 
         if (cameraRoot == null)
         {
-            Debug.LogError("未找到 cameraRoot，请在 Inspector 中拖入 CameraRoot 对象。");
+            Debug.LogError("未找到 cameraRoot，请在 Inspector 中指定 CameraRoot 物体");
             enabled = false;
             return;
         }
@@ -82,12 +84,34 @@ public class SimpleFirstPersonController : MonoBehaviour
 
     void Update()
     {
+        // ? 新增：如果输入被禁用，跳过所有操作
+        if (!_isInputEnabled) return;
+
         HandleCursor();
         Look();
         HandleCrouchToggle();
         UpdateCrouch();
         Move();
     }
+
+    // ? 新增：供流程系统调用的输入控制方法
+    public void SetPlayerInputEnabled(bool enabled)
+    {
+        _isInputEnabled = enabled;
+
+        if (enabled)
+        {
+            // 恢复输入时锁定鼠标
+            LockCursor();
+        }
+        else
+        {
+            // 禁用输入时释放鼠标（用于填写表单）
+            UnlockCursor();
+        }
+    }
+
+    public bool IsInputEnabled() => _isInputEnabled;
 
     void HandleCursor()
     {
@@ -107,10 +131,10 @@ public class SimpleFirstPersonController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        // 左右看：旋转玩家本体
+        // 左右旋转人物
         transform.Rotate(Vector3.up * mouseX);
 
-        // 上下看：旋转 CameraRoot
+        // 上下旋转 CameraRoot
         pitch -= mouseY;
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
         cameraRoot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
@@ -124,7 +148,6 @@ public class SimpleFirstPersonController : MonoBehaviour
         }
     }
 
-
     void UpdateCrouch()
     {
         float targetHeight = isCrouching ? crouchHeight : standHeight;
@@ -137,7 +160,7 @@ public class SimpleFirstPersonController : MonoBehaviour
             crouchTransitionSpeed * Time.deltaTime
         );
 
-        // 保持底部尽量贴地：center 要始终是 height / 2
+        // 防止底部穿透地面，center 要始终在 height / 2
         characterController.center = new Vector3(0f, characterController.height / 2f, 0f);
 
         // 平滑改变相机高度
@@ -193,7 +216,7 @@ public class SimpleFirstPersonController : MonoBehaviour
                 verticalVelocity = -2f;
             }
 
-            // 下蹲状态下通常不允许跳跃
+            // 蹲伏状态下通常不能跳跃
             if (!isCrouching && Input.GetButtonDown("Jump"))
             {
                 verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);

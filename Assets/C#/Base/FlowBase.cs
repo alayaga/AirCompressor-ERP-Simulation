@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System;
- 
 
 /// <summary>
 /// 流程基类
@@ -13,7 +12,6 @@ public abstract class FlowBase
     protected bool _isRunning = false;
     private Coroutine _currentCoroutine = null;
     private MonoBehaviour _coroutineRunner = null;
-
     private FlowRunner _safeRunner;
     protected bool _allowSafeStop = true;
 
@@ -133,7 +131,8 @@ public abstract class FlowBase
             yield break;
         }
 
-        PlayerController playerController = playerObject.GetComponent<PlayerController>();
+        // ✅ 修改：将 PlayerController 改为 SimpleFirstPersonController
+        SimpleFirstPersonController playerController = playerObject.GetComponent<SimpleFirstPersonController>();
         playerController?.SetPlayerInputEnabled(true);
 
         while (Vector3.Distance(playerObject.transform.position, targetPosition) > tolerance)
