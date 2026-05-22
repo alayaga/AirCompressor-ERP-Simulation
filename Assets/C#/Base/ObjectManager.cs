@@ -1,10 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
 
-/// <summary>
-/// 物体管理器
-/// </summary>
 public class ObjectManager : MonoBehaviour
 {
     #region 单例
@@ -13,7 +9,7 @@ public class ObjectManager : MonoBehaviour
     {
         get
         {
-            if (_instance == null) Debug.LogError("ObjectManager 未初始化!");
+            if (_instance == null) Debug.LogError("[ObjectManager] 实例不存在，请检查场景配置");
             return _instance;
         }
     }
@@ -21,11 +17,23 @@ public class ObjectManager : MonoBehaviour
 
     public enum ObjectType
     {
-        Player,
-        空压机,
-        原料仓储,
-        卡车
+        Player,           // 玩家
+        AirCompressor,    // 空压机
+        RawMaterialStorage, // 原料仓储
+        Truck             // 卡车
+        // 后续新增物体直接在此追加
     }
+
+    [System.Serializable]
+    public class ObjectEntry
+    {
+        public ObjectType type;
+        public GameObject target;
+    }
+
+    [Header(" 场景对象配置")]
+    [Tooltip("请勿依赖Hierarchy顺序，直接在Inspector中拖拽赋值")]
+    [SerializeField] private List<ObjectEntry> objectEntries = new List<ObjectEntry>();
 
     private Dictionary<ObjectType, GameObject> _objectDictionary = new Dictionary<ObjectType, GameObject>();
     private bool _isInitialized = false;
@@ -36,70 +44,47 @@ public class ObjectManager : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            InitializeObjects();
         }
         else
+        {
             Destroy(gameObject);
-    }
-
-    private void Start()
-    {
-        InitializeObjects();
+        }
     }
 
     public void InitializeObjects()
     {
         if (_isInitialized) return;
-
         _objectDictionary.Clear();
-        int childCount = transform.childCount;
-        
-        for (int i = 0; i < childCount; i++)
+        foreach (var entry in objectEntries)
         {
-            Transform child = transform.GetChild(i);
-            if (i < Enum.GetValues(typeof(ObjectType)).Length)
-            {
-                ObjectType objectType = (ObjectType)i;
-                _objectDictionary.Add(objectType, child.gameObject);
-                Debug.Log($"物体初始化: {objectType} -> {child.name}");
-            }
+            if (entry.target != null)
+                _objectDictionary[entry.type] = entry.target;
+            else
+                Debug.LogWarning($"[ObjectManager] 未配置对象: {entry.type}");
         }
         _isInitialized = true;
     }
 
-    public GameObject GetObject(ObjectType objectType)
+    /// <summary>安全获取，避免NullReference中断流程</summary>
+    public bool TryGetObject(ObjectType type, out GameObject obj)
     {
+        obj = null;
         if (!_isInitialized) InitializeObjects();
-        if (_objectDictionary.TryGetValue(objectType, out GameObject obj))
-            return obj;
-        
-        Debug.LogError($"找不到物体: {objectType}");
+        return _objectDictionary.TryGetValue(type, out obj) && obj != null;
+    }
+
+    public GameObject GetObject(ObjectType type)
+    {
+        if (TryGetObject(type, out GameObject obj)) return obj;
+        Debug.LogError($"[ObjectManager] 找不到物体: {type}");
         return null;
     }
 
-    public void RegisterObject(ObjectType objectType, GameObject targetObject)
+    public void RegisterObject(ObjectType type, GameObject target)
     {
-        if (targetObject == null)
-        {
-            Debug.LogError("注册物体不能为空");
-            return;
-        }
-
+        if (target == null) return;
         if (!_isInitialized) _isInitialized = true;
-
-        if (_objectDictionary.ContainsKey(objectType))
-            _objectDictionary[objectType] = targetObject;
-        else
-            _objectDictionary.Add(objectType, targetObject);
-        
-        Debug.Log($"物体注册: {objectType} -> {targetObject.name}");
-    }
-
-    public void UnregisterObject(ObjectType objectType)
-    {
-        if (_objectDictionary.ContainsKey(objectType))
-        {
-            _objectDictionary.Remove(objectType);
-            Debug.Log($"物体移除: {objectType}");
-        }
+        _objectDictionary[type] = target;
     }
 }

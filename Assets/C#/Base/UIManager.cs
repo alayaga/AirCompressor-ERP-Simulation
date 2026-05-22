@@ -1,10 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
 
-/// <summary>
-/// UI管理器
-/// </summary>
 public class UIManager : MonoBehaviour
 {
     #region 单例
@@ -13,7 +9,7 @@ public class UIManager : MonoBehaviour
     {
         get
         {
-            if (_instance == null) Debug.LogError("UIManager 未初始化!");
+            if (_instance == null) Debug.LogError("[UIManager] 实例不存在");
             return _instance;
         }
     }
@@ -21,28 +17,24 @@ public class UIManager : MonoBehaviour
 
     public enum UIType
     {
-        测试UI,
-        通用UI,
-        销售报价单,
-        销售订单,
-        生产工单,
-        生产用料清单,
-        生产用料申请单,
-        生产领料单,
-        物料需求单,
-        采购需求申请单,
-        采购申请单,
-        采购订单,
-        收料通知单,
-        采购入库单,
-        工序计划单,
-        工序汇报单,
-        生产汇报单,
-        发货通知单,
-        完工入库单,
-        销售出库单,
-        退出游戏UI
+        TestUI, CommonUI,
+        SalesQuotation, SalesOrder,
+        ProductionWorkOrder, ProductionBOM, ProductionMaterialRequest, ProductionPickList,
+        MaterialDemand, PurchaseDemand, PurchaseOrder, ReceiptNotice, PurchaseInbound,
+        ProcessPlan, ProcessReport, ProductionReport, DeliveryNotice,
+        FinishedInbound, SalesOutbound, ExitGameUI
     }
+
+    [System.Serializable]
+    public class UIEntry
+    {
+        public UIType type;
+        public GameObject panel;
+    }
+
+    [Header("️ UI面板配置")]
+    [Tooltip("将Canvas下的Panel子物体拖拽至此")]
+    [SerializeField] private List<UIEntry> uiEntries = new List<UIEntry>();
 
     private Dictionary<UIType, GameObject> _uiDictionary = new Dictionary<UIType, GameObject>();
     private bool _isInitialized = false;
@@ -50,91 +42,67 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         if (_instance == null)
+        {
             _instance = this;
-        else
-            Destroy(gameObject);
+            DontDestroyOnLoad(gameObject);
+            InitializeUI();
+        }
+        else Destroy(gameObject);
     }
 
     public void InitializeUI()
-    {   
+    {
         if (_isInitialized) return;
-
         _uiDictionary.Clear();
-        int childCount = transform.childCount;
-        
-        for (int i = 0; i < childCount; i++)
-        {   
-            Transform child = transform.GetChild(i);
-            if (i < Enum.GetValues(typeof(UIType)).Length)
-            {   
-                UIType uiType = (UIType)i;
-                _uiDictionary.Add(uiType, child.gameObject);
-                child.gameObject.SetActive(false);
-                Debug.Log($"UI初始化: {uiType} -> {child.name}");
+        foreach (var entry in uiEntries)
+        {
+            if (entry.panel != null)
+            {
+                entry.panel.SetActive(false); // 初始化默认隐藏
+                _uiDictionary[entry.type] = entry.panel;
             }
         }
         _isInitialized = true;
     }
 
-    public void ShowUI(UIType uiType)
-    {   
+    public bool TryGetUI(UIType type, out GameObject panel)
+    {
+        panel = null;
         if (!_isInitialized) InitializeUI();
-        if (_uiDictionary.TryGetValue(uiType, out GameObject uiObject))
-        {   
-            uiObject.SetActive(true);
-            Debug.Log($"显示UI: {uiType}");
-        }
-        else
-            Debug.LogError($"找不到UI: {uiType}");
+        return _uiDictionary.TryGetValue(type, out panel) && panel != null;
     }
-    
-    public bool IsAnyOtherUIVisible(UIType excludeUIType)
-    {   
+
+    public void ShowUI(UIType type)
+    {
+        if (TryGetUI(type, out GameObject panel))
+        {
+            panel.SetActive(true);
+            Debug.Log($"[UIManager] 显示: {type}");
+        }
+        else Debug.LogError($"[UIManager] 找不到UI: {type}");
+    }
+
+    public void HideUI(UIType type)
+    {
+        if (TryGetUI(type, out GameObject panel))
+        {
+            panel.SetActive(false);
+            Debug.Log($"[UIManager] 隐藏: {type}");
+        }
+    }
+
+    /// <summary>独占显示（关闭其他所有面板，仅打开指定面板）</summary>
+    public void ShowOnlyUI(UIType type)
+    {
         if (!_isInitialized) InitializeUI();
-        
         foreach (var kvp in _uiDictionary)
-        {   
-            if (kvp.Key == excludeUIType) continue;
-            if (kvp.Value.activeInHierarchy) return true;
-        }
-        return false;
+            kvp.Value.SetActive(kvp.Key == type);
+        Debug.Log($"[UIManager] 独占显示: {type}");
     }
 
-    public void HideUI(UIType uiType)
-    {   
-        if (!_isInitialized) InitializeUI();
-        if (_uiDictionary.TryGetValue(uiType, out GameObject uiObject))
-        {   
-            uiObject.SetActive(false);
-            Debug.Log($"隐藏UI: {uiType}");
-        }
-        else
-            Debug.LogError($"找不到UI: {uiType}");
-    }
-
-    public void ShowOnlyUI(UIType uiType)
-    {   
-        if (!_isInitialized) InitializeUI();
-        foreach (var ui in _uiDictionary.Values)
-            ui.SetActive(false);
-        ShowUI(uiType);
-    }
-
-    public GameObject GetUIObject(UIType uiType)
-    {   
-        if (!_isInitialized) InitializeUI();
-        if (_uiDictionary.TryGetValue(uiType, out GameObject uiObject))
-            return uiObject;
-        
-        Debug.LogError($"找不到UI: {uiType}");
-        return null;
-    }
-
-    public bool IsUIVisible(UIType uiType)
-    {   
-        if (!_isInitialized) InitializeUI();
-        if (_uiDictionary.TryGetValue(uiType, out GameObject uiObject))
-            return uiObject.activeInHierarchy;
+    public bool IsUIVisible(UIType type)
+    {
+        if (TryGetUI(type, out GameObject panel)) return panel.activeSelf;
         return false;
     }
 }

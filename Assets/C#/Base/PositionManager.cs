@@ -1,10 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System;
 
-/// <summary>
-/// 位置管理器
-/// </summary>
 public class PositionManager : MonoBehaviour
 {
     #region 单例
@@ -13,7 +9,7 @@ public class PositionManager : MonoBehaviour
     {
         get
         {
-            if (_instance == null) Debug.LogError("PositionManager 未初始化!");
+            if (_instance == null) Debug.LogError("[PositionManager] 实例不存在");
             return _instance;
         }
     }
@@ -21,149 +17,113 @@ public class PositionManager : MonoBehaviour
 
     public enum PositionType
     {
-        销售员,
-        销售主管,
-        生产主管,
-        领料员,
-        仓管员,
-        仓库主管,
-        采购员,
-        采购主管,
-        质检员,
-        五个班组长,
-        五车间班组长,
-        位置1,
-        位置2,
-        位置3,
-        位置4,
-        位置5,
-        位置6,
-        进货位置,
-        卡车视角,
-        PMC
+        SalesDesk,          // 销售员
+        SalesManagerDesk,   // 销售主管
+        ProductionManagerDesk, // 生产主管
+        MaterialPicker,     // 领料员
+        WarehouseDesk,      // 仓管员
+        WarehouseManagerDesk, // 仓库主管
+        Purchaser,          // 采购员
+        PurchaseManager,    // 采购主管
+        QualityInspector,   // 质检员
+        TeamLeader_5,       // 五个班组长
+        WorkshopLeader_5,   // 五车间班组长
+        Waypoint1, Waypoint2, Waypoint3, Waypoint4, Waypoint5, Waypoint6,
+        InboundLocation,    // 进货位置
+        TruckView,          // 卡车视角
+        PMC_Office          // PMC办公室
     }
 
+    [System.Serializable]
+    public class PositionEntry
+    {
+        public PositionType type;
+        public Transform target;
+    }
+
+    [Header("📍 位置点配置")]
+    [Tooltip("将场景中的空物体/路标点拖拽至此")]
+    [SerializeField] private List<PositionEntry> positionEntries = new List<PositionEntry>();
+
     private Dictionary<PositionType, Transform> _positionDictionary = new Dictionary<PositionType, Transform>();
-    private Dictionary<string, Transform> _namePositionMap = new Dictionary<string, Transform>();
     private bool _isInitialized = false;
-    private bool _allowDynamicRegister = true;
 
     private void Awake()
     {
         if (_instance == null)
+        {
             _instance = this;
-        else
-            Destroy(gameObject);
-    }
-
-    private void Start()
-    {
-        InitializePositions();
+            DontDestroyOnLoad(gameObject);
+            InitializePositions();
+        }
+        else Destroy(gameObject);
     }
 
     public void InitializePositions()
     {
         if (_isInitialized) return;
-
         _positionDictionary.Clear();
-        _namePositionMap.Clear();
-
-        int childCount = transform.childCount;
-
-        for (int i = 0; i < childCount; i++)
+        foreach (var entry in positionEntries)
         {
-            Transform child = transform.GetChild(i);
-            if (i < Enum.GetValues(typeof(PositionType)).Length)
-            {
-                PositionType posType = (PositionType)i;
-                _positionDictionary.Add(posType, child);
-                _namePositionMap[posType.ToString()] = child;
-                Debug.Log($"位置初始化: {posType} -> {child.name}");
-            }
+            if (entry.target != null)
+                _positionDictionary[entry.type] = entry.target;
+            else
+                Debug.LogWarning($"[PositionManager] 未配置位置: {entry.type}");
         }
         _isInitialized = true;
     }
 
-    public Vector3 GetPosition(PositionType positionType)
+    public bool TryGetPosition(PositionType type, out Vector3 pos)
     {
+        pos = Vector3.zero;
         if (!_isInitialized) InitializePositions();
-        if (_positionDictionary.TryGetValue(positionType, out Transform t))
-            return t.position;
+        if (_positionDictionary.TryGetValue(type, out Transform t))
+        {
+            pos = t.position;
+            return true;
+        }
+        return false;
+    }
 
-        Debug.LogError($"找不到位置: {positionType}");
+    public bool TryGetPositionTransform(PositionType type, out Transform t)
+    {
+        t = null;
+        if (!_isInitialized) InitializePositions();
+        return _positionDictionary.TryGetValue(type, out t) && t != null;
+    }
+
+    public Vector3 GetPosition(PositionType type)
+    {
+        if (TryGetPosition(type, out Vector3 pos)) return pos;
+        Debug.LogError($"[PositionManager] 找不到位置: {type}");
         return Vector3.zero;
     }
 
-    public Vector3 GetPosition(string name)
-    {
-        if (_namePositionMap.TryGetValue(name, out var t))
-            return t.position;
-
-        Debug.LogWarning($"未找到名称位置: {name}，尝试枚举映射");
-        if (Enum.TryParse<PositionType>(name, out var enumType))
-            return GetPosition(enumType);
-
-        return Vector3.zero;
-    }
-
-    public Quaternion GetRotation(PositionType positionType)
+    public Quaternion GetRotation(PositionType type)
     {
         if (!_isInitialized) InitializePositions();
-        if (_positionDictionary.TryGetValue(positionType, out Transform t))
-            return t.rotation;
-
-        Debug.LogError($"找不到位置: {positionType}");
+        if (_positionDictionary.TryGetValue(type, out Transform t)) return t.rotation;
+        Debug.LogError($"[PositionManager] 找不到位置旋转: {type}");
         return Quaternion.identity;
     }
 
-    public Transform GetPositionTransform(PositionType positionType)
+    /// <summary>安全瞬移（自动处理CharacterController防穿地）</summary>
+    public void SetObjectToPosition(GameObject target, PositionType posType, bool matchRotation = true)
     {
-        if (!_isInitialized) InitializePositions();
-        if (_positionDictionary.TryGetValue(positionType, out Transform t))
-            return t;
+        if (target == null || !TryGetPositionTransform(posType, out Transform t)) return;
 
-        Debug.LogError($"找不到位置: {positionType}");
-        return null;
+        var charCtrl = target.GetComponent<CharacterController>();
+        if (charCtrl != null) charCtrl.enabled = false;
+
+        target.transform.SetPositionAndRotation(t.position, matchRotation ? t.rotation : target.transform.rotation);
+
+        if (charCtrl != null) charCtrl.enabled = true;
     }
 
-    public void SetObjectToPosition(GameObject target, PositionType positionType, bool matchRotation = true)
+    public void RegisterPosition(PositionType type, Transform pos)
     {
-        if (target == null)
-        {
-            Debug.LogError("目标物体不能为空");
-            return;
-        }
-
-        if (!_isInitialized) InitializePositions();
-
-        if (_positionDictionary.TryGetValue(positionType, out Transform t))
-        {
-            target.transform.position = t.position;
-            if (matchRotation) target.transform.rotation = t.rotation;
-            Debug.Log($"{target.name} 已移动到 {positionType}");
-        }
-        else
-            Debug.LogError($"找不到位置: {positionType}");
-    }
-
-    public void RegisterPosition(string name, Transform position)
-    {
-        if (!_allowDynamicRegister) return;
-
-        if (string.IsNullOrEmpty(name) || position == null)
-        {
-            Debug.LogError("注册位置参数无效");
-            return;
-        }
-
-        _namePositionMap[name] = position;
-        Debug.Log($"位置动态注册: {name}");
-    }
-
-    public void RegisterPositions(Dictionary<string, Transform> positions)
-    {
-        if (!_allowDynamicRegister) return;
-        foreach (var kv in positions)
-            RegisterPosition(kv.Key, kv.Value);
+        if (pos == null) return;
+        if (!_isInitialized) _isInitialized = true;
+        _positionDictionary[type] = pos;
     }
 }
