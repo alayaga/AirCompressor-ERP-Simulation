@@ -32,12 +32,17 @@ public class SceneManage : MonoBehaviour
 
     /// <summary>
     /// 选择 "标准产品流程"
+    /// ⚠️ TODO: 标准流程由其他负责人实现
+    /// 需要：
+    /// 1. 创建 StandardSalesFlow 或相关流程类
+    /// 2. 配置 FlowStarter 的 flowType
+    /// 3. 实现标准流程的步骤逻辑
     /// </summary>
     public void SelectStandardFlow()
     {
-        Debug.Log("选择了标准产品流程");
-        PrepareDemandForFlow(DemandManager.WorkflowType.Standard);
-        SceneManager.LoadScene("加载场景");
+        Debug.Log("选择了标准产品流程 [TODO: 标准流程待实现]");
+        // PrepareDemandForFlow(DemandManager.WorkflowType.Standard);
+        // SceneManager.LoadScene("加载场景");
     }
 
     /// <summary>

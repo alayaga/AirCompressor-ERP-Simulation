@@ -19,7 +19,7 @@ public class FlowTaskIntegration : MonoBehaviour
     #endregion
 
     [Header("UI引用")]
-    [SerializeField] private TaskGuidePanel taskGuidePanel;
+    [SerializeField] private TaskGuidePanelNew taskGuidePanel;
     [SerializeField] private bool autoFindPanel = true;
 
     private Dictionary<System.Type, FlowTaskConfig> flowConfigs = new Dictionary<System.Type, FlowTaskConfig>();
@@ -37,13 +37,16 @@ public class FlowTaskIntegration : MonoBehaviour
         else { Destroy(gameObject); return; }
         
         if (autoFindPanel && taskGuidePanel == null)
-            taskGuidePanel = FindObjectOfType<TaskGuidePanel>();
+            taskGuidePanel = FindObjectOfType<TaskGuidePanelNew>();
         
         InitializeFlowConfigs();
     }
 
     private void InitializeFlowConfigs()
     {
+        // ===== 定制产品销售流程 =====
+        // 步骤配置在 CustomSalesFlow.InitializeSteps() 中定义
+
         //// 销售流程
         //flowConfigs[typeof(SalesFlow)] = new FlowTaskConfig
         //{
@@ -174,51 +177,44 @@ public class FlowTaskIntegration : MonoBehaviour
         if (flow == null) return;
         
         currentFlow = flow;
-        System.Type flowType = flow.GetType();
         
-        if (flowConfigs.TryGetValue(flowType, out FlowTaskConfig config))
-        {
-            currentConfig = config;
-            currentStepIndex = 0;
-            
-            taskGuidePanel?.UpdateTaskInfo(config.flowName, config.taskTitle, config.taskDescription, 0, config.steps.Count);
-            
-            if (config.steps.Count > 0) ShowStep(0);
-        }
+        // 让 CustomSalesFlow 自己管 UI
+        flow.StartFlow();
     }
 
     public void CompleteCurrentStep()
     {
-        if (currentConfig == null || taskGuidePanel == null) return;
+        Debug.Log($"[FlowTaskIntegration] CompleteCurrentStep 被调用");
+        Debug.Log($"[FlowTaskIntegration] currentFlow 是否为空: {currentFlow == null}");
         
-        taskGuidePanel.CompleteCurrentStep();
-        currentStepIndex++;
-        
-        if (currentStepIndex < currentConfig.steps.Count)
-            StartCoroutine(DelayedShowNextStep());
-        else
-            taskGuidePanel.CompleteTask();
+        // 调用流程的完成方法
+        if (currentFlow != null)
+        {
+            Debug.Log($"[FlowTaskIntegration] 调用 currentFlow.MarkStepComplete()");
+            currentFlow.MarkStepComplete();
+        }
     }
 
-    private System.Collections.IEnumerator DelayedShowNextStep()
-    {
-        yield return new WaitForSeconds(0.5f);
-        taskGuidePanel.UpdateProgress(currentStepIndex, currentConfig.steps.Count);
-        ShowStep(currentStepIndex);
-    }
+    //private System.Collections.IEnumerator DelayedShowNextStep()
+    //{
+    //    yield return new WaitForSeconds(0.5f);
+    //    taskGuidePanel.UpdateProgress(currentStepIndex, currentConfig.steps.Count);
+    //    ShowStep(currentStepIndex);
+    //}
 
-    private void ShowStep(int stepIndex)
-    {
-        if (currentConfig == null || taskGuidePanel == null) return;
-        if (stepIndex < 0 || stepIndex >= currentConfig.steps.Count) return;
-        
-        StepInfo step = currentConfig.steps[stepIndex];
-        taskGuidePanel.UpdateCurrentStep(step.title, step.description, step.targetNPC, step.targetLocation, step.actionType, step.hint);
-    }
+    //private void ShowStep(int stepIndex)
+    //{
+    //    if (currentConfig == null || taskGuidePanel == null) return;
+    //    if (stepIndex < 0 || stepIndex >= currentConfig.steps.Count) return;
+    //    
+    //    StepInfo step = currentConfig.steps[stepIndex];
+    //    taskGuidePanel.UpdateCurrentStep(step.title, step.description, step.targetNPC, step.targetLocation, step.actionType, step.hint);
+    //}
 
-    public void SetTaskGuidePanel(TaskGuidePanel panel) { taskGuidePanel = panel; }
+    public void SetTaskGuidePanel(TaskGuidePanelNew panel) { taskGuidePanel = panel; }
     public FlowTaskConfig GetCurrentFlowConfig() => currentConfig;
     public int GetCurrentStepIndex() => currentStepIndex;
+    public FlowBase GetCurrentFlow() => currentFlow;
 }
 
 [System.Serializable]

@@ -11,6 +11,10 @@ public class PlayerInteractionDetector : MonoBehaviour
     [Header("Debug")]
     public Interactables currentInteractable;
 
+    // 调试模式：开启后会输出检测信息
+    [Header("Debug Settings")]
+    public bool debugMode = true;
+
     void Update()
     {
         DetectInteractable();
@@ -18,6 +22,7 @@ public class PlayerInteractionDetector : MonoBehaviour
 
     void DetectInteractable()
     {
+        Interactables previous = currentInteractable;
         currentInteractable = null;
 
         Ray ray = new Ray(transform.position, transform.forward);
@@ -25,11 +30,25 @@ public class PlayerInteractionDetector : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, interactDistance, interactMask))
         {
+            if (debugMode)
+            {
+                Debug.DrawRay(transform.position, transform.forward * interactDistance, Color.red);
+                Debug.Log($"[检测] 射线命中: {hit.collider.name}");
+            }
+
             Interactables interactable = hit.collider.GetComponent<Interactables>();
 
             if (interactable != null)
             {
                 currentInteractable = interactable;
+                if (previous != interactable && debugMode)
+                {
+                    Debug.Log($"[检测] 发现可交互物: {interactable.npcName} - {interactable.actionType}");
+                }
+            }
+            else if (debugMode)
+            {
+                Debug.Log($"[检测] 射线命中 {hit.collider.name}，但没有 Interactables 组件");
             }
         }
     }

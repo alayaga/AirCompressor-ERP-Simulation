@@ -79,7 +79,7 @@ public class TaskGuidePanel : MonoBehaviour
 
     private void Start()
     {
-        FlowTaskIntegration.Instance?.SetTaskGuidePanel(this);
+        // FlowTaskIntegration.Instance?.SetTaskGuidePanel(this);
         UpdateToggleButtonText();
         ShowWelcomeMessage();
         if (panelRoot != null && !panelRoot.activeSelf) panelRoot.SetActive(true);

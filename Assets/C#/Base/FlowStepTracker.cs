@@ -8,6 +8,9 @@ public static class FlowStepTracker
 {
     public static void CompleteStep()
     {
+        Debug.Log($"[FlowStepTracker] CompleteStep 被调用！");
+        Debug.Log($"[FlowStepTracker] FlowTaskIntegration.Instance 是否为空: {FlowTaskIntegration.Instance == null}");
+        
         FlowTaskIntegration.Instance?.CompleteCurrentStep();
     }
 

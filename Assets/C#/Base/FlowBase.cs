@@ -73,6 +73,14 @@ public abstract class FlowBase
 
     protected abstract IEnumerator FlowCoroutine();
 
+    /// <summary>
+    /// 完成当前步骤（由外部调用）
+    /// </summary>
+    public virtual void MarkStepComplete()
+    {
+        // 基类不做任何事，子类可重写
+    }
+
     protected MonoBehaviour GetCoroutineRunner()
     {
         if (ObjectManager.Instance != null)
