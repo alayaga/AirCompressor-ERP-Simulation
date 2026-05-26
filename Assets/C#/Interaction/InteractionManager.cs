@@ -159,23 +159,90 @@ public class InteractionManager : MonoBehaviour
         // 如果没有当前流程，允许交互（比如游戏刚开始）
         if (currentFlow == null) return true;
         
-        // 如果是 CustomSalesFlow，检查当前步骤的目标NPC
-        if (currentFlow is CustomSalesFlow salesFlow)
+        // 检查当前步骤的目标NPC（支持多种流程类型）
+        string targetNPC = null;
+        
+        // 优先检查分支流程（如果主流程正在运行分支）
+        if (currentFlow is StandardSalesFlow standardFlow)
         {
-            var currentStep = salesFlow.GetCurrentStep();
-            if (currentStep != null && !string.IsNullOrEmpty(currentStep.targetNPC))
+            // 检查是否在分支流程中
+            FlowBase branchFlow = GetCurrentBranchFlow(standardFlow);
+            if (branchFlow != null)
             {
-                // 检查 NPC 名称是否匹配（忽略大小写）
-                if (!string.IsNullOrEmpty(target.npcName) &&
-                    !currentStep.targetNPC.Equals(target.npcName, System.StringComparison.OrdinalIgnoreCase))
-                {
-                    Debug.Log($"[交互] 目标不匹配：当前需要找 {currentStep.targetNPC}，但你面对的是 {target.npcName}");
-                    return false;
-                }
+                // 使用分支流程的步骤
+                targetNPC = GetTargetNPCFromFlow(branchFlow);
+            }
+            else
+            {
+                // 使用主流程的步骤
+                var currentStep = standardFlow.GetCurrentStep();
+                if (currentStep != null) targetNPC = currentStep.targetNPC;
+            }
+        }
+        else
+        {
+            // 直接获取当前流程的目标NPC
+            targetNPC = GetTargetNPCFromFlow(currentFlow);
+        }
+        
+        if (!string.IsNullOrEmpty(targetNPC))
+        {
+            // 检查 NPC 名称是否匹配（忽略大小写）
+            if (!string.IsNullOrEmpty(target.npcName) &&
+                !targetNPC.Equals(target.npcName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log($"[交互] 目标不匹配：当前需要找 {targetNPC}，但你面对的是 {target.npcName}");
+                return false;
             }
         }
         
         return true;
+    }
+    
+    /// <summary>
+    /// 从流程获取目标NPC
+    /// </summary>
+    private string GetTargetNPCFromFlow(FlowBase flow)
+    {
+        if (flow is CustomSalesFlow customFlow)
+        {
+            var currentStep = customFlow.GetCurrentStep();
+            return currentStep?.targetNPC;
+        }
+        else if (flow is StandardDeliveryFlow deliveryFlow)
+        {
+            var currentStep = deliveryFlow.GetCurrentStep();
+            return currentStep?.targetNPC;
+        }
+        else if (flow is StandardSalesBranchFlow salesBranchFlow)
+        {
+            var currentStep = salesBranchFlow.GetCurrentStep();
+            return currentStep?.targetNPC;
+        }
+        else if (flow is StandardSalesFlow mainFlow)
+        {
+            var currentStep = mainFlow.GetCurrentStep();
+            return currentStep?.targetNPC;
+        }
+        
+        return null;
+    }
+    
+    /// <summary>
+    /// 获取 StandardSalesFlow 当前运行的分支流程
+    /// </summary>
+    private FlowBase GetCurrentBranchFlow(StandardSalesFlow mainFlow)
+    {
+        // 使用反射获取私有字段
+        System.Reflection.FieldInfo branchFlowField = typeof(StandardSalesFlow).GetField("_currentBranchFlow", 
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        
+        if (branchFlowField != null)
+        {
+            return branchFlowField.GetValue(mainFlow) as FlowBase;
+        }
+        
+        return null;
     }
 
     #endregion

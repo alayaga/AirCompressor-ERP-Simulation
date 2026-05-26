@@ -3,7 +3,7 @@ using System.Collections;
 
 /// <summary>
 /// 流程启动器
-/// 在场景加载完成后自动启动定制产品销售流程
+/// 在场景加载完成后自动启动流程（根据 DemandManager 的流程类型动态选择）
 /// 挂在场景中的 FlowStarter 空物体上
 /// </summary>
 public class FlowStarter : MonoBehaviour
@@ -11,9 +11,6 @@ public class FlowStarter : MonoBehaviour
     [Header("流程配置")]
     [Tooltip("是否在启动时自动开始流程")]
     public bool autoStartFlow = true;
-
-    [Tooltip("要启动的流程类型")]
-    public System.Type flowType = typeof(CustomSalesFlow);
 
     [Tooltip("延迟启动时间（秒）")]
     public float startDelay = 2f;
@@ -29,6 +26,11 @@ public class FlowStarter : MonoBehaviour
     private IEnumerator StartFlowAfterDelay()
     {
         yield return new WaitForSeconds(startDelay);
+        
+        // 根据 DemandManager 中的流程类型动态选择要启动的流程
+        System.Type flowType = GetFlowTypeByWorkflow();
+        
+        Debug.Log($"[FlowStarter] 当前流程类型: {flowType.Name}");
         
         // 创建流程实例
         FlowBase flow = System.Activator.CreateInstance(flowType) as FlowBase;
@@ -73,7 +75,57 @@ public class FlowStarter : MonoBehaviour
     /// </summary>
     public void StartFlow(System.Type type)
     {
-        flowType = type;
-        StartFlow();
+        StartCoroutine(StartFlowWithType(type));
+    }
+
+    private IEnumerator StartFlowWithType(System.Type flowType)
+    {
+        yield return new WaitForSeconds(startDelay);
+        
+        FlowBase flow = System.Activator.CreateInstance(flowType) as FlowBase;
+        if (flow != null)
+        {
+            if (FlowManager.Instance != null)
+            {
+                FlowManager.Instance.RegisterFlow(flow);
+            }
+            if (FlowTaskIntegration.Instance != null)
+            {
+                FlowTaskIntegration.Instance.StartFlowWithUI(flow);
+            }
+            else
+            {
+                flow.StartFlow();
+            }
+            Debug.Log($"[FlowStarter] 已启动流程: {flowType.Name}");
+        }
+    }
+
+    /// <summary>
+    /// 根据 DemandManager 的流程类型获取对应的流程类
+    /// </summary>
+    private System.Type GetFlowTypeByWorkflow()
+    {
+        if (DemandManager.Instance != null)
+        {
+            var demand = DemandManager.Instance.GetCurrentDemand();
+            if (demand != null)
+            {
+                switch (demand.workflowType)
+                {
+                    case DemandManager.WorkflowType.Standard:
+                        return typeof(StandardSalesFlow); // 使用合并后的主流程（包含销售和发货分支）
+                    case DemandManager.WorkflowType.Custom:
+                        return typeof(CustomSalesFlow);
+                    default:
+                        Debug.LogWarning("[FlowStarter] 未知流程类型，默认使用定制流程");
+                        return typeof(CustomSalesFlow);
+                }
+            }
+        }
+        
+        // 默认返回定制流程（保持向后兼容）
+        Debug.LogWarning("[FlowStarter] 未找到 DemandManager，默认使用定制流程");
+        return typeof(CustomSalesFlow);
     }
 }

@@ -27,6 +27,14 @@ public class TaskGuidePanelNew : MonoBehaviour
     [SerializeField] private TMP_Text targetInfoText;
     [SerializeField] private TMP_Text hintText;
 
+    [Header("面板尺寸设置")]
+    [Tooltip("默认面板高度")]
+    [SerializeField] private float defaultHeight = 400f;
+    [Tooltip("扩展面板高度（显示更多内容时）")]
+    [SerializeField] private float expandedHeight = 600f;
+    
+    private RectTransform _rectTransform;
+
     private int _currentStep = 0;
     private int _totalSteps = 0;
 
@@ -34,7 +42,12 @@ public class TaskGuidePanelNew : MonoBehaviour
     {
         if (_instance == null) _instance = this;
         else if (_instance != this) Destroy(gameObject);
+        
+        // 获取 RectTransform 组件
+        _rectTransform = GetComponent<RectTransform>();
+        
     }
+    
 
     private void Start()
     {
@@ -72,6 +85,10 @@ public class TaskGuidePanelNew : MonoBehaviour
 
         if (targetInfoText != null)
             targetInfoText.text = $"目标NPC：{targetNPC}\n位置：{targetLocation}\n操作：{actionType}";
+
+        // 清空初始化时的提示信息
+        if (hintText != null)
+            hintText.text = "";
     }
 
     /// <summary>
@@ -107,6 +124,91 @@ public class TaskGuidePanelNew : MonoBehaviour
         if (hintText != null)
             hintText.text = "恭喜完成所有步骤！";
     }
+
+    /// <summary>
+    /// 更新提示文本
+    /// </summary>
+    /// <param name="text">提示内容</param>
+    public void UpdateHintText(string text)
+    {
+        if (hintText != null)
+            hintText.text = text;
+    }
+
+    #region 面板尺寸调整方法
+
+    /// <summary>
+    /// 设置面板为默认高度
+    /// </summary>
+    public void SetDefaultHeight()
+    {
+        SetPanelHeight(defaultHeight);
+    }
+
+    /// <summary>
+    /// 设置面板为扩展高度（更长）
+    /// </summary>
+    public void SetExpandedHeight()
+    {
+        SetPanelHeight(expandedHeight);
+    }
+
+    /// <summary>
+    /// 设置面板高度
+    /// </summary>
+    /// <param name="height">目标高度</param>
+    public void SetPanelHeight(float height)
+    {
+        if (_rectTransform != null)
+        {
+            _rectTransform.sizeDelta = new Vector2(_rectTransform.sizeDelta.x, height);
+            Debug.Log($"[TaskGuidePanelNew] 面板高度已设置为: {height}");
+        }
+        else
+        {
+            Debug.LogWarning("[TaskGuidePanelNew] RectTransform 组件未找到！");
+        }
+    }
+
+    /// <summary>
+    /// 获取当前面板高度
+    /// </summary>
+    /// <returns>当前高度</returns>
+    public float GetCurrentHeight()
+    {
+        if (_rectTransform != null)
+        {
+            return _rectTransform.sizeDelta.y;
+        }
+        return 0f;
+    }
+
+    /// <summary>
+    /// 动态调整面板高度以适应内容
+    /// </summary>
+    public void AutoAdjustHeight()
+    {
+        // 获取所有文本组件的总高度
+        float totalTextHeight = 0f;
+        
+        if (flowNameText != null) totalTextHeight += flowNameText.preferredHeight;
+        if (taskTitleText != null) totalTextHeight += taskTitleText.preferredHeight;
+        if (progressText != null) totalTextHeight += progressText.preferredHeight;
+        if (currentStepText != null) totalTextHeight += currentStepText.preferredHeight;
+        if (stepDescriptionText != null) totalTextHeight += stepDescriptionText.preferredHeight;
+        if (targetInfoText != null) totalTextHeight += targetInfoText.preferredHeight;
+        if (hintText != null) totalTextHeight += hintText.preferredHeight;
+        
+        // 添加间距
+        float targetHeight = totalTextHeight + 60f; // 60f 是边距
+        
+        // 限制最小和最大高度
+        targetHeight = Mathf.Clamp(targetHeight, defaultHeight, expandedHeight);
+        
+        SetPanelHeight(targetHeight);
+    }
+
+    #endregion
 
     /// <summary>
     /// 显示欢迎信息
