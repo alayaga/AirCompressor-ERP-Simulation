@@ -193,8 +193,19 @@ public class FlowTaskIntegration : MonoBehaviour
             // 如果是 StandardSalesFlow，检查是否在分支流程中
             if (currentFlow is StandardSalesFlow standardFlow)
             {
-                // 获取分支流程
                 FlowBase branchFlow = GetCurrentBranchFlow(standardFlow);
+                if (branchFlow != null)
+                {
+                    Debug.Log($"[FlowTaskIntegration] 调用分支流程 {branchFlow.GetType().Name}.MarkStepComplete()");
+                    branchFlow.MarkStepComplete();
+                    return;
+                }
+            }
+
+            // 如果是 CustomSalesFlow，检查是否在分支流程中
+            if (currentFlow is CustomSalesFlow customFlow)
+            {
+                FlowBase branchFlow = GetCurrentBranchFlow(customFlow);
                 if (branchFlow != null)
                 {
                     Debug.Log($"[FlowTaskIntegration] 调用分支流程 {branchFlow.GetType().Name}.MarkStepComplete()");
@@ -213,15 +224,30 @@ public class FlowTaskIntegration : MonoBehaviour
     /// </summary>
     private FlowBase GetCurrentBranchFlow(StandardSalesFlow mainFlow)
     {
-        // 使用反射获取私有字段
-        System.Reflection.FieldInfo branchFlowField = typeof(StandardSalesFlow).GetField("_currentBranchFlow", 
+        System.Reflection.FieldInfo branchFlowField = typeof(StandardSalesFlow).GetField("_currentBranchFlow",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
+
         if (branchFlowField != null)
         {
             return branchFlowField.GetValue(mainFlow) as FlowBase;
         }
-        
+
+        return null;
+    }
+
+    /// <summary>
+    /// 获取 CustomSalesFlow 当前运行的分支流程
+    /// </summary>
+    private FlowBase GetCurrentBranchFlow(CustomSalesFlow mainFlow)
+    {
+        System.Reflection.FieldInfo branchFlowField = typeof(CustomSalesFlow).GetField("_currentBranchFlow",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        if (branchFlowField != null)
+        {
+            return branchFlowField.GetValue(mainFlow) as FlowBase;
+        }
+
         return null;
     }
 

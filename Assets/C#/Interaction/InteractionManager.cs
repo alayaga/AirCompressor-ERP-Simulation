@@ -179,6 +179,20 @@ public class InteractionManager : MonoBehaviour
                 if (currentStep != null) targetNPC = currentStep.targetNPC;
             }
         }
+        else if (currentFlow is CustomSalesFlow customFlow)
+        {
+            // 检查是否在分支流程中
+            FlowBase branchFlow = GetCurrentBranchFlow(customFlow);
+            if (branchFlow != null)
+            {
+                targetNPC = GetTargetNPCFromFlow(branchFlow);
+            }
+            else
+            {
+                var currentStep = customFlow.GetCurrentStep();
+                if (currentStep != null) targetNPC = currentStep.targetNPC;
+            }
+        }
         else
         {
             // 直接获取当前流程的目标NPC
@@ -209,6 +223,11 @@ public class InteractionManager : MonoBehaviour
             var currentStep = customFlow.GetCurrentStep();
             return currentStep?.targetNPC;
         }
+        else if (flow is CustomProductionFlow customProdFlow)
+        {
+            var currentStep = customProdFlow.GetCurrentStep();
+            return currentStep?.targetNPC;
+        }
         else if (flow is StandardDeliveryFlow deliveryFlow)
         {
             var currentStep = deliveryFlow.GetCurrentStep();
@@ -233,15 +252,30 @@ public class InteractionManager : MonoBehaviour
     /// </summary>
     private FlowBase GetCurrentBranchFlow(StandardSalesFlow mainFlow)
     {
-        // 使用反射获取私有字段
-        System.Reflection.FieldInfo branchFlowField = typeof(StandardSalesFlow).GetField("_currentBranchFlow", 
+        System.Reflection.FieldInfo branchFlowField = typeof(StandardSalesFlow).GetField("_currentBranchFlow",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        
+
         if (branchFlowField != null)
         {
             return branchFlowField.GetValue(mainFlow) as FlowBase;
         }
-        
+
+        return null;
+    }
+
+    /// <summary>
+    /// 获取 CustomSalesFlow 当前运行的分支流程
+    /// </summary>
+    private FlowBase GetCurrentBranchFlow(CustomSalesFlow mainFlow)
+    {
+        System.Reflection.FieldInfo branchFlowField = typeof(CustomSalesFlow).GetField("_currentBranchFlow",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        if (branchFlowField != null)
+        {
+            return branchFlowField.GetValue(mainFlow) as FlowBase;
+        }
+
         return null;
     }
 

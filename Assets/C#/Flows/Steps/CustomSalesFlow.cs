@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// 定制产品销售流程
-/// 从客户询单到提交销售订单给PMC的完整流程
+/// 销售阶段（客户询单→BOM→报价→提交PMC），完成后进入生产/采购分支选择
 /// </summary>
 public class CustomSalesFlow : FlowBase
 {
@@ -19,28 +19,38 @@ public class CustomSalesFlow : FlowBase
         public string targetNPC;
         public string targetLocation;
         public Interactables.ActionType actionType;
-        
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action)
+        public bool isBranchChoice = false;
+
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, bool isBranch = false)
         {
             stepName = name;
             description = desc;
             targetNPC = npc;
             targetLocation = location;
             actionType = action;
+            isBranchChoice = isBranch;
         }
     }
-    
+
     // 流程信息
     private const string FLOW_NAME = "定制产品销售流程";
     private const string TASK_TITLE = "定制产品订单处理";
     private const string TASK_DESCRIPTION = "完成从客户询单到提交PMC的完整销售流程";
-    
+
     // 步骤队列
     private Queue<StepData> _steps = new Queue<StepData>();
     private StepData _currentStep;
     private bool _isStepCompleted = false;
     private int _totalSteps;
     private int _currentStepIndex = 0;
+
+    // 分支流程状态
+    private bool _productionBranchCompleted = false;
+    private bool _purchaseBranchCompleted = false;
+    private bool _productionBranchSelected = false;
+    private bool _purchaseBranchSelected = false;
+    private bool _isInBranch = false;
+    private FlowBase _currentBranchFlow = null;
 
     protected override IEnumerator FlowCoroutine()
     {
@@ -56,7 +66,6 @@ public class CustomSalesFlow : FlowBase
         // 执行所有步骤
         while (_steps.Count > 0)
         {
-            // 取出一个步骤
             _currentStep = _steps.Dequeue();
             _isStepCompleted = false;
             _currentStepIndex++;
@@ -66,8 +75,56 @@ public class CustomSalesFlow : FlowBase
             // 显示当前步骤到UI
             ShowCurrentStepToUI();
 
-            // 等待玩家完成此步骤（通过按E触发 CompleteStep）
-            yield return new WaitUntil(() => _isStepCompleted);
+            // 如果是分支选择步骤，等待玩家选择
+            if (_currentStep.isBranchChoice)
+            {
+                Debug.Log("[CustomSalesFlow] 等待玩家选择分支（[1]生产流程 [2]采购流程）");
+
+                while (!_isStepCompleted)
+                {
+                    if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+                    {
+                        SelectBranch(1);
+                    }
+                    else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+                    {
+                        SelectBranch(2);
+                    }
+
+                    yield return null;
+                }
+
+                // 根据玩家选择启动对应的分支流程
+                if (_productionBranchSelected)
+                {
+                    Debug.Log("[CustomSalesFlow] 启动生产流程分支");
+                    yield return StartBranchFlow<CustomProductionFlow>();
+                    _productionBranchSelected = false;
+                }
+                else if (_purchaseBranchSelected)
+                {
+                    Debug.Log("[CustomSalesFlow] 启动采购流程分支");
+                    // TODO: 采购流程由其他人负责实现，此处为占位
+                    Debug.LogWarning("[CustomSalesFlow] 采购流程尚未实现，请在 CustomPurchaseFlow 完成后替换此占位");
+                    yield return StartBranchFlowPlaceholder("采购流程");
+                    _purchaseBranchSelected = false;
+                }
+            }
+            else
+            {
+                // 如果是系统步骤，自动完成
+                if (_currentStep.targetNPC == "系统")
+                {
+                    Debug.Log($"[CustomSalesFlow] 系统步骤自动完成: {_currentStep.stepName}");
+                    yield return new WaitForSeconds(1.5f);
+                    _isStepCompleted = true;
+                }
+                else
+                {
+                    // 等待玩家完成此步骤
+                    yield return new WaitUntil(() => _isStepCompleted);
+                }
+            }
 
             Debug.Log($"[完成] {_currentStep.stepName}");
 
@@ -97,7 +154,7 @@ public class CustomSalesFlow : FlowBase
         _steps.Enqueue(new StepData("审核销售订单", "销售总监审核订单内容", "销售总监", "销售办公室", Interactables.ActionType.Approve));
 
         // ===== 阶段3：BOM单处理 =====
-        _steps.Enqueue(new StepData("填写BOM单", "技术部根据订单生成物料清单", "技术员", "技术部", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("填写BOM单", "技术部根据订单生成物料清单", "技术员", "计划物控中心", Interactables.ActionType.Fill));
 
         // ===== 阶段4：财务报价 =====
         _steps.Enqueue(new StepData("查看BOM单", "财务部查看物料清单", "财务主管", "财务部", Interactables.ActionType.View));
@@ -109,14 +166,110 @@ public class CustomSalesFlow : FlowBase
         _steps.Enqueue(new StepData("客户确认", "客户确认报价并签订合同", "销售员", "销售办公室", Interactables.ActionType.View));
 
         // ===== 阶段6：提交PMC =====
-        _steps.Enqueue(new StepData("提交销售订单给PMC", "PMC可查看销售订单", "销售员", "PMC办公室", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("提交销售订单给PMC", "PMC可查看销售订单", "销售员", "计划物控中心", Interactables.ActionType.Fill));
+
+        // ===== 阶段7：分支选择（生产/采购）=====
+        _steps.Enqueue(new StepData(
+            "选择后续流程",
+            "请选择要继续的流程分支\n[1]生产流程 [2]采购流程",
+            "系统",
+            "主界面",
+            Interactables.ActionType.View,
+            true
+        ));
+    }
+
+    /// <summary>
+    /// 启动分支流程
+    /// </summary>
+    private IEnumerator StartBranchFlow<T>() where T : FlowBase, new()
+    {
+        Debug.Log($"[CustomSalesFlow] 启动分支流程: {typeof(T).Name}");
+
+        _isInBranch = true;
+        _currentBranchFlow = new T();
+
+        if (FlowManager.Instance != null)
+        {
+            FlowManager.Instance.RegisterFlow(_currentBranchFlow);
+        }
+
+        _currentBranchFlow.StartFlow();
+
+        // 等待分支流程完成
+        yield return new WaitUntil(() => !_currentBranchFlow.IsRunning);
+
+        // 标记分支完成
+        if (typeof(T) == typeof(CustomProductionFlow))
+        {
+            _productionBranchCompleted = true;
+        }
+
+        _isInBranch = false;
+        _currentBranchFlow = null;
+
+        Debug.Log($"[CustomSalesFlow] 分支流程完成: {typeof(T).Name}");
+    }
+
+    /// <summary>
+    /// 占位分支流程（采购流程未实现时使用）
+    /// </summary>
+    private IEnumerator StartBranchFlowPlaceholder(string flowName)
+    {
+        Debug.Log($"[CustomSalesFlow] 启动占位分支: {flowName}");
+        _isInBranch = true;
+
+        // 更新UI提示
+        if (TaskGuidePanelNew.Instance != null)
+        {
+            TaskGuidePanelNew.Instance.UpdateCurrentStep(
+                flowName,
+                $"{flowName}尚未实现，将在后续版本中完成。\n按任意键继续...",
+                "系统",
+                "-",
+                "等待"
+            );
+        }
+
+        // 等待玩家按键跳过
+        yield return new WaitUntil(() => Input.anyKeyDown);
+        yield return new WaitForSeconds(0.5f);
+
+        _purchaseBranchCompleted = true;
+        _isInBranch = false;
+        _currentBranchFlow = null;
+
+        Debug.Log($"[CustomSalesFlow] 占位分支完成: {flowName}");
+    }
+
+    /// <summary>
+    /// 处理分支选择输入
+    /// </summary>
+    public void SelectBranch(int branchIndex)
+    {
+        if (!_isStepCompleted && _currentStep != null && _currentStep.isBranchChoice)
+        {
+            if (branchIndex == 1 && !_productionBranchCompleted && !_productionBranchSelected)
+            {
+                Debug.Log("[CustomSalesFlow] 选择生产流程分支");
+                _productionBranchSelected = true;
+                _isStepCompleted = true;
+            }
+            else if (branchIndex == 2 && !_purchaseBranchCompleted && !_purchaseBranchSelected)
+            {
+                Debug.Log("[CustomSalesFlow] 选择采购流程分支");
+                _purchaseBranchSelected = true;
+                _isStepCompleted = true;
+            }
+            else
+            {
+                Debug.LogWarning("[CustomSalesFlow] 无效的分支选择或该分支已完成");
+            }
+        }
     }
 
     #region UI更新方法
 
-    /// <summary>
-    /// 显示流程信息到UI
-    /// </summary>
     private void ShowTaskInfoToUI()
     {
         if (TaskGuidePanelNew.Instance != null)
@@ -125,17 +278,32 @@ public class CustomSalesFlow : FlowBase
         }
     }
 
-    /// <summary>
-    /// 显示当前步骤到UI
-    /// </summary>
     private void ShowCurrentStepToUI()
     {
         if (TaskGuidePanelNew.Instance != null && _currentStep != null)
         {
+            string description = _currentStep.description;
+            if (_currentStep.isBranchChoice)
+            {
+                // 动态构建可用分支列表
+                List<string> availableBranches = new List<string>();
+                if (!_productionBranchCompleted) availableBranches.Add("[1]生产流程");
+                if (!_purchaseBranchCompleted) availableBranches.Add("[2]采购流程");
+
+                if (availableBranches.Count == 0)
+                {
+                    description = "所有分支都已完成";
+                }
+                else
+                {
+                    description = "请选择要继续的流程分支\n" + string.Join(" ", availableBranches);
+                }
+            }
+
             string actionText = GetActionText(_currentStep.actionType);
             TaskGuidePanelNew.Instance.UpdateCurrentStep(
                 _currentStep.stepName,
-                _currentStep.description,
+                description,
                 _currentStep.targetNPC,
                 _currentStep.targetLocation,
                 actionText
@@ -143,9 +311,6 @@ public class CustomSalesFlow : FlowBase
         }
     }
 
-    /// <summary>
-    /// 更新进度到UI
-    /// </summary>
     private void UpdateProgressToUI()
     {
         if (TaskGuidePanelNew.Instance != null)
@@ -154,9 +319,6 @@ public class CustomSalesFlow : FlowBase
         }
     }
 
-    /// <summary>
-    /// 显示任务完成到UI
-    /// </summary>
     private void ShowTaskCompleteToUI()
     {
         if (TaskGuidePanelNew.Instance != null)
@@ -165,9 +327,6 @@ public class CustomSalesFlow : FlowBase
         }
     }
 
-    /// <summary>
-    /// 获取操作类型文字
-    /// </summary>
     private string GetActionText(Interactables.ActionType action)
     {
         switch (action)
@@ -186,38 +345,45 @@ public class CustomSalesFlow : FlowBase
 
     #region 公共方法
 
-    /// <summary>
-    /// 完成当前步骤（重写基类方法，由 InteractionManager 调用）
-    /// </summary>
     public override void MarkStepComplete()
     {
-        Debug.Log($"[CustomSalesFlow] MarkStepComplete 被调用！_isStepCompleted 设置为 true");
+        Debug.Log($"[CustomSalesFlow] MarkStepComplete 被调用！当前步骤：{_currentStep?.stepName ?? "null"}");
+
+        // 如果在分支流程中，传递完成信号给分支流程
+        if (_isInBranch && _currentBranchFlow != null)
+        {
+            _currentBranchFlow.MarkStepComplete();
+            return;
+        }
+
+        // 防止在分支选择步骤被意外调用
+        if (_currentStep != null && _currentStep.isBranchChoice)
+        {
+            Debug.LogWarning("[CustomSalesFlow] 分支选择步骤不能通过 MarkStepComplete() 完成，必须通过 SelectBranch() 选择！");
+            return;
+        }
+
         _isStepCompleted = true;
     }
 
-    /// <summary>
-    /// 获取当前步骤信息
-    /// </summary>
     public StepData GetCurrentStep()
     {
         return _currentStep;
     }
 
-    /// <summary>
-    /// 获取总步骤数
-    /// </summary>
     public int GetTotalSteps()
     {
         return _totalSteps;
     }
 
-    /// <summary>
-    /// 获取当前步骤索引（从1开始）
-    /// </summary>
     public int GetCurrentStepIndex()
     {
         return _currentStepIndex;
     }
+
+    public bool IsProductionBranchCompleted() => _productionBranchCompleted;
+    public bool IsPurchaseBranchCompleted() => _purchaseBranchCompleted;
+    public bool IsInBranch() => _isInBranch;
 
     #endregion
 }
