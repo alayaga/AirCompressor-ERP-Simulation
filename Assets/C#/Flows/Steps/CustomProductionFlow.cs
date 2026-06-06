@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// 定制产品生产流程（共47步）
+/// 定制产品生产流程（共57步）
 /// 从PMC查看销售订单到产品入库通知销售员的完整生产流程
 /// 车间顺序：1弯管 → 2焊接 → 3配电 → 4总装（流水线依赖）
 /// </summary>
@@ -96,7 +96,7 @@ public class CustomProductionFlow : FlowBase
     }
 
     /// <summary>
-    /// 初始化所有步骤（共43步）
+    /// 初始化所有步骤（共57步）
     /// </summary>
     private void InitializeSteps()
     {
@@ -499,6 +499,90 @@ public class CustomProductionFlow : FlowBase
             "系统自动通知销售员产品已入库",
             "系统",
             "-",
+            Interactables.ActionType.View
+        ));
+
+        // ========================================================
+        // 阶段6: 发货流程（步骤48~57）
+        // ========================================================
+
+        _steps.Enqueue(new StepData(
+            "销售员查看入库通知",
+            "销售员查看产品入库通知，确认货已配齐",
+            "销售员",
+            "销售办公室",
+            Interactables.ActionType.View
+        ));
+
+        _steps.Enqueue(new StepData(
+            "联系客户确认发货",
+            "销售员联系客户，确认是否可以发货",
+            "销售员",
+            "销售办公室",
+            Interactables.ActionType.Fill
+        ));
+
+        _steps.Enqueue(new StepData(
+            "客户确认可发货",
+            "客户确认可以发货",
+            "销售员",
+            "销售办公室",
+            Interactables.ActionType.View
+        ));
+
+        _steps.Enqueue(new StepData(
+            "销售员点击发货",
+            "销售员在销售订单点击发货，自动下推发货通知单",
+            "销售员",
+            "销售办公室",
+            Interactables.ActionType.Fill
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓管员填写发货通知单",
+            "仓管员填写发货通知单（由销售订单下推）",
+            "仓管员B",
+            "仓库",
+            Interactables.ActionType.Fill
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓库主管审核发货通知单",
+            "仓库主管审核发货通知单",
+            "仓库主管",
+            "仓库",
+            Interactables.ActionType.Approve
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓库包装出库",
+            "仓库包装出库，发货完成",
+            "仓管员B",
+            "仓库",
+            Interactables.ActionType.Fill
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓管员填写销售出库单",
+            "仓管员填写销售出库单（由发货通知单下推）",
+            "仓管员B",
+            "仓库",
+            Interactables.ActionType.Fill
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓库主管审核销售出库单",
+            "仓库主管审核销售出库单",
+            "仓库主管",
+            "仓库",
+            Interactables.ActionType.Approve
+        ));
+
+        _steps.Enqueue(new StepData(
+            "客户收货签字",
+            "客户收货，在发货通知单上签字",
+            "销售员",
+            "销售办公室",
             Interactables.ActionType.View
         ));
     }
