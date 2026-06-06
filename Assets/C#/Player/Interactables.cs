@@ -19,7 +19,12 @@ public class Interactables : MonoBehaviour
         PushDown,   // 下推
         View,       // 查看
         Pick,       // 领取
-        Deliver     // 交付
+        Deliver,    // 交付
+        Save,       // 保存
+        Submit,     // 提交
+        Ship,       // 发货
+        Sign,       // 签字
+        Exit        // 退出
     }
 
     #endregion

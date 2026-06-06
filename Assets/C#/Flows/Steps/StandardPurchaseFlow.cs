@@ -19,14 +19,15 @@ public class StandardPurchaseFlow : FlowBase
         public string targetNPC;
         public string targetLocation;
         public Interactables.ActionType actionType;
-
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action)
+        public UIManager.UIType? billType;  // 对应单据类型，null=无单据
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null)
         {
             stepName = name;
             description = desc;
             targetNPC = npc;
             targetLocation = location;
             actionType = action;
+            this.billType = billType;
         }
     }
 
@@ -42,80 +43,67 @@ public class StandardPurchaseFlow : FlowBase
     private int _totalSteps;
     private int _currentStepIndex = 0;
 
-    protected override IEnumerator FlowCoroutine()
+        protected override IEnumerator FlowCoroutine()
     {
         Debug.Log("[StandardPurchaseFlow] 开始标准产品原料采购流程");
 
-        // 初始化步骤队列
         InitializeSteps();
         _totalSteps = _steps.Count;
-
-        // 显示流程信息到UI
         ShowTaskInfoToUI();
 
-        // 执行所有步骤
         while (_steps.Count > 0)
         {
-            // 取出一个步骤
             _currentStep = _steps.Dequeue();
             _isStepCompleted = false;
             _currentStepIndex++;
-
             Debug.Log($"[步骤 {_currentStepIndex}/{_totalSteps}] {_currentStep.stepName}");
-
-            // 显示当前步骤到UI
             ShowCurrentStepToUI();
 
-            // 判断是否为自动步骤（供应商或系统操作）
+            Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
             bool isAutoStep = _currentStep.targetNPC == "供应商" || _currentStep.targetNPC == "系统";
-
-            if (isAutoStep)
+            if (_currentStep.billType != null)
             {
-                // 自动步骤：等待5秒后自动完成
+                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+
+                if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
+            }
+            else if (isAutoStep)
+            {
                 Debug.Log($"[StandardPurchaseFlow] 自动步骤：{_currentStep.stepName}，等待5秒后自动完成");
                 yield return new WaitForSeconds(5f);
                 _isStepCompleted = true;
             }
             else
             {
-                // 手动步骤：等待玩家完成（通过按E触发 CompleteStep）
                 yield return new WaitUntil(() => _isStepCompleted);
             }
 
             Debug.Log($"[完成] {_currentStep.stepName}");
-
-            // 更新进度到UI
             UpdateProgressToUI();
-
             yield return new WaitForSeconds(0.5f);
         }
 
-        // 显示流程完成
         ShowTaskCompleteToUI();
         Debug.Log("[StandardPurchaseFlow] 标准产品原料采购流程完成！");
-    }
-
-    /// <summary>
-    /// 初始化所有步骤（根据标准产品流程v1.3流程图 - 标准产品原料采购流程）
-    /// </summary>
-    private void InitializeSteps()
+    }    private void InitializeSteps()
     {
         _steps.Clear();
 
-        // ===== 标准产品原料采购流程 =====
-        // PMC制作两周采购计划，经采购主管审核后，跟单员执行采购到入库的完整流程
+        // ===== 标准产品原料采购流程 v1.3 =====
+        // PMC查看BOM单开始，经采购主管审核后，跟单员执行采购到入库的完整流程
 
-        _steps.Enqueue(new StepData("PMC制作两周采购计划", "PMC制作两周采购计划，点击提交后采购主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("采购主管审核采购计划", "采购主管审核两周采购计划，点击审核后自动下推", "采购主管", "采购部", Interactables.ActionType.Approve));
-        _steps.Enqueue(new StepData("跟单员查看采购计划", "跟单员查看采购计划", "跟单员", "采购部", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("跟单员填采购订单", "跟单员填写采购订单并邮件给供应商", "跟单员", "采购部", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("PMC查看BOM单", "PMC查看标准产品的BOM单", "PMC主管", "PMC部", Interactables.ActionType.View, UIManager.UIType.ProductionBOM));
+        _steps.Enqueue(new StepData("PMC制作两周采购计划", "PMC制作两周采购计划；点：提交；采购主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("采购主管审核采购计划", "采购主管审核两周采购计划，点击审核后自动下推", "采购主管", "采购部", Interactables.ActionType.Approve, UIManager.UIType.PurchaseRequest));
+        _steps.Enqueue(new StepData("跟单员查看采购计划", "跟单员查看采购计划", "跟单员", "采购部", Interactables.ActionType.View, UIManager.UIType.PurchaseRequest));
+        _steps.Enqueue(new StepData("跟单员填采购订单", "跟单员填写采购订单并邮件给供应商", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.PurchaseOrder));
         _steps.Enqueue(new StepData("供应商送货", "供应商电话联系跟单员后送货", "供应商", "供应商处", Interactables.ActionType.View));
         _steps.Enqueue(new StepData("供应商填送货通知单", "供应商填写送货通知单（随货）", "供应商", "供应商处", Interactables.ActionType.Fill));
         _steps.Enqueue(new StepData("仓库到货收货", "仓库进行到货收货", "仓管员", "质检区", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("跟单员制收料通知单", "跟单员制作收料通知单，点击提交后自动下推", "跟单员", "采购部", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单，进行质检", "仓管员", "质检区", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("跟单员制收料通知单", "跟单员制作收料通知单，点击提交后自动下推", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.ReceiptNotice));
+        _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单，进行质检", "仓管员", "质检区", Interactables.ActionType.View, UIManager.UIType.ReceiptNotice));
         _steps.Enqueue(new StepData("仓管员填来料检验单", "仓管员填写来料检验单，点击提交后自动下推", "仓管员", "质检区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("仓管员填采购入库单", "仓管员填写采购入库单", "仓管员", "质检区", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("仓管员填采购入库单", "仓管员填写采购入库单", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.PurchaseInbound));
     }
 
     #region UI更新方法

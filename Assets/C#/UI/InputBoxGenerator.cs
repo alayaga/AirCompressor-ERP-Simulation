@@ -106,6 +106,21 @@ public class InputBoxGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 获取所有输入框的内容（用于数据快照/还原）
+    /// </summary>
+    public string[] GetAllContents()
+    {
+        string[] contents = new string[generatedInputBoxes.Count];
+        for (int i = 0; i < generatedInputBoxes.Count; i++)
+        {
+            contents[i] = generatedInputBoxes[i] != null
+                ? generatedInputBoxes[i].GetContent()
+                : string.Empty;
+        }
+        return contents;
+    }
+
     public void SetInputBoxContentByTitle(string title, string content)
     {
         foreach (InputBoxScript inputBox in generatedInputBoxes)

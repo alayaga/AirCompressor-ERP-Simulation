@@ -19,10 +19,12 @@ public class UIManager : MonoBehaviour
     {
         TestUI, CommonUI,
         SalesQuotation, SalesOrder,
-        ProductionWorkOrder, ProductionBOM, ProductionMaterialRequest, ProductionPickList,
-        MaterialDemand, PurchaseDemand, PurchaseOrder, ReceiptNotice, PurchaseInbound,
-        ProcessPlan, ProcessReport, ProductionReport, DeliveryNotice,
-        FinishedInbound, SalesOutbound, ExitGameUI
+        ProductionWorkOrder, ProductionBOM, PickList, DispatchOrder,
+        ProductionMaterialList, PurchaseRequest, PurchaseOrder, ReceiptNotice, PurchaseInbound,
+        WeeklyProductionPlan, ProcessReport, ProductionReport, DeliveryNotice,
+        FinishedInbound, SalesOutbound, ExitGameUI,
+        ProductionSchedule,  // 排产单
+        ProductionReturn     // 生产退料入库单
     }
 
     [System.Serializable]

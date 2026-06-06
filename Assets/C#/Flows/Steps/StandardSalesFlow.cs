@@ -49,10 +49,12 @@ public class StandardSalesFlow : FlowBase
     private bool _deliveryBranchCompleted = false;
     private bool _productionBranchCompleted = false;  // 生产流程分支
     private bool _purchaseBranchCompleted = false;    // 采购流程分支
+    private bool _productionDeptPurchaseBranchCompleted = false;  // 生产部门提交采购流程分支
     private bool _salesBranchSelected = false;   // 待执行标记
     private bool _deliveryBranchSelected = false; // 待执行标记
     private bool _productionBranchSelected = false;   // 生产流程待执行
     private bool _purchaseBranchSelected = false;     // 采购流程待执行
+    private bool _productionDeptPurchaseBranchSelected = false; // 生产采购流程待执行
     private bool _isInBranch = false;
     private FlowBase _currentBranchFlow = null;
 
@@ -105,7 +107,11 @@ public class StandardSalesFlow : FlowBase
                     {
                         SelectBranch(4);
                     }
-                    
+                    else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
+                    {
+                        SelectBranch(5);
+                    }
+
                     yield return null; // 等待下一帧
                 }
                 
@@ -134,11 +140,18 @@ public class StandardSalesFlow : FlowBase
                     yield return StartBranchFlow<StandardPurchaseFlow>();
                     _purchaseBranchSelected = false;
                 }
+                else if (_productionDeptPurchaseBranchSelected)
+                {
+                    Debug.Log("[StandardSalesFlow] 启动生产部门提交采购流程分支");
+                    yield return StartBranchFlow<ProductionDeptPurchaseFlow>();
+                    _productionDeptPurchaseBranchSelected = false;
+                }
                 else
                 {
                     // 检查是否所有分支都已完成
-                    bool allCompleted = _salesBranchCompleted && _deliveryBranchCompleted 
-                                      && _productionBranchCompleted && _purchaseBranchCompleted;
+                    bool allCompleted = _salesBranchCompleted && _deliveryBranchCompleted
+                                      && _productionBranchCompleted && _purchaseBranchCompleted
+                                      && _productionDeptPurchaseBranchCompleted;
                     
                     if (allCompleted)
                     {
@@ -188,19 +201,22 @@ public class StandardSalesFlow : FlowBase
 
         // 主流程开始
         _mainSteps.Enqueue(new StepData("流程开始", "欢迎进入标准产品流程，即将进行分支选择", "系统", "主界面", Interactables.ActionType.View));
-        
+
         // 分支选择步骤1（首次选择）
-        _mainSteps.Enqueue(new StepData("选择分支", "请选择要完成的流程分支\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程", "系统", "主界面", Interactables.ActionType.View, true));
-        
+        _mainSteps.Enqueue(new StepData("选择分支", "请选择要完成的流程分支\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程 [5]生产采购", "系统", "主界面", Interactables.ActionType.View, true));
+
         // 分支选择步骤2（继续选择）
-        _mainSteps.Enqueue(new StepData("继续分支", "请选择下一个分支流程\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程", "系统", "主界面", Interactables.ActionType.View, true));
-        
+        _mainSteps.Enqueue(new StepData("继续分支", "请选择下一个分支流程\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程 [5]生产采购", "系统", "主界面", Interactables.ActionType.View, true));
+
         // 分支选择步骤3（继续选择）
-        _mainSteps.Enqueue(new StepData("继续分支", "请选择下一个分支流程\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程", "系统", "主界面", Interactables.ActionType.View, true));
-        
-        // 分支选择步骤4（最后一个分支）
-        _mainSteps.Enqueue(new StepData("继续分支", "请选择最后一个分支流程\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程", "系统", "主界面", Interactables.ActionType.View, true));
-        
+        _mainSteps.Enqueue(new StepData("继续分支", "请选择下一个分支流程\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程 [5]生产采购", "系统", "主界面", Interactables.ActionType.View, true));
+
+        // 分支选择步骤4（继续选择）
+        _mainSteps.Enqueue(new StepData("继续分支", "请选择下一个分支流程\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程 [5]生产采购", "系统", "主界面", Interactables.ActionType.View, true));
+
+        // 分支选择步骤5（最后一个分支）
+        _mainSteps.Enqueue(new StepData("继续分支", "请选择最后一个分支流程\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程 [5]生产采购", "系统", "主界面", Interactables.ActionType.View, true));
+
         // 流程结束
         _mainSteps.Enqueue(new StepData("流程结束", "所有流程已完成，任务圆满结束！", "系统", "主界面", Interactables.ActionType.View));
     }
@@ -244,6 +260,10 @@ public class StandardSalesFlow : FlowBase
         {
             _purchaseBranchCompleted = true;
         }
+        else if (typeof(T) == typeof(ProductionDeptPurchaseFlow))
+        {
+            _productionDeptPurchaseBranchCompleted = true;
+        }
         
         _isInBranch = false;
         _currentBranchFlow = null;
@@ -282,6 +302,12 @@ public class StandardSalesFlow : FlowBase
                 _purchaseBranchSelected = true;  // 标记待执行
                 _isStepCompleted = true;
             }
+            else if (branchIndex == 5 && !_productionDeptPurchaseBranchCompleted && !_productionDeptPurchaseBranchSelected)
+            {
+                Debug.Log("[StandardSalesFlow] 选择生产部门提交采购流程分支");
+                _productionDeptPurchaseBranchSelected = true;  // 标记待执行
+                _isStepCompleted = true;
+            }
             else
             {
                 Debug.LogWarning("[StandardSalesFlow] 无效的分支选择或该分支已完成");
@@ -313,6 +339,7 @@ public class StandardSalesFlow : FlowBase
                 if (!_deliveryBranchCompleted) availableBranches.Add("[2]销售-发货");
                 if (!_productionBranchCompleted) availableBranches.Add("[3]生产流程");
                 if (!_purchaseBranchCompleted) availableBranches.Add("[4]采购流程");
+                if (!_productionDeptPurchaseBranchCompleted) availableBranches.Add("[5]生产采购");
                 
                 if (availableBranches.Count == 0)
                 {
@@ -408,6 +435,7 @@ public class StandardSalesFlow : FlowBase
 
     public bool IsSalesBranchCompleted() => _salesBranchCompleted;
     public bool IsDeliveryBranchCompleted() => _deliveryBranchCompleted;
+    public bool IsProductionDeptPurchaseBranchCompleted() => _productionDeptPurchaseBranchCompleted;
     public bool IsInBranch() => _isInBranch;
 
     #endregion

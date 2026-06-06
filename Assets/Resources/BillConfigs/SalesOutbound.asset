@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a901303b4d6eb544e91598c8808991eb, type: 3}
+  m_Name: SalesOutbound
+  m_EditorClassIdentifier: 
+  billType: 18
+  billName: "\u9500\u552E\u51FA\u5E93\u5355"
+  roleSettings:
+  - roleName: "\u4ED3\u7BA1\u5458"
+    visibleButtons: 0700000008000000010000000b000000
+  - roleName: "\u4ED3\u5E93\u4E3B\u7BA1"
+    visibleButtons: 020000000b000000

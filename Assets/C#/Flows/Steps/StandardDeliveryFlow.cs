@@ -19,14 +19,15 @@ public class StandardDeliveryFlow : FlowBase
         public string targetNPC;
         public string targetLocation;
         public Interactables.ActionType actionType;
-        
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action)
+        public UIManager.UIType? billType;  // 对应单据类型，null=无单据
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null)
         {
             stepName = name;
             description = desc;
             targetNPC = npc;
             targetLocation = location;
             actionType = action;
+            this.billType = billType;
         }
     }
     
@@ -44,114 +45,121 @@ public class StandardDeliveryFlow : FlowBase
     
     // 库存检查相关
     private bool _hasStock = false;  // 是否有现货
-    private bool _stockChecked = false;  // 是否已检查库存
 
     protected override IEnumerator FlowCoroutine()
     {
         Debug.Log("[StandardDeliveryFlow] 开始标准产品发货流程");
 
-        // 初始化步骤队列
         InitializeSteps();
         _totalSteps = _steps.Count;
-
-        // 显示流程信息到UI
         ShowTaskInfoToUI();
 
-        // 执行所有步骤
         while (_steps.Count > 0)
         {
-            // 取出一个步骤
             _currentStep = _steps.Dequeue();
             _isStepCompleted = false;
             _currentStepIndex++;
-
             Debug.Log($"[步骤 {_currentStepIndex}/{_totalSteps}] {_currentStep.stepName}");
-
-            // 显示当前步骤到UI
             ShowCurrentStepToUI();
 
-            // 判断是否为自动步骤（客户操作或系统操作）
+            Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
             bool isAutoStep = _currentStep.targetNPC == "客户" || _currentStep.targetNPC == "系统";
-            
-            if (isAutoStep)
+            if (_currentStep.billType != null)
             {
-                // 自动步骤：等待5秒后自动完成
+                // 单据步骤：尝试打开UI，未配置则回退到else分支
+                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+                if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
+            }
+            else if (isAutoStep)
+            {
                 Debug.Log($"[StandardDeliveryFlow] 自动步骤：{_currentStep.stepName}，等待5秒后自动完成");
                 yield return new WaitForSeconds(5f);
                 _isStepCompleted = true;
             }
             else
             {
-                // 手动步骤：等待玩家完成（通过按E触发 CompleteStep）
                 yield return new WaitUntil(() => _isStepCompleted);
             }
 
             Debug.Log($"[完成] {_currentStep.stepName}");
-
-            // 更新进度到UI
             UpdateProgressToUI();
-            
-            // 库存检查判断逻辑（在"检查库存"步骤后执行）
+
             if (_currentStep.stepName == "检查库存")
             {
-                _stockChecked = true;
-                // 模拟库存检查结果（实际项目中应该从数据库或库存系统获取）
                 _hasStock = CheckStock();
-                
-                if (_hasStock)
+                if (!_hasStock)
                 {
-                    Debug.Log("[StandardDeliveryFlow] 库存充足，跳过生产流程");
-                    // 跳过生产步骤，直接进入发货流程
-                    SkipProductionSteps();
+                    Debug.Log("[StandardDeliveryFlow] 库存不足，启动标准产品生产流程");
+                    yield return StartProductionSubFlow();
+                    Debug.Log("[StandardDeliveryFlow] 生产完成，继续发货流程");
                 }
                 else
                 {
-                    Debug.Log("[StandardDeliveryFlow] 库存不足，需要执行生产流程");
+                    Debug.Log("[StandardDeliveryFlow] 库存充足，直接进入发货流程");
                 }
             }
 
             yield return new WaitForSeconds(0.5f);
         }
 
-        // 显示流程完成
         ShowTaskCompleteToUI();
         Debug.Log("[StandardDeliveryFlow] 标准产品发货流程完成！");
     }
 
-    /// <summary>
-    /// 初始化所有步骤（根据 标准产品流程v1.3 流程图 - 标准产品销售-发货流程）
-    /// </summary>
     private void InitializeSteps()
     {
         _steps.Clear();
 
-        // ===== 标准产品销售-发货流程（完整流程）=====
-        
-        // ========== 阶段1：订单处理 ==========
+        // ===== 标准产品销售-发货流程 v1.3 =====
+
+        // 阶段1：订单接收与审核
         _steps.Enqueue(new StepData("客户下单", "客户通过官网选择机型、数量，点击下单，自动生成销售订单", "客户", "系统", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("审核销售订单", "销售总监审核销售订单，点击审核后仓库可查看", "销售总监", "销售部", Interactables.ActionType.Approve));
-        _steps.Enqueue(new StepData("查看销售订单", "仓管员查看销售订单", "仓管员", "质检区", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("审核销售订单", "销售总监审核销售订单；点：审核；仓库可查看销售订单", "销售总监", "销售部", Interactables.ActionType.Approve, UIManager.UIType.SalesOrder));
+        _steps.Enqueue(new StepData("查看销售订单", "仓管员查看销售订单", "仓管员", "质检区", Interactables.ActionType.View, UIManager.UIType.SalesOrder));
         _steps.Enqueue(new StepData("检查库存", "仓管员检查现有库存", "仓管员", "质检区", Interactables.ActionType.View));
-        
-        // ========== 阶段2：生产流程（无现货时执行）==========-
-        _steps.Enqueue(new StepData("PMC填写排产单", "PMC填写每日排产单，提交后自动下推给仓管员和车间主管", "PMC主管", "PMC部", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("仓管员发料", "仓管员按生产用料清单发料到备料区", "仓管员", "质检区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("车间主管派工", "车间主管按生产工单派工给班组长，填写4个车间的工序计划单", "车间主管", "生产部", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("班组长填派工单", "1/2/3/4车间班组长查看工序计划单，填写工人个人派工单", "车间班组长", "生产区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("工人领料", "工人查看派工单，到备料区领料并填写领料单", "工人", "备料区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("工人生产", "工人进行生产加工", "工人", "生产区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("工序汇报", "1/2/3车间班组长检查并填写工序汇报单", "车间班组长", "生产区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("半成品转运", "1/2/3车间员工将半成品送往4车间", "工人", "生产区", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("4车间组装", "4车间负责组装，组装完成后将成品送往仓库", "工人", "生产区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("成品入库", "成品入库，更新库存", "仓管员", "质检区", Interactables.ActionType.Fill));
-        
-        // ========== 阶段3：发货流程（有现货或生产完成后执行）==========
-        _steps.Enqueue(new StepData("填写发货通知单", "仓管员填写发货通知单", "仓管员", "质检区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("审核发货通知单", "仓库主管审核发货通知单", "仓库主管", "仓库部", Interactables.ActionType.Approve));
+        // 注意：检查库存后，无现货时会自动启动"标准产品生产流程"子流程
+
+        // 阶段2：确认发货（有现货时执行）
+        _steps.Enqueue(new StepData("联系客户确认发货", "销售员联系客户确认是否可以发货", "销售员", "销售办公室", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("客户确认可发货", "客户确认可以发货", "客户", "客户处", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("销售订单点发货", "销售员在销售订单点发货；自动下推发货通知单", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
+
+        // 阶段3：发货出库
+        _steps.Enqueue(new StepData("填写发货通知单", "仓管员填写发货通知单（由销售订单下推）", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.DeliveryNotice));
+        _steps.Enqueue(new StepData("审核发货通知单", "仓库主管审核发货通知单", "仓库主管", "仓库部", Interactables.ActionType.Approve, UIManager.UIType.DeliveryNotice));
         _steps.Enqueue(new StepData("包装出库", "仓库包装出库，发货完成", "仓管员", "质检区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("填写销售出库单", "仓管员填写销售出库单（由发货通知单下推）", "仓管员", "质检区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("审核销售出库单", "仓库主管审核销售出库单", "仓库主管", "仓库部", Interactables.ActionType.Approve));
+        _steps.Enqueue(new StepData("填写销售出库单", "仓管员填写销售出库单（由发货通知单下推）", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.SalesOutbound));
+        _steps.Enqueue(new StepData("审核销售出库单", "仓库主管审核销售出库单", "仓库主管", "仓库部", Interactables.ActionType.Approve, UIManager.UIType.SalesOutbound));
         _steps.Enqueue(new StepData("客户签收", "客户收货，在发货通知单上签字", "客户", "客户处", Interactables.ActionType.View));
+    }
+
+    /// <summary>
+    /// 启动标准产品生产流程作为子流程
+    /// </summary>
+    private IEnumerator StartProductionSubFlow()
+    {
+        if (TaskGuidePanelNew.Instance != null)
+        {
+            TaskGuidePanelNew.Instance.UpdateHintText("库存不足，正在启动生产流程...");
+        }
+
+        var productionFlow = new StandardProductionFlow();
+
+        if (FlowManager.Instance != null)
+        {
+            FlowManager.Instance.RegisterFlow(productionFlow);
+        }
+
+        productionFlow.StartFlow();
+
+        yield return new WaitUntil(() => !productionFlow.IsRunning);
+
+        _hasStock = true;
+
+        if (TaskGuidePanelNew.Instance != null)
+        {
+            TaskGuidePanelNew.Instance.UpdateHintText("生产完成，库存已补充，继续发货流程");
+        }
     }
 
     /// <summary>
@@ -174,50 +182,6 @@ public class StandardDeliveryFlow : FlowBase
         }
         
         return hasStock;
-    }
-
-    /// <summary>
-    /// 跳过生产步骤，直接进入发货流程
-    /// </summary>
-    private void SkipProductionSteps()
-    {
-        // 定义需要跳过的生产步骤名称
-        List<string> stepsToSkip = new List<string>
-        {
-            "PMC填写排产单",
-            "仓管员发料",
-            "车间主管派工",
-            "班组长填派工单",
-            "工人领料",
-            "工人生产",
-            "工序汇报",
-            "半成品转运",
-            "4车间组装",
-            "成品入库"
-        };
-        
-        // 创建新队列，只保留发货及之后的步骤
-        Queue<StepData> remainingSteps = new Queue<StepData>();
-        
-        while (_steps.Count > 0)
-        {
-            StepData step = _steps.Dequeue();
-            
-            if (!stepsToSkip.Contains(step.stepName))
-            {
-                remainingSteps.Enqueue(step);
-            }
-            else
-            {
-                Debug.Log($"[StandardDeliveryFlow] 跳过步骤：{step.stepName}");
-            }
-        }
-        
-        // 更新步骤队列
-        _steps = remainingSteps;
-        
-        // 更新总步骤数（减去跳过的步骤数）
-        _totalSteps = _currentStepIndex + _steps.Count;
     }
 
     #region UI更新方法

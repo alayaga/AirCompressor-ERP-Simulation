@@ -16,14 +16,15 @@ public class StandardSalesBranchFlow : FlowBase
         public string targetNPC;
         public string targetLocation;
         public Interactables.ActionType actionType;
-        
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action)
+        public UIManager.UIType? billType;  // 对应单据类型，null=无单据
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null)
         {
             stepName = name;
             description = desc;
             targetNPC = npc;
             targetLocation = location;
             actionType = action;
+            this.billType = billType;
         }
     }
     
@@ -56,7 +57,19 @@ public class StandardSalesBranchFlow : FlowBase
 
             ShowCurrentStepToUI();
 
-            yield return new WaitUntil(() => _isStepCompleted);
+            Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
+            // 判断是否有单据交互
+            if (_currentStep.billType != null)
+            {
+                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+
+                if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
+            }
+            else
+            {
+                // 手动步骤：等待玩家完成（通过按E触发 CompleteStep）
+                yield return new WaitUntil(() => _isStepCompleted);
+            }
 
             Debug.Log($"[完成] {_currentStep.stepName}");
 
@@ -73,14 +86,11 @@ public class StandardSalesBranchFlow : FlowBase
     {
         _steps.Clear();
 
-        _steps.Enqueue(new StepData("填写销售计划", "销售总监填写下月月度销售计划", "销售总监", "销售办公室", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("提交销售计划", "提交销售计划给PMC", "销售总监", "销售办公室", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("填写销售计划", "销售总监填写下月月度销售计划；点：提交", "销售总监", "销售办公室", Interactables.ActionType.Fill));
         _steps.Enqueue(new StepData("查看销售计划", "PMC查看订单、库存、在制、在途等情况", "PMC主管", "计划物控中心", Interactables.ActionType.View));
         _steps.Enqueue(new StepData("回复交期", "PMC回复销售产品交期", "PMC主管", "计划物控中心", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("制作生产计划", "PMC制作一周生产计划", "PMC主管", "计划物控中心", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("提交生产计划", "提交生产计划，生产主管可查看", "PMC主管", "计划物控中心", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("制作采购计划", "PMC制作两周采购计划", "PMC主管", "计划物控中心", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("提交采购计划", "提交采购计划，采购主管可查看", "PMC主管", "计划物控中心", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("制作生产计划", "PMC制作一周生产计划；点：提交；生产主管可查看", "PMC主管", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.WeeklyProductionPlan));
+        _steps.Enqueue(new StepData("制作采购计划", "PMC制作两周采购计划；点：提交；采购主管可查看", "PMC主管", "计划物控中心", Interactables.ActionType.Fill));
     }
 
     #region UI更新方法

@@ -27,9 +27,16 @@ public class InputBoxScript : MonoBehaviour
     /// <summary>
     /// 获取填写框的标题
     /// </summary>
-    /// <returns>标题文本</returns>
     public string GetTitle()
     {
         return titleText != null ? titleText.text : string.Empty;
+    }
+
+    /// <summary>
+    /// 获取填写框的内容
+    /// </summary>
+    public string GetContent()
+    {
+        return contentText != null ? contentText.text : string.Empty;
     }
 }
