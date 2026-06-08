@@ -1276,10 +1276,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 35837368}
   inputBoxGenerator2: {fileID: 35837366}
   settingTableGenerator: {fileID: 35837367}
-  fillButton: {fileID: 1411279453}
-  submitButton: {fileID: 186202155}
-  approveButton: {fileID: 1776586084}
-  pushButton: {fileID: 1921948066}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &38738846
 GameObject:
   m_ObjectHideFlags: 0
@@ -10030,10 +10039,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 188505230}
   inputBoxGenerator2: {fileID: 188505228}
   settingTableGenerator: {fileID: 188505229}
-  fillButton: {fileID: 1861511330}
-  submitButton: {fileID: 1751979349}
-  approveButton: {fileID: 1068967104}
-  pushButton: {fileID: 491573125}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &190834762
 GameObject:
   m_ObjectHideFlags: 0
@@ -10833,11 +10851,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputBoxGenerator: {fileID: 203692654}
+  inputBoxGenerator2: {fileID: 0}
   settingTableGenerator: {fileID: 203692653}
-  fillButton: {fileID: 1657567371}
-  submitButton: {fileID: 1583664153}
-  approveButton: {fileID: 629449146}
-  pushButton: {fileID: 780420967}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &204539818
 GameObject:
   m_ObjectHideFlags: 0
@@ -14772,6 +14800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a07409c6a7f7b42af7f3b82966d97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiEntries: []
 --- !u!1 &307871507
 GameObject:
   m_ObjectHideFlags: 0
@@ -34274,10 +34303,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 683291947}
   inputBoxGenerator2: {fileID: 683291945}
   settingTableGenerator: {fileID: 683291946}
-  fillButton: {fileID: 158827186}
-  submitButton: {fileID: 138142577}
-  approveButton: {fileID: 1559171646}
-  pushButton: {fileID: 345656936}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &684580982
 GameObject:
   m_ObjectHideFlags: 0
@@ -36167,10 +36205,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 718162176}
   inputBoxGenerator2: {fileID: 718162174}
   settingTableGenerator: {fileID: 718162175}
-  fillButton: {fileID: 1069785448}
-  submitButton: {fileID: 1184272938}
-  approveButton: {fileID: 2137055661}
-  pushButton: {fileID: 1656184547}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &718819162
 GameObject:
   m_ObjectHideFlags: 0
@@ -44553,10 +44600,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 869792938}
   inputBoxGenerator2: {fileID: 869792936}
   settingTableGenerator: {fileID: 869792937}
-  fillButton: {fileID: 916007014}
-  submitButton: {fileID: 1945142932}
-  approveButton: {fileID: 2000810752}
-  pushButton: {fileID: 355589892}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &870024229
 GameObject:
   m_ObjectHideFlags: 0
@@ -45598,10 +45654,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 890693185}
   inputBoxGenerator2: {fileID: 890693183}
   settingTableGenerator: {fileID: 890693184}
-  fillButton: {fileID: 548762403}
-  submitButton: {fileID: 946526527}
-  approveButton: {fileID: 1676119535}
-  pushButton: {fileID: 1993314757}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &893594405
 GameObject:
   m_ObjectHideFlags: 0
@@ -53779,10 +53844,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1053020734}
   inputBoxGenerator2: {fileID: 1053020737}
   settingTableGenerator: {fileID: 1053020733}
-  fillButton: {fileID: 2067246591}
-  submitButton: {fileID: 1506024619}
-  approveButton: {fileID: 527571377}
-  pushButton: {fileID: 80878824}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &1054278324
 GameObject:
   m_ObjectHideFlags: 0
@@ -54271,10 +54345,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1059320487}
   inputBoxGenerator2: {fileID: 1059320485}
   settingTableGenerator: {fileID: 1059320486}
-  fillButton: {fileID: 1140314944}
-  submitButton: {fileID: 684763886}
-  approveButton: {fileID: 24817835}
-  pushButton: {fileID: 988681607}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1001 &1060831072
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -57598,10 +57681,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1120374189}
   inputBoxGenerator2: {fileID: 1120374187}
   settingTableGenerator: {fileID: 1120374188}
-  fillButton: {fileID: 822587667}
-  submitButton: {fileID: 789834439}
-  approveButton: {fileID: 1638467449}
-  pushButton: {fileID: 883102008}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &1122196296
 GameObject:
   m_ObjectHideFlags: 0
@@ -61465,6 +61557,9 @@ MonoBehaviour:
   maxAirCompressorDemand: 500
   minUnitPrice: 20000
   maxUnitPrice: 30000
+  isDebugMode: 1
+  debugFixedDemandCount: 2
+  currentWorkflowType: 0
 --- !u!1 &1216725443
 GameObject:
   m_ObjectHideFlags: 0
@@ -63249,10 +63344,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1246048199}
   inputBoxGenerator2: {fileID: 1246048197}
   settingTableGenerator: {fileID: 1246048198}
-  fillButton: {fileID: 1482327227}
-  submitButton: {fileID: 2042381696}
-  approveButton: {fileID: 1338331680}
-  pushButton: {fileID: 69759468}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &1247286908
 GameObject:
   m_ObjectHideFlags: 0
@@ -65475,6 +65579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95726c162d4c71f4e8078e2a2819c8a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectEntries: []
 --- !u!4 &1294177694
 Transform:
   m_ObjectHideFlags: 0
@@ -69886,6 +69991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab1baae114e27d3488a555601d530185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  positionEntries: []
 --- !u!4 &1398814256
 Transform:
   m_ObjectHideFlags: 0
@@ -70844,10 +70950,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1417949348}
   inputBoxGenerator2: {fileID: 1417949346}
   settingTableGenerator: {fileID: 1417949347}
-  fillButton: {fileID: 834975842}
-  submitButton: {fileID: 1375684356}
-  approveButton: {fileID: 964831143}
-  pushButton: {fileID: 1592197419}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &1419587947
 GameObject:
   m_ObjectHideFlags: 0
@@ -71534,10 +71649,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1423520222}
   inputBoxGenerator2: {fileID: 1423520220}
   settingTableGenerator: {fileID: 1423520221}
-  fillButton: {fileID: 379848550}
-  submitButton: {fileID: 827794259}
-  approveButton: {fileID: 1779052470}
-  pushButton: {fileID: 1768035036}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &1427458973
 GameObject:
   m_ObjectHideFlags: 0
@@ -89348,11 +89472,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputBoxGenerator: {fileID: 1835571736}
+  inputBoxGenerator2: {fileID: 0}
   settingTableGenerator: {fileID: 1835571737}
-  fillButton: {fileID: 2143735467}
-  submitButton: {fileID: 717446006}
-  approveButton: {fileID: 2121266051}
-  pushButton: {fileID: 873476799}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1001 &1836440415
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -93337,10 +93471,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1925708124}
   inputBoxGenerator2: {fileID: 1925708122}
   settingTableGenerator: {fileID: 1925708123}
-  fillButton: {fileID: 104848237}
-  submitButton: {fileID: 1107492557}
-  approveButton: {fileID: 1017576562}
-  pushButton: {fileID: 1045906334}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1 &1926546164
 GameObject:
   m_ObjectHideFlags: 0
@@ -94464,10 +94607,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1940728322}
   inputBoxGenerator2: {fileID: 1940728320}
   settingTableGenerator: {fileID: 1940728321}
-  fillButton: {fileID: 469191392}
-  submitButton: {fileID: 392697818}
-  approveButton: {fileID: 922460244}
-  pushButton: {fileID: 1627473087}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!4 &1942149394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6577989601485367827, guid: 2feae3e1c795f7445bfb4ba10e8bfab8,
@@ -102545,10 +102697,19 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 2106607509}
   inputBoxGenerator2: {fileID: 2106607507}
   settingTableGenerator: {fileID: 2106607508}
-  fillButton: {fileID: 1526309699}
-  submitButton: {fileID: 1067906843}
-  approveButton: {fileID: 815452400}
-  pushButton: {fileID: 682267904}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
 --- !u!1001 &2112359644
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105198,16 +105359,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 161c69735681ea8449b61e5f49ddfeb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMode: 0
+  inputBoxGenerator: {fileID: 0}
+  inputBoxGenerator2: {fileID: 0}
+  settingTableGenerator: {fileID: 0}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
   fillModeUI: {fileID: 1232267019260038146}
   approveModeUI: {fileID: 1232267018546614333}
   pushDownModeUI: {fileID: 1232267019384604738}
   titleText: {fileID: 1232267018982611155}
   contentText: {fileID: 1232267018462683060}
-  fillButton: {fileID: 1232267018558368524}
-  approveButton: {fileID: 1874227400}
-  rejectButton: {fileID: 1052220862}
-  forwardButton: {fileID: 1232267020008178473}
 --- !u!1 &1232267018354954412
 GameObject:
   m_ObjectHideFlags: 0

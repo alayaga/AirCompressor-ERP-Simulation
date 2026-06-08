@@ -2,6 +2,21 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
+/// 流程测试类型枚举（仅在 Enable Test Mode 时生效）
+/// </summary>
+public enum TestFlowType
+{
+    CustomSales,
+    CustomProduction,
+    CustomPurchase,
+    StandardSales,
+    StandardSalesBranch,
+    StandardProduction,
+    StandardPurchase,
+    StandardDelivery
+}
+
+/// <summary>
 /// 流程启动器
 /// 在场景加载完成后自动启动流程（根据 DemandManager 的流程类型动态选择）
 /// 挂在场景中的 FlowStarter 空物体上
@@ -15,6 +30,13 @@ public class FlowStarter : MonoBehaviour
     [Tooltip("延迟启动时间（秒）")]
     public float startDelay = 2f;
 
+    [Header("测试模式")]
+    [Tooltip("开启后绕过 DemandManager，直接启动下方选择的流程")]
+    public bool enableTestMode = false;
+
+    [Tooltip("选择要测试的流程")]
+    public TestFlowType testFlowType = TestFlowType.CustomSales;
+
     private void Start()
     {
         if (autoStartFlow)
@@ -27,10 +49,10 @@ public class FlowStarter : MonoBehaviour
     {
         yield return new WaitForSeconds(startDelay);
         
-        // 根据 DemandManager 中的流程类型动态选择要启动的流程
-        System.Type flowType = GetFlowTypeByWorkflow();
-        
-        Debug.Log($"[FlowStarter] 当前流程类型: {flowType.Name}");
+        // 根据测试模式或 DemandManager 决定要启动的流程
+        System.Type flowType = GetFlowType();
+
+        Debug.Log($"[FlowStarter] 当前流程类型: {flowType.Name} (测试模式: {enableTestMode})");
         
         // 创建流程实例
         FlowBase flow = System.Activator.CreateInstance(flowType) as FlowBase;
@@ -102,10 +124,18 @@ public class FlowStarter : MonoBehaviour
     }
 
     /// <summary>
-    /// 根据 DemandManager 的流程类型获取对应的流程类
+    /// 获取要启动的流程类型
+    /// 测试模式下直接返回枚举对应的类型，否则走 DemandManager
     /// </summary>
-    private System.Type GetFlowTypeByWorkflow()
+    private System.Type GetFlowType()
     {
+        // 测试模式：绕过 DemandManager，直接返回指定流程
+        if (enableTestMode)
+        {
+            return GetTestFlowType();
+        }
+
+        // 正常模式：根据 DemandManager 的流程类型
         if (DemandManager.Instance != null)
         {
             var demand = DemandManager.Instance.GetCurrentDemand();
@@ -114,7 +144,7 @@ public class FlowStarter : MonoBehaviour
                 switch (demand.workflowType)
                 {
                     case DemandManager.WorkflowType.Standard:
-                        return typeof(StandardSalesFlow); // 使用合并后的主流程（包含销售和发货分支）
+                        return typeof(StandardSalesFlow);
                     case DemandManager.WorkflowType.Custom:
                         return typeof(CustomSalesFlow);
                     default:
@@ -123,9 +153,30 @@ public class FlowStarter : MonoBehaviour
                 }
             }
         }
-        
+
         // 默认返回定制流程（保持向后兼容）
         Debug.LogWarning("[FlowStarter] 未找到 DemandManager，默认使用定制流程");
         return typeof(CustomSalesFlow);
+    }
+
+    /// <summary>
+    /// 根据 TestFlowType 枚举返回对应的 FlowBase 子类
+    /// </summary>
+    private System.Type GetTestFlowType()
+    {
+        switch (testFlowType)
+        {
+            case TestFlowType.CustomSales:         return typeof(CustomSalesFlow);
+            case TestFlowType.CustomProduction:    return typeof(CustomProductionFlow);
+            case TestFlowType.CustomPurchase:      return typeof(CustomPurchaseFlow);
+            case TestFlowType.StandardSales:       return typeof(StandardSalesFlow);
+            case TestFlowType.StandardSalesBranch: return typeof(StandardSalesBranchFlow);
+            case TestFlowType.StandardProduction:  return typeof(StandardProductionFlow);
+            case TestFlowType.StandardPurchase:    return typeof(StandardPurchaseFlow);
+            case TestFlowType.StandardDelivery:    return typeof(StandardDeliveryFlow);
+            default:
+                Debug.LogWarning($"[FlowStarter] 未知测试流程类型: {testFlowType}，回退到 CustomSalesFlow");
+                return typeof(CustomSalesFlow);
+        }
     }
 }
