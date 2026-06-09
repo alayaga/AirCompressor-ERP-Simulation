@@ -161,26 +161,25 @@ public abstract class FlowBase
     }
 
     /// <summary>
-    /// 打开单据UI并等待用户操作完成
-    /// 如果单据系统未配置（无Config或无Panel），自动回退到按E完成模式
+    /// 打开单据UI并等待用户操作完成（轻量化版本，使用 BillView + BillData）
     /// </summary>
-    /// <param name="stepActionType">流程步骤的 ActionType，决定单据的 BillMode（默认 View）</param>
+    /// <param name="stepActionType">流程步骤的 ActionType，决定按钮可见性</param>
     protected IEnumerator WaitForBillComplete(UIManager.UIType billType, string roleName,
         Interactables.ActionType stepActionType = Interactables.ActionType.View)
     {
         Debug.Log($"[FlowBase] OPEN BILL: {billType}, 角色: {roleName}, stepAction: {stepActionType}");
 
-        // 1. 获取单据配置
-        var config = BillButtonConfigLoader.GetConfig(billType);
-        if (config == null)
+        // 1. 获取单据配置数据
+        var billData = BillDataLoader.GetConfig(billType);
+        if (billData == null)
         {
-            Debug.LogError($"[FlowBase] FAIL: 未找到 BillButtonConfig: {billType}");
+            Debug.LogError($"[FlowBase] FAIL: 未找到 BillData: {billType}");
             yield break;
         }
-        Debug.Log($"[FlowBase] OK: 配置已加载 [{config.billName}]");
+        Debug.Log($"[FlowBase] OK: 配置已加载 [{billData.billName}]");
 
         // 2. 根据角色获取可见按钮
-        var buttons = config.GetButtonsForRole(roleName);
+        var buttons = billData.GetButtonsForRole(roleName);
         Debug.Log($"[FlowBase] 角色按钮: {string.Join(", ", buttons)}");
 
         // 3. 打开UI面板
@@ -190,39 +189,42 @@ public abstract class FlowBase
         if (!UIManager.Instance.TryGetUI(billType, out GameObject panel) || panel == null)
         {
             Debug.LogError($"[FlowBase] FAIL: 面板未注册: {billType} (检查UIManager.uiEntries)");
-            UIManager.Instance.HideUI(billType);
             yield break;
         }
         Debug.Log($"[FlowBase] OK: 面板={panel.name}, active={panel.activeSelf}");
 
-        // 5. 获取 BillPanelBase 组件（所有单据面板现在都继承自此基类）
-        var billPanel = panel.GetComponent<BillPanelBase>();
-        if (billPanel != null)
+        // 5. 获取 BillView 组件
+        var billView = panel.GetComponent<BillView>();
+        if (billView == null)
         {
-            Debug.Log($"[FlowBase] OK: BillPanelBase → OpenBill(mode={stepActionType})");
-            billPanel.OpenBill(stepActionType, buttons);
-
-            // 如果是 UIFormBase 子类，额外调用子面板切换（保持兼容）
-            if (billPanel is UIFormBase uiForm)
-                uiForm.ShowUIMode(UIFormMode.Fill);
-        }
-        else
-        {
-            Debug.LogError($"[FlowBase] FAIL: 面板上没有 BillPanelBase 组件!");
+            Debug.LogError($"[FlowBase] FAIL: 面板上没有 BillView 组件! 请替换旧的 BillPanelBase → BillView");
             UIManager.Instance.HideUI(billType);
             yield break;
         }
 
-        // 6. 解锁鼠标 + 禁用玩家移动，让玩家能点击单据按钮
+        // 6. 打开单据（设置按钮显隐，传入BillData供弹窗文字使用）
+        billView.Open(stepActionType, buttons, billData);
+        Debug.Log($"[FlowBase] OK: BillView.Open(action={stepActionType})");
+
+        // 7. 如果是 Fill 步骤，自动填入预配置数据（含输入框+表格+列头）
+        if (stepActionType == Interactables.ActionType.Fill && billData != null)
+        {
+            billView.FillData(billData.prefillInputData, billData.prefillTableData, billData.tableColumnHeaders);
+            Debug.Log($"[FlowBase] OK: 已填入预配置数据");
+        }
+
+        // 8. 隐藏准心 + 解锁鼠标 + 禁用玩家移动
+        HideCrosshair();
         ShowCursor();
         DisablePlayerInput();
 
-        // 7. 等待用户操作完成（点击提交/审核/退出等按钮）
+        // 9. 等待用户操作完成（点击提交/审核/退出等按钮）
         yield return new WaitUntil(() =>
-            panel == null || !panel.activeSelf || billPanel.IsCompleted);
+            panel == null || !panel.activeSelf || billView.IsCompleted);
 
-        // 8. 关闭UI、恢复鼠标和移动、标记步骤完成
+        // 10. 关闭UI、恢复准心/鼠标/移动、标记步骤完成
         UIManager.Instance.HideUI(billType);
+        ShowCrosshair();
         HideCursor();
         EnablePlayerInput();
         MarkStepComplete();
@@ -239,6 +241,18 @@ public abstract class FlowBase
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private void HideCrosshair()
+    {
+        var crosshair = UnityEngine.Object.FindObjectOfType<CrosshairUI>();
+        if (crosshair != null) crosshair.gameObject.SetActive(false);
+    }
+
+    private void ShowCrosshair()
+    {
+        var crosshair = UnityEngine.Object.FindObjectOfType<CrosshairUI>();
+        if (crosshair != null) crosshair.gameObject.SetActive(true);
     }
 
     private void DisablePlayerInput()

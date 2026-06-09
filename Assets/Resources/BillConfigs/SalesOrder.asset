@@ -9,11 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a901303b4d6eb544e91598c8808991eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 795f5b8ebe91798409ee19b447f2f9fc, type: 3}
   m_Name: SalesOrder
   m_EditorClassIdentifier: 
   billType: 3
   billName: "\u9500\u552E\u8BA2\u5355"
+  prefillInputData:
+  - 
+  prefillTableData: []
+  tableColumnHeaders:
+  - "\u884C\u53F7"
+  fillBannerText: "\u5DF2\u586B\u5199"
+  saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
+  submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
+  approveBannerText: "\u5DF2\u5BA1\u6838\uFF01"
+  approveConfirmText: "\u662F\u5426\u4E0B\u63A8\uFF1F"
+  pushDownBannerText: "\u5DF2\u4E0B\u63A8\uFF01"
+  shipBannerText: "\u5DF2\u901A\u77E5\u4ED3\u5E93\u53D1\u8D27"
+  shipFailAlertText: "\u6761\u4EF6\u4E0D\u6EE1\u8DB3\uFF0C\u65E0\u6CD5\u53D1\u8D27"
+  signBannerText: "\u5DF2\u7B7E\u540D\uFF01"
   roleSettings:
   - roleName: "\u9500\u552E\u5458"
     visibleButtons: 070000000800000001000000090000000b000000

@@ -131,21 +131,21 @@ public class BillConfigGenerator : EditorWindow
         string configName = billType.ToString();
         string path = $"Assets/Resources/BillConfigs/{configName}.asset";
 
-        BillButtonConfig config = AssetDatabase.LoadAssetAtPath<BillButtonConfig>(path);
+        BillData config = AssetDatabase.LoadAssetAtPath<BillData>(path);
         
         if (config == null)
         {
-            config = ScriptableObject.CreateInstance<BillButtonConfig>();
+            config = ScriptableObject.CreateInstance<BillData>();
             AssetDatabase.CreateAsset(config, path);
         }
 
         config.billType = billType;
         config.billName = billName;
-        config.roleSettings = new List<BillButtonConfig.RoleButtonSetting>();
+        config.roleSettings = new List<BillData.RoleButtonSetting>();
 
         foreach (var kvp in roleButtons)
         {
-            config.roleSettings.Add(new BillButtonConfig.RoleButtonSetting
+            config.roleSettings.Add(new BillData.RoleButtonSetting
             {
                 roleName = kvp.Key,
                 visibleButtons = kvp.Value
