@@ -63,7 +63,7 @@ public class StandardPurchaseFlow : FlowBase
             bool isAutoStep = _currentStep.targetNPC == "供应商" || _currentStep.targetNPC == "系统";
             if (_currentStep.billType != null)
             {
-                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
 
                 if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
             }

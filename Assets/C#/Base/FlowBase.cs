@@ -164,9 +164,11 @@ public abstract class FlowBase
     /// 打开单据UI并等待用户操作完成
     /// 如果单据系统未配置（无Config或无Panel），自动回退到按E完成模式
     /// </summary>
-    protected IEnumerator WaitForBillComplete(UIManager.UIType billType, string roleName)
+    /// <param name="stepActionType">流程步骤的 ActionType，决定单据的 BillMode（默认 View）</param>
+    protected IEnumerator WaitForBillComplete(UIManager.UIType billType, string roleName,
+        Interactables.ActionType stepActionType = Interactables.ActionType.View)
     {
-        Debug.Log($"[FlowBase] OPEN BILL: {billType}, 角色: {roleName}");
+        Debug.Log($"[FlowBase] OPEN BILL: {billType}, 角色: {roleName}, stepAction: {stepActionType}");
 
         // 1. 获取单据配置
         var config = BillButtonConfigLoader.GetConfig(billType);
@@ -179,12 +181,12 @@ public abstract class FlowBase
 
         // 2. 根据角色获取可见按钮
         var buttons = config.GetButtonsForRole(roleName);
-        Debug.Log($"[FlowBase] 可见按钮: {string.Join(", ", buttons)}");
+        Debug.Log($"[FlowBase] 角色按钮: {string.Join(", ", buttons)}");
 
         // 3. 打开UI面板
         UIManager.Instance.ShowUI(billType);
 
-        // 4. 找到面板并配置按钮
+        // 4. 找到面板
         if (!UIManager.Instance.TryGetUI(billType, out GameObject panel) || panel == null)
         {
             Debug.LogError($"[FlowBase] FAIL: 面板未注册: {billType} (检查UIManager.uiEntries)");
@@ -193,46 +195,33 @@ public abstract class FlowBase
         }
         Debug.Log($"[FlowBase] OK: 面板={panel.name}, active={panel.activeSelf}");
 
-        // 尝试获取管理器组件
-        var uiForm = panel.GetComponent<UIFormBase>();
-        var outboundMgr = panel.GetComponent<FinishedProductOutboundManager>();
-        var quoteMgr = panel.GetComponent<QuoteFormManager>();
+        // 5. 获取 BillPanelBase 组件（所有单据面板现在都继承自此基类）
+        var billPanel = panel.GetComponent<BillPanelBase>();
+        if (billPanel != null)
+        {
+            Debug.Log($"[FlowBase] OK: BillPanelBase → OpenBill(mode={stepActionType})");
+            billPanel.OpenBill(stepActionType, buttons);
 
-        if (uiForm != null)
-        {
-            Debug.Log($"[FlowBase] OK: UIFormBase");
-            uiForm.ConfigureButtons(buttons);
-            uiForm.ShowUIMode(UIFormMode.Fill);
-        }
-        else if (outboundMgr != null)
-        {
-            Debug.Log($"[FlowBase] OK: FinishedProductOutboundManager");
-            outboundMgr.ConfigureButtons(buttons);
-        }
-        else if (quoteMgr != null)
-        {
-            Debug.Log($"[FlowBase] OK: QuoteFormManager");
-            quoteMgr.ConfigureButtons(buttons);
+            // 如果是 UIFormBase 子类，额外调用子面板切换（保持兼容）
+            if (billPanel is UIFormBase uiForm)
+                uiForm.ShowUIMode(UIFormMode.Fill);
         }
         else
         {
-            Debug.LogError($"[FlowBase] FAIL: 面板上没有任何按钮管理组件!");
+            Debug.LogError($"[FlowBase] FAIL: 面板上没有 BillPanelBase 组件!");
             UIManager.Instance.HideUI(billType);
             yield break;
         }
 
-        // 4.5 解锁鼠标 + 禁用玩家移动，让玩家能点击单据按钮
+        // 6. 解锁鼠标 + 禁用玩家移动，让玩家能点击单据按钮
         ShowCursor();
         DisablePlayerInput();
 
-        // 5. 等待用户操作完成（点击提交/审核/退出等按钮）
+        // 7. 等待用户操作完成（点击提交/审核/退出等按钮）
         yield return new WaitUntil(() =>
-            panel == null || !panel.activeSelf ||
-            (uiForm != null && uiForm.IsCompleted) ||
-            (outboundMgr != null && outboundMgr.IsCompleted) ||
-            (quoteMgr != null && quoteMgr.IsCompleted));
+            panel == null || !panel.activeSelf || billPanel.IsCompleted);
 
-        // 6. 关闭UI、恢复鼠标和移动、标记步骤完成
+        // 8. 关闭UI、恢复鼠标和移动、标记步骤完成
         UIManager.Instance.HideUI(billType);
         HideCursor();
         EnablePlayerInput();

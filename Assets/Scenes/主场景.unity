@@ -1276,6 +1276,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 35837368}
   inputBoxGenerator2: {fileID: 35837366}
   settingTableGenerator: {fileID: 35837367}
+<<<<<<< HEAD
   fillButton: {fileID: 1411279453}
   submitButton: {fileID: 186202155}
   approveButton: {fileID: 1776586084}
@@ -1284,6 +1285,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &38738846
 GameObject:
   m_ObjectHideFlags: 0
@@ -9955,6 +9971,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 188505230}
   inputBoxGenerator2: {fileID: 188505228}
   settingTableGenerator: {fileID: 188505229}
+<<<<<<< HEAD
   fillButton: {fileID: 1861511330}
   submitButton: {fileID: 1751979349}
   approveButton: {fileID: 1068967104}
@@ -9963,6 +9980,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &190834762
 GameObject:
   m_ObjectHideFlags: 0
@@ -10670,7 +10702,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputBoxGenerator: {fileID: 203692654}
+  inputBoxGenerator2: {fileID: 0}
   settingTableGenerator: {fileID: 203692653}
+<<<<<<< HEAD
   fillButton: {fileID: 1657567371}
   submitButton: {fileID: 1583664153}
   approveButton: {fileID: 629449146}
@@ -10679,6 +10713,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &204539818
 GameObject:
   m_ObjectHideFlags: 0
@@ -33729,6 +33778,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 683291947}
   inputBoxGenerator2: {fileID: 683291945}
   settingTableGenerator: {fileID: 683291946}
+<<<<<<< HEAD
   fillButton: {fileID: 158827186}
   submitButton: {fileID: 138142577}
   approveButton: {fileID: 1559171646}
@@ -33737,6 +33787,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &684580982
 GameObject:
   m_ObjectHideFlags: 0
@@ -35489,6 +35554,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 718162176}
   inputBoxGenerator2: {fileID: 718162174}
   settingTableGenerator: {fileID: 718162175}
+<<<<<<< HEAD
   fillButton: {fileID: 1069785448}
   submitButton: {fileID: 1184272938}
   approveButton: {fileID: 2137055661}
@@ -35497,6 +35563,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &718819162
 GameObject:
   m_ObjectHideFlags: 0
@@ -43800,6 +43881,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 869792938}
   inputBoxGenerator2: {fileID: 869792936}
   settingTableGenerator: {fileID: 869792937}
+<<<<<<< HEAD
   fillButton: {fileID: 916007014}
   submitButton: {fileID: 1945142932}
   approveButton: {fileID: 2000810752}
@@ -43808,6 +43890,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &870024229
 GameObject:
   m_ObjectHideFlags: 0
@@ -44712,6 +44809,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 890693185}
   inputBoxGenerator2: {fileID: 890693183}
   settingTableGenerator: {fileID: 890693184}
+<<<<<<< HEAD
   fillButton: {fileID: 548762403}
   submitButton: {fileID: 946526527}
   approveButton: {fileID: 1676119535}
@@ -44720,6 +44818,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &893594405
 GameObject:
   m_ObjectHideFlags: 0
@@ -52818,6 +52931,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1053020734}
   inputBoxGenerator2: {fileID: 1053020737}
   settingTableGenerator: {fileID: 1053020733}
+<<<<<<< HEAD
   fillButton: {fileID: 2067246591}
   submitButton: {fileID: 1506024619}
   approveButton: {fileID: 527571377}
@@ -52826,6 +52940,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &1054278324
 GameObject:
   m_ObjectHideFlags: 0
@@ -53314,6 +53443,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1059320487}
   inputBoxGenerator2: {fileID: 1059320485}
   settingTableGenerator: {fileID: 1059320486}
+<<<<<<< HEAD
   fillButton: {fileID: 1140314944}
   submitButton: {fileID: 684763886}
   approveButton: {fileID: 24817835}
@@ -53322,6 +53452,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1001 &1060831072
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -56645,6 +56790,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1120374189}
   inputBoxGenerator2: {fileID: 1120374187}
   settingTableGenerator: {fileID: 1120374188}
+<<<<<<< HEAD
   fillButton: {fileID: 822587667}
   submitButton: {fileID: 789834439}
   approveButton: {fileID: 1638467449}
@@ -56653,6 +56799,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &1122196296
 GameObject:
   m_ObjectHideFlags: 0
@@ -62211,6 +62372,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1246048199}
   inputBoxGenerator2: {fileID: 1246048197}
   settingTableGenerator: {fileID: 1246048198}
+<<<<<<< HEAD
   fillButton: {fileID: 1482327227}
   submitButton: {fileID: 2042381696}
   approveButton: {fileID: 1338331680}
@@ -62219,6 +62381,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &1247286908
 GameObject:
   m_ObjectHideFlags: 0
@@ -69733,6 +69910,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1417949348}
   inputBoxGenerator2: {fileID: 1417949346}
   settingTableGenerator: {fileID: 1417949347}
+<<<<<<< HEAD
   fillButton: {fileID: 834975842}
   submitButton: {fileID: 1375684356}
   approveButton: {fileID: 964831143}
@@ -69741,6 +69919,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &1419587947
 GameObject:
   m_ObjectHideFlags: 0
@@ -70427,6 +70620,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1423520222}
   inputBoxGenerator2: {fileID: 1423520220}
   settingTableGenerator: {fileID: 1423520221}
+<<<<<<< HEAD
   fillButton: {fileID: 379848550}
   submitButton: {fileID: 827794259}
   approveButton: {fileID: 1779052470}
@@ -70435,6 +70629,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1 &1427458973
 GameObject:
   m_ObjectHideFlags: 0
@@ -87716,6 +87925,185 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1834882570}
   m_CullTransparentMesh: 1
+<<<<<<< HEAD
+=======
+--- !u!1 &1835571732
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1835571733}
+  - component: {fileID: 1835571735}
+  - component: {fileID: 1835571734}
+  - component: {fileID: 1835571736}
+  - component: {fileID: 1835571737}
+  - component: {fileID: 1835571738}
+  m_Layer: 5
+  m_Name: "\u9500\u552E\u62A5\u4EF7\u5355"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1835571733
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835571732}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2066473588}
+  - {fileID: 1926546165}
+  - {fileID: 1506212221}
+  - {fileID: 1522908496}
+  - {fileID: 1545731883}
+  - {fileID: 1980417911}
+  - {fileID: 363497438}
+  - {fileID: 59797877}
+  - {fileID: 2143735464}
+  m_Father: {fileID: 307517427}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1320, y: 880}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1835571734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835571732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.7019608}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 2c52acc49729b4749879b9ba1fc04c5d, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1835571735
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835571732}
+  m_CullTransparentMesh: 1
+--- !u!114 &1835571736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835571732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4dcecfd82752154f859e994cea3a598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPosition: {fileID: 1506212221}
+  inputBoxPrefab: {fileID: 5432517723047844525, guid: d1077beeb276223469d2903e84948b39,
+    type: 3}
+  titleConfigurations:
+  - "\u5355\u636E\u7F16\u53F7"
+  - "\u62A5\u4EF7\u65E5\u671F"
+  - "\u8BA2\u8D27\u5BA2\u6237"
+  - "\u7ED3\u7B97\u5E01\u522B"
+  - "\u4EF7\u76EE\u8868"
+  - "\u6298\u6263\u8868"
+  - "\u9500\u552E\u7EC4"
+  - "\u9500\u552E\u5458"
+  - "\u751F\u6548\u65E5\u671F"
+  - "\u5931\u6548\u65E5\u671F"
+  - "\u5355\u636E\u72B6\u6001"
+  - "\u521B\u5EFA\u4EBA"
+  - "\u5BA1\u6838\u4EBA"
+--- !u!114 &1835571737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835571732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9539badec3dde2145858799fb61c9c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tableParent: {fileID: 1545731883}
+  headerCellPrefab: {fileID: 7442955749373605985, guid: cbdc2bca206a42242ae1785eeef85168,
+    type: 3}
+  dataCellPrefab: {fileID: 7442955749373605985, guid: cbdc2bca206a42242ae1785eeef85168,
+    type: 3}
+  rowPrefab: {fileID: 6801478979548198225, guid: 485c305d1ab97124d935abb989446e54,
+    type: 3}
+  columnHeaders:
+  - "\u7269\u6599\u7F16\u7801"
+  - "\u7269\u6599\u540D\u79F0"
+  - "\u89C4\u683C\u578B\u53F7"
+  - "\u9500\u552E\u5355\u4F4D"
+  - "\u6570\u91CF"
+  - "\u5355\u4EF7"
+  - "\u91D1\u989D"
+  - "\u4EA4\u8D27\u5929\u6570"
+  - "\u5907\u6CE8"
+  cellWidth: 100
+  indexColumnWidth: 0
+  cellHeight: 30
+--- !u!114 &1835571738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835571732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ebfef271c0ba96479b75c22566519ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputBoxGenerator: {fileID: 1835571736}
+  inputBoxGenerator2: {fileID: 0}
+  settingTableGenerator: {fileID: 1835571737}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1001 &1836440415
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -91700,6 +92088,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1925708124}
   inputBoxGenerator2: {fileID: 1925708122}
   settingTableGenerator: {fileID: 1925708123}
+<<<<<<< HEAD
   fillButton: {fileID: 104848237}
   submitButton: {fileID: 1107492557}
   approveButton: {fileID: 1017576562}
@@ -91708,6 +92097,100 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+--- !u!1 &1926546164
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1926546165}
+  - component: {fileID: 1926546167}
+  - component: {fileID: 1926546166}
+  m_Layer: 5
+  m_Name: "\u6587\u5B57"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1926546165
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926546164}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1835571733}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 350, y: 325}
+  m_SizeDelta: {x: 600, y: 70}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1926546166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926546164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: e3265ab4bf004d28a9537516768c1c75, type: 3}
+    m_FontSize: 30
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 3
+    m_MaxSize: 50
+    m_Alignment: 3
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "\u57FA\u672C\u4FE1\u606F"
+--- !u!222 &1926546167
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926546164}
+  m_CullTransparentMesh: 1
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1001 &1927752156
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -92752,6 +93235,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 1940728322}
   inputBoxGenerator2: {fileID: 1940728320}
   settingTableGenerator: {fileID: 1940728321}
+<<<<<<< HEAD
   fillButton: {fileID: 469191392}
   submitButton: {fileID: 392697818}
   approveButton: {fileID: 922460244}
@@ -92760,6 +93244,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!4 &1942149394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6577989601485367827, guid: 2feae3e1c795f7445bfb4ba10e8bfab8,
@@ -100518,6 +101017,7 @@ MonoBehaviour:
   inputBoxGenerator: {fileID: 2106607509}
   inputBoxGenerator2: {fileID: 2106607507}
   settingTableGenerator: {fileID: 2106607508}
+<<<<<<< HEAD
   fillButton: {fileID: 1526309699}
   submitButton: {fileID: 1067906843}
   approveButton: {fileID: 815452400}
@@ -100526,6 +101026,21 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   shipButton: {fileID: 0}
   signButton: {fileID: 0}
+=======
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
+>>>>>>> 42b445331516e6a988f877f0def86a2b0bd0bc6b
 --- !u!1001 &2112359644
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -102917,7 +103432,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 161c69735681ea8449b61e5f49ddfeb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMode: 0
+  inputBoxGenerator: {fileID: 0}
+  inputBoxGenerator2: {fileID: 0}
+  settingTableGenerator: {fileID: 0}
+  fillBtn: {fileID: 0}
+  saveBtn: {fileID: 0}
+  submitBtn: {fileID: 0}
+  approveBtn: {fileID: 0}
+  shipBtn: {fileID: 0}
+  signBtn: {fileID: 0}
+  exitBtn: {fileID: 0}
+  bannerText: {fileID: 0}
+  confirmPopup: {fileID: 0}
+  confirmPopupText: {fileID: 0}
+  confirmYesBtn: {fileID: 0}
+  confirmNoBtn: {fileID: 0}
+  prefillData: []
   fillModeUI: {fileID: 1232267019260038146}
   approveModeUI: {fileID: 1232267018546614333}
   pushDownModeUI: {fileID: 1232267019384604738}
@@ -102930,10 +103460,6 @@ MonoBehaviour:
   signBtn: {fileID: 0}
   titleText: {fileID: 1232267018982611155}
   contentText: {fileID: 1232267018462683060}
-  fillButton: {fileID: 1232267018558368524}
-  approveButton: {fileID: 1874227400}
-  rejectButton: {fileID: 1052220862}
-  forwardButton: {fileID: 1232267020008178473}
 --- !u!1 &1232267018354954412
 GameObject:
   m_ObjectHideFlags: 0

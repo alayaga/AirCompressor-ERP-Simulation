@@ -104,9 +104,7 @@ public class CustomSalesFlow : FlowBase
                 else if (_purchaseBranchSelected)
                 {
                     Debug.Log("[CustomSalesFlow] 启动采购流程分支");
-                    // TODO: 采购流程由其他人负责实现，此处为占位
-                    Debug.LogWarning("[CustomSalesFlow] 采购流程尚未实现，请在 CustomPurchaseFlow 完成后替换此占位");
-                    yield return StartBranchFlowPlaceholder("采购流程");
+                    yield return StartBranchFlow<CustomPurchaseFlow>();
                     _purchaseBranchSelected = false;
                 }
             }
@@ -209,37 +207,6 @@ public class CustomSalesFlow : FlowBase
         _currentBranchFlow = null;
 
         Debug.Log($"[CustomSalesFlow] 分支流程完成: {typeof(T).Name}");
-    }
-
-    /// <summary>
-    /// 占位分支流程（采购流程未实现时使用）
-    /// </summary>
-    private IEnumerator StartBranchFlowPlaceholder(string flowName)
-    {
-        Debug.Log($"[CustomSalesFlow] 启动占位分支: {flowName}");
-        _isInBranch = true;
-
-        // 更新UI提示
-        if (TaskGuidePanelNew.Instance != null)
-        {
-            TaskGuidePanelNew.Instance.UpdateCurrentStep(
-                flowName,
-                $"{flowName}尚未实现，将在后续版本中完成。\n按任意键继续...",
-                "系统",
-                "-",
-                "等待"
-            );
-        }
-
-        // 等待玩家按键跳过
-        yield return new WaitUntil(() => Input.anyKeyDown);
-        yield return new WaitForSeconds(0.5f);
-
-        _purchaseBranchCompleted = true;
-        _isInBranch = false;
-        _currentBranchFlow = null;
-
-        Debug.Log($"[CustomSalesFlow] 占位分支完成: {flowName}");
     }
 
     /// <summary>
