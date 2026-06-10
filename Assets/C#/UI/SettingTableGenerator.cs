@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections.Generic;
 
 public class SettingTableGenerator : MonoBehaviour
@@ -10,10 +11,10 @@ public class SettingTableGenerator : MonoBehaviour
     private Transform tableParent; // 表格生成点
     
     [SerializeField]
-    private Text headerCellPrefab; // 表头单元格预制体
-    
+    private GameObject headerCellPrefab; // 表头单元格预制体（支持旧版Text或TMP_Text）
+
     [SerializeField]
-    private Text dataCellPrefab; // 数据单元格预制体
+    private GameObject dataCellPrefab; // 数据单元格预制体（支持旧版Text或TMP_Text）
     
     [SerializeField]
     private RectTransform rowPrefab; // 行预制体
@@ -33,18 +34,25 @@ public class SettingTableGenerator : MonoBehaviour
     
     #region 私有变量
     private List<RectTransform> rows = new List<RectTransform>(); // 存储生成的行
-    private Dictionary<string, List<Text>> dataCells = new Dictionary<string, List<Text>>(); // 存储数据单元格，便于更新
+    private Dictionary<string, List<GameObject>> dataCells = new Dictionary<string, List<GameObject>>();
     #endregion
     
     #region 生命周期方法
     private void OnEnable()
     {
-        // 设置序号列宽度为其他列的一半
         indexColumnWidth = cellWidth * 0.5f;
-        // 初始化表格
-        InitializeTable();
+        // 编辑模式下自动预览，运行时不自动建表（由BillView.FillData控制）
+        if (!Application.isPlaying)
+            InitializeTable();
     }
     #endregion
+
+    /// <summary>由 BillView 在 FillData 时调用，覆盖 prefab 上的列头配置</summary>
+    public void SetColumnHeaders(string[] headers)
+    {
+        if (headers != null && headers.Length > 0)
+            columnHeaders = headers;
+    }
     
     #region 公共方法
     public void InitializeTable()
@@ -74,72 +82,49 @@ public class SettingTableGenerator : MonoBehaviour
     }
     
     public string AddRow(string[] rowData)
-    {        
-        // 创建新行
+    {
         RectTransform newRow = Instantiate(rowPrefab, tableParent);
-        // 计算行宽（序号列+其他列）
         newRow.sizeDelta = new Vector2(indexColumnWidth + columnHeaders.Length * cellWidth, cellHeight);
-        
-        // 生成行ID
+
         string rowId = "row_" + rows.Count;
         rows.Add(newRow);
-        
-        // 存储该行的单元格
-        List<Text> rowCells = new List<Text>();
-        
-        // 创建序号列单元格
-        Text indexCell = Instantiate(dataCellPrefab, newRow);
-        RectTransform indexCellRect = indexCell.GetComponent<RectTransform>();
+
+        List<GameObject> rowCells = new List<GameObject>();
+
+        // 序号列
+        GameObject indexCellGO = Instantiate(dataCellPrefab, newRow);
+        RectTransform indexCellRect = indexCellGO.GetComponent<RectTransform>();
         indexCellRect.anchoredPosition = new Vector2(0, 0);
         indexCellRect.sizeDelta = new Vector2(indexColumnWidth, cellHeight);
-        // 设置序号文本（从1开始计数）
-        indexCell.text = (rows.Count).ToString();
-        rowCells.Add(indexCell);
-        
-        // 创建并设置数据单元格
+        SetCellText(indexCellGO, rows.Count.ToString());
+        rowCells.Add(indexCellGO);
+
+        // 数据列
         for (int i = 0; i < columnHeaders.Length; i++)
-        {            
-            Text cell = Instantiate(dataCellPrefab, newRow);
-            RectTransform cellRect = cell.GetComponent<RectTransform>();
-            // 位置计算需要考虑序号列
+        {
+            GameObject cellGO = Instantiate(dataCellPrefab, newRow);
+            RectTransform cellRect = cellGO.GetComponent<RectTransform>();
             cellRect.anchoredPosition = new Vector2(indexColumnWidth + i * cellWidth, 0);
             cellRect.sizeDelta = new Vector2(cellWidth, cellHeight);
-            
-            // 设置单元格内容
-            if (i < rowData.Length)
-            {
-                cell.text = rowData[i];
-            }
-            else
-            {
-                cell.text = string.Empty;
-            }
-            
-            rowCells.Add(cell);
+            SetCellText(cellGO, i < rowData.Length ? rowData[i] : "");
+            rowCells.Add(cellGO);
         }
-        
-        // 存储该行的单元格引用
+
         dataCells[rowId] = rowCells;
-        
         return rowId;
     }
-    
+
     public void UpdateRow(string rowId, string[] rowData)
-    {        
-        if (dataCells.ContainsKey(rowId))
-        {            
-            List<Text> rowCells = dataCells[rowId];
-            
-            // 更新单元格内容（跳过第0个，它是序号）
-            for (int i = 0; i < rowData.Length && i + 1 < rowCells.Count; i++)
-            {                
-                rowCells[i + 1].text = rowData[i];
-            }
-        }
-        else
-        {            
+    {
+        if (!dataCells.TryGetValue(rowId, out var rowCells))
+        {
             Debug.LogWarning("未找到ID为" + rowId + "的行");
+            return;
         }
+
+        // 跳过第0个（序号），从第1个开始更新
+        for (int i = 0; i < rowData.Length && i + 1 < rowCells.Count; i++)
+            SetCellText(rowCells[i + 1], rowData[i]);
     }
     
     /// <summary>
@@ -163,59 +148,59 @@ public class SettingTableGenerator : MonoBehaviour
     /// 创建表头行
     /// </summary>
     public void CreateHeaderRow()
-    {        
-        // 创建表头行
+    {
         RectTransform headerRow = Instantiate(rowPrefab, tableParent);
-        // 计算行宽（序号列+其他列）
         headerRow.sizeDelta = new Vector2(indexColumnWidth + columnHeaders.Length * cellWidth, cellHeight);
-        
-        // 标记为表头行
         headerRow.name = "HeaderRow";
-        
-        // 创建序号列表头
-        Text indexHeaderCell = Instantiate(headerCellPrefab, headerRow);
-        RectTransform indexCellRect = indexHeaderCell.GetComponent<RectTransform>();
+
+        // 序号列表头
+        GameObject indexHeaderGO = Instantiate(headerCellPrefab, headerRow);
+        RectTransform indexCellRect = indexHeaderGO.GetComponent<RectTransform>();
         indexCellRect.anchoredPosition = new Vector2(0, 0);
         indexCellRect.sizeDelta = new Vector2(indexColumnWidth, cellHeight);
-        indexHeaderCell.text = "#";
-        indexHeaderCell.fontStyle = FontStyle.Bold;
-        
-        // 创建数据列表头单元格
+        SetCellText(indexHeaderGO, "#", true);
+
+        // 数据列表头
         for (int i = 0; i < columnHeaders.Length; i++)
-        {            
-            Text headerCell = Instantiate(headerCellPrefab, headerRow);
-            RectTransform cellRect = headerCell.GetComponent<RectTransform>();
-            // 位置计算需要考虑序号列
+        {
+            GameObject headerGO = Instantiate(headerCellPrefab, headerRow);
+            RectTransform cellRect = headerGO.GetComponent<RectTransform>();
             cellRect.anchoredPosition = new Vector2(indexColumnWidth + i * cellWidth, 0);
             cellRect.sizeDelta = new Vector2(cellWidth, cellHeight);
-            
-            // 设置表头文本
-            headerCell.text = columnHeaders[i];
-            
-            // 可以在这里设置表头样式（如粗体等）
-            headerCell.fontStyle = FontStyle.Bold;
+            SetCellText(headerGO, columnHeaders[i], true);
         }
     }
     
-    /// <summary>
-    /// 清空整个表格（包括表头）
-    /// </summary>
     public void ClearTable()
-    {        
-        // 检查 tableParent 是否为空
-        if (tableParent == null)
-        {            
-            return;
-        }
-        
-        // 销毁所有子对象
+    {
+        if (tableParent == null) return;
+
         foreach (Transform child in tableParent)
-        {            
             Destroy(child.gameObject);
-        }
-        
+
         rows.Clear();
         dataCells.Clear();
+    }
+    #endregion
+
+    #region 兼容工具
+
+    /// <summary>设置单元格文字，同时兼容 TMP_Text 和旧版 Text</summary>
+    private void SetCellText(GameObject go, string text, bool bold = false)
+    {
+        var tmp = go.GetComponent<TMP_Text>();
+        if (tmp != null)
+        {
+            tmp.text = text;
+            if (bold) tmp.fontStyle = FontStyles.Bold;
+            return;
+        }
+        var legacy = go.GetComponent<Text>();
+        if (legacy != null)
+        {
+            legacy.text = text;
+            if (bold) legacy.fontStyle = FontStyle.Bold;
+        }
     }
     #endregion
 }

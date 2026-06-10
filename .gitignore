@@ -20,6 +20,13 @@
 [Dd]erivedData/
 *.log
 
+# Unity 2022+ 解决方案格式
+*.slnx
+
+# 光照烘焙数据（自动生成）
+**/Lightmap-*.exr
+**/LightingData.asset
+
 # =============================================================================
 # 2. 个人编辑器设置（避免团队冲突）
 # =============================================================================
@@ -57,6 +64,13 @@
 *.iml
 *.rider
 [Aa]ssets/Plugins/Editor/JetBrains*
+
+# TRAE IDE (字节跳动)
+.trae/
+**/.trae/
+
+# Claude Code
+.claude/
 
 # MonoDevelop/Xamarin
 *.pidb.meta

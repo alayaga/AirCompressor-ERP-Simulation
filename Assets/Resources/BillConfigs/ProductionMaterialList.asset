@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a901303b4d6eb544e91598c8808991eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 795f5b8ebe91798409ee19b447f2f9fc, type: 3}
   m_Name: ProductionMaterialList
   m_EditorClassIdentifier: 
   billType: 8
   billName: "\u751F\u4EA7\u7528\u6599\u6E05\u5355"
+  prefillInputData: []
   roleSettings:
   - roleName: PMC
     visibleButtons: 0700000008000000010000000b000000
