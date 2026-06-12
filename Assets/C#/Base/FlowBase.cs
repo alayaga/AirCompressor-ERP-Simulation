@@ -206,12 +206,8 @@ public abstract class FlowBase
         billView.Open(stepActionType, buttons, billData);
         Debug.Log($"[FlowBase] OK: BillView.Open(action={stepActionType})");
 
-        // 7. 如果是 Fill 步骤，自动填入预配置数据（含输入框+表格+列头）
-        if (stepActionType == Interactables.ActionType.Fill && billData != null)
-        {
-            billView.FillData(billData.prefillInputData, billData.prefillTableData, billData.tableColumnHeaders);
-            Debug.Log($"[FlowBase] OK: 已填入预配置数据");
-        }
+        // 7. Fill 步骤：不自动填数据，等玩家点击"填写"按钮后再由 BillView.OnFillClicked 填入
+        // （数据已通过 billView.Open 传入，BillView 持有 _billData 引用）
 
         // 8. 隐藏准心 + 解锁鼠标 + 禁用玩家移动
         HideCrosshair();
@@ -222,13 +218,23 @@ public abstract class FlowBase
         yield return new WaitUntil(() =>
             panel == null || !panel.activeSelf || billView.IsCompleted);
 
-        // 10. 关闭UI、恢复准心/鼠标/移动、标记步骤完成
+        // 10. 关闭UI、恢复准心/鼠标/移动
         UIManager.Instance.HideUI(billType);
         ShowCrosshair();
         HideCursor();
         EnablePlayerInput();
-        MarkStepComplete();
-        Debug.Log($"[FlowBase] 单据操作完成: {billType}");
+
+        // 11. 判断是完成还是取消
+        if (billView.WasCancelled)
+        {
+            // 用户点了退出，不标记步骤完成（由 FlowCoroutine 等待重新进入）
+            Debug.Log($"[FlowBase] 单据操作取消: {billType}（退出按钮）");
+        }
+        else
+        {
+            MarkStepComplete();
+            Debug.Log($"[FlowBase] 单据操作完成: {billType}");
+        }
     }
 
     private void ShowCursor()
@@ -246,13 +252,15 @@ public abstract class FlowBase
     private void HideCrosshair()
     {
         var crosshair = UnityEngine.Object.FindObjectOfType<CrosshairUI>();
-        if (crosshair != null) crosshair.gameObject.SetActive(false);
+        if (crosshair != null && crosshair.crosshairImage != null)
+            crosshair.crosshairImage.enabled = false;
     }
 
     private void ShowCrosshair()
     {
         var crosshair = UnityEngine.Object.FindObjectOfType<CrosshairUI>();
-        if (crosshair != null) crosshair.gameObject.SetActive(true);
+        if (crosshair != null && crosshair.crosshairImage != null)
+            crosshair.crosshairImage.enabled = true;
     }
 
     private void DisablePlayerInput()

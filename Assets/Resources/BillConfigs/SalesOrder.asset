@@ -15,18 +15,67 @@ MonoBehaviour:
   billType: 3
   billName: "\u9500\u552E\u8BA2\u5355"
   prefillInputData:
-  - 
-  prefillTableData: []
+  - XSDD20231102001
+  - 2023-11-02
+  - "\u6C5F\u82CF\u534E\u79D1\u673A\u68B0\u5236\u9020\u6709\u9650\u516C\u53F8"
+  - "\u4EBA\u6C11\u5E01"
+  - "2023\u5E74\u5EA6\u6807\u51C6\u4EF7\u76EE\u8868"
+  - "\u5E74\u5EA6\u6218\u7565\u5BA2\u6237\u534F\u8BAE\u6298\u6263"
+  - "\u534E\u4E1C\u533A\u9500\u552E\u4E00\u90E8"
+  - "\u674E\u94ED"
+  - "\u672A\u5BA1\u6838"
+  - "\u542B\u4E3B\u673A\u3001\u50A8\u6C14\u7F50\u5373\u5168\u5957\u5B89\u5168\u8F85\u6750\u9700\u542B\u7A0E\u8FD0"
+  - "\u674E\u94ED"
+  - "\u738B\u5F3A"
+  prefillTableData:
+  - columns:
+    - 1
+    - "\u6C38\u78C1\u53D8\u9891\u87BA\u6746\u7A7A\u538B\u673A"
+    - DA-55A-CUS
+    - "\u53F0"
+    - 1
+    - 48,000.00
+    - TBC
+    - "\u5F85\u5B9A"
+    - "\u5B9A\u5236\u673A\u578B\uFF0C55kw\uFF0C\u9700\u5339\u914D\u5BA2\u6237\u73B0\u6709\u6C14\u8DEF"
+  - columns:
+    - 2
+    - "\u50A8\u6C14\u7F50"
+    - C-3.0/1.0
+    - "\u53F0"
+    - 2
+    - 8,500.00
+    - TBC
+    - "\u5F85\u5B9A"
+    - "\u6807\u51C6\u4EF6\uFF0C\u4F46\u968F\u4E3B\u673A\u4E00\u8D77\u62A5\u4EF7"
+  - columns:
+    - 3
+    - "\u667A\u80FD\u8054\u63A7\u7CFB\u7EDF"
+    - PLC-MOO
+    - "\u5957"
+    - 1
+    - '-'
+    - TBC
+    - "\u5F85\u5B9A"
+    - "\u5B9A\u5236\u9879\uFF1A\u9700\u589E\u52A0\u8FDC\u7A0B\u542F\u505C\u5373\u6570\u636E\u4E0A\u4F20\u6A21\u5757"
   tableColumnHeaders:
   - "\u884C\u53F7"
+  - "\u7269\u6599/\u4EA7\u54C1\u540D\u79F0"
+  - "\u89C4\u683C\u578B\u53F7"
+  - "\u5355\u4F4D"
+  - "\u6570\u91CF"
+  - "\u9884\u4F30\u5355\u4EF7\uFF08\u5143\uFF09"
+  - "\u6700\u7EC8\u5355\u4EF7\uFF08\u5143\uFF09"
+  - "\u91D1\u989D\uFF08\u5143\uFF09"
+  - "\u5907\u6CE8"
   fillBannerText: "\u5DF2\u586B\u5199"
   saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
   submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
   approveBannerText: "\u5DF2\u5BA1\u6838\uFF01"
-  approveConfirmText: "\u662F\u5426\u4E0B\u63A8\uFF1F"
+  approveConfirmText: "\u662F\u5426\u4E0B\u63A8BOM\u5355"
   pushDownBannerText: "\u5DF2\u4E0B\u63A8\uFF01"
   shipBannerText: "\u5DF2\u901A\u77E5\u4ED3\u5E93\u53D1\u8D27"
-  shipFailAlertText: "\u6761\u4EF6\u4E0D\u6EE1\u8DB3\uFF0C\u65E0\u6CD5\u53D1\u8D27"
+  shipFailAlertText: "\u8D27\u672A\u914D\u9F50"
   signBannerText: "\u5DF2\u7B7E\u540D\uFF01"
   roleSettings:
   - roleName: "\u9500\u552E\u5458"

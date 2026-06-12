@@ -19,15 +19,17 @@ public class CustomSalesFlow : FlowBase
         public string targetNPC;
         public string targetLocation;
         public Interactables.ActionType actionType;
+        public UIManager.UIType? billType;
         public bool isBranchChoice = false;
 
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, bool isBranch = false)
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, bool isBranch = false)
         {
             stepName = name;
             description = desc;
             targetNPC = npc;
             targetLocation = location;
             actionType = action;
+            this.billType = billType;
             isBranchChoice = isBranch;
         }
     }
@@ -110,7 +112,7 @@ public class CustomSalesFlow : FlowBase
             }
             else
             {
-                // 如果是系统步骤，自动完成
+                // 先等待玩家交互（系统步骤自动完成）
                 if (_currentStep.targetNPC == "系统")
                 {
                     Debug.Log($"[CustomSalesFlow] 系统步骤自动完成: {_currentStep.stepName}");
@@ -119,8 +121,23 @@ public class CustomSalesFlow : FlowBase
                 }
                 else
                 {
-                    // 等待玩家完成此步骤
+                    // 等待玩家走到NPC前按E
                     yield return new WaitUntil(() => _isStepCompleted);
+                }
+
+                // 交互完成后，如果步骤关联了单据，再打开单据面板
+                if (_currentStep.billType != null)
+                {
+                    bool stepDone = false;
+                    while (!stepDone)
+                    {
+                        _isStepCompleted = false;
+                        yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
+                        if (_isStepCompleted)
+                            stepDone = true;
+                        else
+                            yield return new WaitUntil(() => _isStepCompleted);
+                    }
                 }
             }
 
@@ -148,23 +165,23 @@ public class CustomSalesFlow : FlowBase
         _steps.Enqueue(new StepData("客户询单", "客户咨询定制产品需求", "销售员", "销售办公室", Interactables.ActionType.Fill));
 
         // ===== 阶段2：销售订单处理 =====
-        _steps.Enqueue(new StepData("填写销售订单", "录入客户需求和产品规格", "销售员", "销售办公室", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("审核销售订单", "销售总监审核订单内容", "销售总监", "销售办公室", Interactables.ActionType.Approve));
+        _steps.Enqueue(new StepData("填写销售订单", "录入客户需求和产品规格", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
+        _steps.Enqueue(new StepData("审核销售订单", "销售总监审核订单内容", "销售总监", "销售办公室", Interactables.ActionType.Approve, UIManager.UIType.SalesOrder));
 
         // ===== 阶段3：BOM单处理 =====
-        _steps.Enqueue(new StepData("填写BOM单", "技术部根据订单生成物料清单", "技术员", "计划物控中心", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("填写BOM单", "技术部根据订单生成物料清单", "技术员", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.ProductionBOM));
 
         // ===== 阶段4：财务报价 =====
-        _steps.Enqueue(new StepData("查看BOM单", "财务部查看物料清单", "财务主管", "财务部", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("计算成本并确认价格", "填写销售报价单", "财务主管", "财务部", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("查看BOM单", "财务部查看物料清单", "财务主管", "财务部", Interactables.ActionType.View, UIManager.UIType.ProductionBOM));
+        _steps.Enqueue(new StepData("计算成本并确认价格", "填写销售报价单", "财务主管", "财务部", Interactables.ActionType.Fill, UIManager.UIType.SalesQuotation));
 
         // ===== 阶段5：报价确认 =====
-        _steps.Enqueue(new StepData("查看报价单", "销售员查看财务核算的报价", "销售员", "销售办公室", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("报价给客户", "将报价单发送给客户", "销售员", "销售办公室", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("查看报价单", "销售员查看财务核算的报价", "销售员", "销售办公室", Interactables.ActionType.View, UIManager.UIType.SalesQuotation));
+        _steps.Enqueue(new StepData("报价给客户", "将报价单发送给客户", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesQuotation));
         _steps.Enqueue(new StepData("客户确认", "客户确认报价并签订合同", "销售员", "销售办公室", Interactables.ActionType.View));
 
         // ===== 阶段6：提交PMC =====
-        _steps.Enqueue(new StepData("提交销售订单给PMC", "PMC可查看销售订单", "销售员", "计划物控中心", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("提交销售订单给PMC", "PMC可查看销售订单", "销售员", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
 
         // ===== 阶段7：分支选择（生产/采购）=====
         _steps.Enqueue(new StepData(
@@ -173,7 +190,7 @@ public class CustomSalesFlow : FlowBase
             "系统",
             "主界面",
             Interactables.ActionType.View,
-            true
+            isBranch: true
         ));
     }
 

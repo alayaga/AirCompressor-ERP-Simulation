@@ -48,6 +48,9 @@ public class BillView : MonoBehaviour
     /// <summary>用户操作完成后为true，FlowBase通过此属性判断是否继续</summary>
     public bool IsCompleted { get; private set; }
 
+    /// <summary>用户点了退出（非提交/审核），FlowBase据此判断是否重新打开单据</summary>
+    public bool WasCancelled { get; private set; }
+
     /// <summary>面板是否处于打开状态</summary>
     public bool IsOpen => gameObject.activeSelf;
 
@@ -59,15 +62,35 @@ public class BillView : MonoBehaviour
     private List<Interactables.ActionType> _roleButtons = new List<Interactables.ActionType>();
     private BillData _billData;
 
+    // 保存/恢复：退出后再次进入时保留已填数据
+    private string[] _savedInputData;
+    private string[][] _savedTableRows;
+    private bool _hasSavedData = false;
+    private bool _hasFilled = false; // 是否点击过"填写"或恢复了已保存数据
+
+    // CanvasGroup：弹窗显示时暂时禁用单据面板的交互
+    private CanvasGroup _canvasGroup;
+
     #endregion
 
     #region 生命周期
 
     private void Awake()
     {
+        _canvasGroup = GetComponent<CanvasGroup>();
+        if (_canvasGroup == null)
+            _canvasGroup = gameObject.AddComponent<CanvasGroup>();
         AutoFindUnassignedReferences();
         BindButtons();
         HideConfirmPopup();
+    }
+
+    private void OnDisable()
+    {
+        // 面板被隐藏时强制清理横幅和弹窗（防止协程被 Unity 停掉导致残留）
+        HideBanner();
+        HideConfirmPopup();
+        HideAlertPopup();
     }
 
     /// <summary>
@@ -163,6 +186,8 @@ public class BillView : MonoBehaviour
         _roleButtons = roleButtons ?? new List<Interactables.ActionType>();
         _billData = billData;
         IsCompleted = false;
+        WasCancelled = false;
+        _hasFilled = false;
 
         HideConfirmPopup();
         HideAlertPopup();
@@ -172,7 +197,13 @@ public class BillView : MonoBehaviour
         var visibleButtons = ComputeVisibleButtons(_stepAction, _roleButtons);
         ApplyButtonVisibility(visibleButtons);
 
-        Debug.Log($"[BillView] 打开单据 | action={_stepAction} | 可见按钮={string.Join(",", visibleButtons)}");
+        // 如果之前保存过数据（退出后重新进入），自动恢复
+        if (_hasSavedData)
+        {
+            RestoreSavedData();
+        }
+
+        Debug.Log($"[BillView] 打开单据 | action={_stepAction} | 可见按钮={string.Join(",", visibleButtons)} | hasSaved={_hasSavedData}");
     }
 
     /// <summary>
@@ -305,21 +336,52 @@ public class BillView : MonoBehaviour
 
     private void OnFillClicked()
     {
+        // 已有保存的表格数据 → 不覆盖
+        bool hasSavedTable = _savedTableRows != null && _savedTableRows.Length > 0;
+        if (hasSavedTable)
+        {
+            ShowBanner("已有保存数据，无需重复填写");
+            Debug.Log("[BillView] 填写 — 已有保存表格数据，跳过");
+            _hasFilled = true;
+            return;
+        }
+        // 从模板填充
+        if (_billData != null)
+        {
+            FillData(_billData.prefillInputData, _billData.prefillTableData, _billData.tableColumnHeaders);
+            Debug.Log("[BillView] 填写 — 已填入预配置数据");
+        }
+        _hasFilled = true;
         ShowBanner(_billData != null ? _billData.fillBannerText : "已填写");
         Debug.Log("[BillView] 填写");
     }
 
     private void OnSaveClicked()
     {
+        // 保存当前输入框和表格数据
+        _hasSavedData = true;
+        _savedInputData = inputBoxGenerator != null
+            ? inputBoxGenerator.GetAllContents()
+            : null;
+        _savedTableRows = settingTableGenerator != null && settingTableGenerator.HasRows
+            ? settingTableGenerator.GetAllRowData()
+            : null;
         ShowBanner(_billData != null ? _billData.saveBannerText : "已保存成功！");
-        Debug.Log("[BillView] 保存");
+        Debug.Log($"[BillView] 保存 — inputLen={_savedInputData?.Length}, tableRows={_savedTableRows?.Length}");
     }
 
     private void OnSubmitClicked()
     {
+        if (!_hasFilled && !_hasSavedData)
+        {
+            ShowAlert("请先点击「填写」录入数据后再提交");
+            Debug.Log("[BillView] 提交被拒绝 — 未填写数据");
+            return;
+        }
+        ClearSavedData();
         ShowBanner(_billData != null ? _billData.submitBannerText : "已提交！");
         Debug.Log("[BillView] 提交 — 完成");
-        IsCompleted = true;
+        StartCoroutine(DelayedComplete());
     }
 
     private void OnApproveClicked()
@@ -333,14 +395,16 @@ public class BillView : MonoBehaviour
         ShowConfirm(confirmText,
             onYes: () =>
             {
+                ClearSavedData();
                 ShowBanner(pushDownText);
                 Debug.Log("[BillView] 审核 + 下推 — 完成");
-                IsCompleted = true;
+                StartCoroutine(DelayedComplete());
             },
             onNo: () =>
             {
+                ClearSavedData();
                 Debug.Log("[BillView] 审核 — 不下推，完成");
-                IsCompleted = true;
+                StartCoroutine(DelayedComplete());
             }
         );
     }
@@ -354,47 +418,100 @@ public class BillView : MonoBehaviour
             return;
         }
 
+        ClearSavedData();
         ShowBanner(_billData != null ? _billData.shipBannerText : "已通知仓库发货");
         Debug.Log("[BillView] 发货 — 完成");
-        IsCompleted = true;
+        StartCoroutine(DelayedComplete());
     }
 
     private void OnSignClicked()
     {
+        ClearSavedData();
         ShowBanner(_billData != null ? _billData.signBannerText : "已签名！");
         Debug.Log("[BillView] 签名 — 完成");
+        StartCoroutine(DelayedComplete());
+    }
+
+    /// <summary>延迟完成步骤，让横幅充分展示后再推进流程</summary>
+    private System.Collections.IEnumerator DelayedComplete()
+    {
+        // 禁用按钮防止重复点击
+        SetButtonsInteractable(false);
+        yield return new WaitForSeconds(1.5f);
         IsCompleted = true;
     }
 
     private void OnExitClicked()
     {
-        Debug.Log("[BillView] 退出");
-        IsCompleted = true;
+        Debug.Log("[BillView] 退出（不完成步骤）");
+        WasCancelled = true;
+        gameObject.SetActive(false);
+    }
+
+    /// <summary>恢复已保存的数据到输入框和表格</summary>
+    private void RestoreSavedData()
+    {
+        if (!_hasSavedData) return;
+        _hasFilled = true; // 恢复数据视为已填写
+        Debug.Log("[BillView] 恢复已保存数据");
+        if (_savedInputData != null && inputBoxGenerator != null)
+            inputBoxGenerator.SetAllInputBoxContents(_savedInputData);
+        if (_savedTableRows != null && settingTableGenerator != null && _savedTableRows.Length > 0)
+        {
+            settingTableGenerator.ClearTable();
+            settingTableGenerator.CreateHeaderRow();
+            foreach (var row in _savedTableRows)
+                settingTableGenerator.AddRow(row);
+        }
+    }
+
+    private void ClearSavedData()
+    {
+        _hasSavedData = false;
+        _hasFilled = false;
+        _savedInputData = null;
+        _savedTableRows = null;
     }
 
     /// <summary>
     /// 发货条件检查。子类可重写以实现业务逻辑。
-    /// 默认直接通过。
+    /// 默认返回不可发货（货未配齐）。
     /// </summary>
     protected virtual bool CheckShipConditions(out string failReason)
     {
-        failReason = null;
-        return true;
+        failReason = "货未配齐，无法发货。请等待生产完成后由仓管质检入库，再行发货。";
+        return false;
     }
 
     #endregion
 
     #region 反馈系统
 
+    private Coroutine _bannerCoroutine;
+
     private void ShowBanner(string message)
     {
         if (bannerText == null) return;
+        if (_bannerCoroutine != null) StopCoroutine(_bannerCoroutine);
         bannerText.text = message;
         bannerText.gameObject.SetActive(true);
+        _bannerCoroutine = StartCoroutine(AutoHideBanner(3f));
+    }
+
+    private System.Collections.IEnumerator AutoHideBanner(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (bannerText != null) bannerText.gameObject.SetActive(false);
+        _bannerCoroutine = null;
     }
 
     private void HideBanner()
     {
+        if (_bannerCoroutine != null)
+        {
+            StopCoroutine(_bannerCoroutine);
+            _bannerCoroutine = null;
+        }
         if (bannerText != null) bannerText.gameObject.SetActive(false);
     }
 
@@ -407,6 +524,28 @@ public class BillView : MonoBehaviour
             return;
         }
 
+        // 确保父级链都激活
+        var t = confirmPopup.transform.parent;
+        while (t != null)
+        {
+            if (!t.gameObject.activeSelf)
+            {
+                Debug.LogWarning($"[BillView] 激活弹窗父级: {t.name}");
+                t.gameObject.SetActive(true);
+            }
+            t = t.parent;
+        }
+
+        // 暂时禁用单据面板的交互，让弹窗可以接收点击
+        if (_canvasGroup != null)
+        {
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
+        }
+
+        confirmPopup.SetActive(true);
+        Debug.Log($"[BillView] 确认弹窗已激活: {confirmPopup.name}, activeInHierarchy={confirmPopup.activeInHierarchy}");
+
         if (confirmPopupText != null) confirmPopupText.text = message;
 
         if (confirmYesBtn != null)
@@ -414,27 +553,46 @@ public class BillView : MonoBehaviour
             confirmYesBtn.onClick.RemoveAllListeners();
             confirmYesBtn.onClick.AddListener(() =>
             {
+                Debug.Log($"[BillView] ★ 确认弹窗 — 点击了「是/同意」");
                 HideConfirmPopup();
                 onYes?.Invoke();
             });
+            Debug.Log($"[BillView] 确认弹窗 — 「是」按钮已绑定, interactable={confirmYesBtn.interactable}, raycastTarget={confirmYesBtn.targetGraphic?.raycastTarget}, active={confirmYesBtn.gameObject.activeInHierarchy}");
         }
+        else
+        {
+            Debug.LogError("[BillView] 确认弹窗 — confirmYesBtn 为 null！请在 Inspector 拖拽引用或确保子物体中有 Button");
+        }
+
         if (confirmNoBtn != null)
         {
             confirmNoBtn.onClick.RemoveAllListeners();
             confirmNoBtn.onClick.AddListener(() =>
             {
+                Debug.Log($"[BillView] ★ 确认弹窗 — 点击了「否/拒绝」");
                 HideConfirmPopup();
                 onNo?.Invoke();
             });
+            Debug.Log($"[BillView] 确认弹窗 — 「否」按钮已绑定, interactable={confirmNoBtn.interactable}, raycastTarget={confirmNoBtn.targetGraphic?.raycastTarget}, active={confirmNoBtn.gameObject.activeInHierarchy}");
+        }
+        else
+        {
+            Debug.LogError("[BillView] 确认弹窗 — confirmNoBtn 为 null！请在 Inspector 拖拽引用或确保子物体中有 Button");
         }
 
-        confirmPopup.SetActive(true);
         SetButtonsInteractable(false);
+        Debug.Log("[BillView] 确认弹窗 — 已禁用主面板按钮");
     }
 
     private void HideConfirmPopup()
     {
         if (confirmPopup != null) confirmPopup.SetActive(false);
+        // 恢复单据面板的交互
+        if (_canvasGroup != null)
+        {
+            _canvasGroup.interactable = true;
+            _canvasGroup.blocksRaycasts = true;
+        }
         SetButtonsInteractable(true);
     }
 

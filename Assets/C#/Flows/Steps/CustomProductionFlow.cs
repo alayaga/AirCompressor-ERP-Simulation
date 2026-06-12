@@ -20,14 +20,16 @@ public class CustomProductionFlow : FlowBase
         public string targetNPC;
         public string targetLocation;
         public Interactables.ActionType actionType;
+        public UIManager.UIType? billType;
 
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action)
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null)
         {
             stepName = name;
             description = desc;
             targetNPC = npc;
             targetLocation = location;
             actionType = action;
+            this.billType = billType;
         }
     }
 
@@ -66,20 +68,32 @@ public class CustomProductionFlow : FlowBase
             // 显示当前步骤到UI
             ShowCurrentStepToUI();
 
-            // 判断是否为自动步骤（系统操作）
-            bool isAutoStep = _currentStep.targetNPC == "系统";
-
-            if (isAutoStep)
+            // 先等待玩家交互（系统步骤自动完成）
+            if (_currentStep.targetNPC == "系统")
             {
-                // 自动步骤：等待后自动完成
                 Debug.Log($"[CustomProductionFlow] 系统步骤自动完成: {_currentStep.stepName}");
                 yield return new WaitForSeconds(3f);
                 _isStepCompleted = true;
             }
             else
             {
-                // 手动步骤：等待玩家按E触发完成
+                // 等待玩家走到NPC前按E
                 yield return new WaitUntil(() => _isStepCompleted);
+            }
+
+            // 交互完成后，如果步骤关联了单据，再打开单据面板
+            if (_currentStep.billType != null)
+            {
+                bool stepDone = false;
+                while (!stepDone)
+                {
+                    _isStepCompleted = false;
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
+                    if (_isStepCompleted)
+                        stepDone = true;
+                    else
+                        yield return new WaitUntil(() => _isStepCompleted);
+                }
             }
 
             Debug.Log($"[完成] {_currentStep.stepName}");
@@ -111,7 +125,8 @@ public class CustomProductionFlow : FlowBase
             "PMC查看销售订单内容，了解定制产品需求",
             "PMC主管",
             "计划物控中心",
-            Interactables.ActionType.View
+            Interactables.ActionType.View,
+            UIManager.UIType.SalesOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -119,7 +134,8 @@ public class CustomProductionFlow : FlowBase
             "制定一周生产计划；填：一周生产计划；点：提交",
             "PMC主管",
             "计划物控中心",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.WeeklyProductionPlan
         ));
 
         _steps.Enqueue(new StepData(
@@ -127,7 +143,8 @@ public class CustomProductionFlow : FlowBase
             "填写每日排产单；点：提交。自动下推给仓库仓管员（生产用料清单）和车间主管（生产工单）",
             "PMC主管",
             "计划物控中心",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionSchedule
         ));
 
         _steps.Enqueue(new StepData(
@@ -147,7 +164,8 @@ public class CustomProductionFlow : FlowBase
             "填写1车间（弯管车间）生产工单",
             "1车间主管",
             "1车间-弯管",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionWorkOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -155,7 +173,8 @@ public class CustomProductionFlow : FlowBase
             "查看1车间生产工单；填写工人个人的派工单",
             "1车间班组长",
             "1车间-弯管",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DispatchOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -171,7 +190,8 @@ public class CustomProductionFlow : FlowBase
             "填写领料单；点：提交",
             "1车间工人",
             "备料区",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.PickList
         ));
 
         // [步骤9] 工人生产 - 需按E触发，将来加入动画控制
@@ -204,7 +224,8 @@ public class CustomProductionFlow : FlowBase
             "填写生产退料入库单",
             "仓管员B",
             "仓库",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionReturn
         ));
 
         _steps.Enqueue(new StepData(
@@ -212,7 +233,8 @@ public class CustomProductionFlow : FlowBase
             "在生产退料入库单上签字",
             "1车间工人",
             "仓库",
-            Interactables.ActionType.Approve
+            Interactables.ActionType.Approve,
+            UIManager.UIType.ProductionReturn
         ));
 
         _steps.Enqueue(new StepData(
@@ -220,7 +242,8 @@ public class CustomProductionFlow : FlowBase
             "弯管生产完成后检查；填写工序汇报单",
             "1车间班组长",
             "1车间-弯管",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProcessReport
         ));
 
         _steps.Enqueue(new StepData(
@@ -240,7 +263,8 @@ public class CustomProductionFlow : FlowBase
             "填写2车间（焊接车间）生产工单",
             "2车间主管",
             "2车间-焊接",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionWorkOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -248,7 +272,8 @@ public class CustomProductionFlow : FlowBase
             "查看2车间生产工单；填写工人个人的派工单",
             "2车间班组长",
             "2车间-焊接",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DispatchOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -264,7 +289,8 @@ public class CustomProductionFlow : FlowBase
             "填写领料单",
             "2车间工人",
             "备料区",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.PickList
         ));
 
         // [步骤20] 工人生产 - 需按E触发，将来加入动画控制
@@ -297,7 +323,8 @@ public class CustomProductionFlow : FlowBase
             "填写生产退料入库单",
             "仓管员B",
             "仓库",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionReturn
         ));
 
         _steps.Enqueue(new StepData(
@@ -305,7 +332,8 @@ public class CustomProductionFlow : FlowBase
             "在生产退料入库单上签字",
             "2车间工人",
             "仓库",
-            Interactables.ActionType.Approve
+            Interactables.ActionType.Approve,
+            UIManager.UIType.ProductionReturn
         ));
 
         _steps.Enqueue(new StepData(
@@ -313,7 +341,8 @@ public class CustomProductionFlow : FlowBase
             "焊接生产完成后检查；填写工序汇报单",
             "2车间班组长",
             "2车间-焊接",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProcessReport
         ));
 
         _steps.Enqueue(new StepData(
@@ -333,7 +362,8 @@ public class CustomProductionFlow : FlowBase
             "填写3车间（配电车间）生产工单",
             "3车间主管",
             "3车间-配电",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionWorkOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -341,7 +371,8 @@ public class CustomProductionFlow : FlowBase
             "查看3车间生产工单；填写工人个人的派工单",
             "3车间班组长",
             "3车间-配电",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DispatchOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -357,7 +388,8 @@ public class CustomProductionFlow : FlowBase
             "填写领料单",
             "3车间工人",
             "备料区",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.PickList
         ));
 
         // [步骤31] 工人生产 - 需按E触发，将来加入动画控制
@@ -390,7 +422,8 @@ public class CustomProductionFlow : FlowBase
             "填写生产退料入库单",
             "仓管员B",
             "仓库",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionReturn
         ));
 
         _steps.Enqueue(new StepData(
@@ -398,7 +431,8 @@ public class CustomProductionFlow : FlowBase
             "在生产退料入库单上签字",
             "3车间工人",
             "仓库",
-            Interactables.ActionType.Approve
+            Interactables.ActionType.Approve,
+            UIManager.UIType.ProductionReturn
         ));
 
         _steps.Enqueue(new StepData(
@@ -406,7 +440,8 @@ public class CustomProductionFlow : FlowBase
             "配电生产完成后检查；填写工序汇报单",
             "3车间班组长",
             "3车间-配电",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProcessReport
         ));
 
         _steps.Enqueue(new StepData(
@@ -426,7 +461,8 @@ public class CustomProductionFlow : FlowBase
             "填写4车间（总装车间）生产工单",
             "4车间主管",
             "4车间-总装",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionWorkOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -434,7 +470,8 @@ public class CustomProductionFlow : FlowBase
             "查看4车间生产工单；填写工人个人的派工单",
             "4车间班组长",
             "4车间-总装",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DispatchOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -450,7 +487,8 @@ public class CustomProductionFlow : FlowBase
             "填写领料单；点：提交",
             "4车间工人",
             "备料区",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.PickList
         ));
 
         // [步骤42] 总装 - 需按E触发，将来加入动画控制
@@ -483,7 +521,8 @@ public class CustomProductionFlow : FlowBase
             "填写完工入库单；工人可查看",
             "仓管员B",
             "仓库",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.FinishedInbound
         ));
 
         _steps.Enqueue(new StepData(
@@ -491,7 +530,8 @@ public class CustomProductionFlow : FlowBase
             "工人在完工入库单上签字",
             "4车间工人",
             "仓库",
-            Interactables.ActionType.Approve
+            Interactables.ActionType.Approve,
+            UIManager.UIType.FinishedInbound
         ));
 
         _steps.Enqueue(new StepData(
@@ -535,7 +575,8 @@ public class CustomProductionFlow : FlowBase
             "销售员在销售订单点击发货，自动下推发货通知单",
             "销售员",
             "销售办公室",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.SalesOrder
         ));
 
         _steps.Enqueue(new StepData(
@@ -543,7 +584,8 @@ public class CustomProductionFlow : FlowBase
             "仓管员填写发货通知单（由销售订单下推）",
             "仓管员B",
             "仓库",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DeliveryNotice
         ));
 
         _steps.Enqueue(new StepData(
@@ -551,7 +593,8 @@ public class CustomProductionFlow : FlowBase
             "仓库主管审核发货通知单",
             "仓库主管",
             "仓库",
-            Interactables.ActionType.Approve
+            Interactables.ActionType.Approve,
+            UIManager.UIType.DeliveryNotice
         ));
 
         _steps.Enqueue(new StepData(
@@ -567,7 +610,8 @@ public class CustomProductionFlow : FlowBase
             "仓管员填写销售出库单（由发货通知单下推）",
             "仓管员B",
             "仓库",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.SalesOutbound
         ));
 
         _steps.Enqueue(new StepData(
@@ -575,7 +619,8 @@ public class CustomProductionFlow : FlowBase
             "仓库主管审核销售出库单",
             "仓库主管",
             "仓库",
-            Interactables.ActionType.Approve
+            Interactables.ActionType.Approve,
+            UIManager.UIType.SalesOutbound
         ));
 
         _steps.Enqueue(new StepData(
