@@ -10,24 +10,47 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 795f5b8ebe91798409ee19b447f2f9fc, type: 3}
-  m_Name: ProcessReport
+  m_Name: IncomingNotification
   m_EditorClassIdentifier: 
-  billType: 14
-  billName: "\u5DE5\u5E8F\u6C47\u62A5\u5355"
-  prefillInputData: []
-  prefillTableData: []
+  billType: 22
+  billName: "\u6536\u6599\u901A\u77E5\u5355"
+  prefillInputData:
+  - RC-20231109-012
+  - PO20231103001
+  - "\u4F5B\u5C71XX\u7535\u673A\u5382 "
+  - "XX\u7701XX\u5E02XX\u533AXX\u8DEFXX\u53F7\uFF08\u4ED3\u5E93\u7269\u6D41\u90E8\uFF09 "
+  - "\u91C7\u8D2D\u5165\u5E93 "
+  prefillTableData:
+  - columns:
+    - MOTOR-100A
+    - "\u4E3B\u7535\u673A"
+    - 7.5KW/380V
+    - "\u53F0"
+    - 30
+    - "\u542B\u5907\u54C11\u53F0(\u89C1\u5305\u88C5\u6E05\u5355)"
+  - columns:
+    - VALVE-205
+    - "\u7535\u78C1\u9600"
+    - "220V/\u5E38\u95ED"
+    - "\u4E2A"
+    - 150
+    - 
+  - columns:
+    - SCREW-M10
+    - "\u9540\u950C\u87BA\u6813"
+    - M10*40
+    - "\u5957"
+    - 500
+    - 
   previewTableData: []
   fillAttachmentSprite: {fileID: 0}
   tableColumnHeaders:
-  - "\u4EA7\u54C1/\u90E8\u4EF6"
-  - "\u5DE5\u5E8F\u540D\u79F0"
-  - "\u5DE5\u4F5C\u4E2D\u5FC3/\u8BBE\u5907"
-  - "\u8BA1\u5212\u6570\u91CF"
-  - "\u5B9E\u5B8C\u6570\u91CF"
+  - "\u7269\u6599\u7F16\u7801"
+  - "\u7269\u6599\u540D\u79F0"
+  - "\u89C4\u683C\u578B\u53F7"
   - "\u5355\u4F4D"
-  - "\u5408\u683C\u6570"
-  - "\u5E9F\u54C1\u6570"
-  - "\u72B6\u6001"
+  - "\u8BA2\u8D2D\u6570\u91CF"
+  - "\u5907\u6CE8"
   fillBannerText: "\u5DF2\u586B\u5199"
   saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
   submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
@@ -42,26 +65,6 @@ MonoBehaviour:
   showSignHintOnFill: 0
   fillSignFixedContent: 
   roleSettings:
-  - roleName: "\u73ED\u7EC4\u957F"
+  - roleName: "\u8DDF\u5355\u5458"
     visibleButtons: 0700000008000000010000000b000000
-  rolePrefillOverrides:
-  - roleName: "1\u8F66\u95F4\u73ED\u7EC4\u957F"
-    prefillInputData:
-    - HB20231113001
-    - OP20231113001
-    - 2023-11-13
-    - "\u674E\u56DB"
-    - "\u7B2C\u4E00\u8F66\u95F4/\u6570\u63A7\u4E00\u73ED"
-    prefillTableData:
-    - columns:
-      - "\u51B7\u5374\u7BA1\u8DEF"
-      - "\u5F2F\u7BA1"
-      - "\u6570\u63A7\u5F2F\u7BA1\u673A(CNC-38)"
-      - 50
-      - 48
-      - "\u7C73"
-      - 47
-      - 1
-      - "\u5DF2\u5B8C\u5DE5"
-    previewTableData: []
-    signHintText: 
+  rolePrefillOverrides: []

@@ -25,8 +25,7 @@ public class FlowManager : MonoBehaviour
     private Queue<Type> _flowQueue = new Queue<Type>();
     private FlowBase _currentFlow = null;
     private bool _isSequentialMode = false;
-    private bool _isInitialized = false;
-    
+
     private Dictionary<Type, FlowConfigBase> _configCache = new Dictionary<Type, FlowConfigBase>();
     private Dictionary<Type, List<Type>> _flowDependencies = new Dictionary<Type, List<Type>>();
 #endregion

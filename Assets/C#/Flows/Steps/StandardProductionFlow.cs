@@ -96,7 +96,7 @@ public class StandardProductionFlow : FlowBase
         _steps.Enqueue(new StepData("PMC填写每日排产单", "PMC填写每日排产单给仓库仓管员和车间主管；点：提交；自动下推给仓管员（生产用料清单）和车间主管（生产工单）", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.ProductionSchedule));
 
         // 阶段2：发料与派工
-        _steps.Enqueue(new StepData("仓管员发料到备料区", "仓管员按生产用料清单发料到备料区（位于生产区）", "仓管员", "质检区", Interactables.ActionType.Deliver));
+        _steps.Enqueue(new StepData("仓管员发料到备料区", "仓管员按生产用料清单发料到备料区（位于生产区）", "仓管员", "备料区", Interactables.ActionType.Deliver));
         _steps.Enqueue(new StepData("车间主管派工", "车间主管按PMC下推的生产工单（已含工序信息）直接派工给班组长；1/2/3/4车间班组长可查看自己车间的生产工单", "车间主管", "生产部", Interactables.ActionType.Fill, UIManager.UIType.ProductionWorkOrder));
         _steps.Enqueue(new StepData("班组长填写派工单", "1/2/3/4车间班组长查看自己车间的生产工单；填写工人个人的派工单；点：提交", "车间班组长", "生产区", Interactables.ActionType.Fill, UIManager.UIType.DispatchOrder));
 
@@ -106,7 +106,7 @@ public class StandardProductionFlow : FlowBase
         _steps.Enqueue(new StepData("工人生产", "工人进行生产加工", "工人", "生产区", Interactables.ActionType.View));
 
         // 阶段4：退料分支（与生产并行）
-        _steps.Enqueue(new StepData("退料送仓库", "工人将生产多余物料退回仓库（与生产并行分支）", "工人", "仓库", Interactables.ActionType.Deliver));
+        _steps.Enqueue(new StepData("退料送仓库", "工人将生产多余物料退回仓库", "工人", "仓库", Interactables.ActionType.Deliver));
         _steps.Enqueue(new StepData("仓管员质检确认退料", "仓管员对退料进行质检确认", "仓管员", "仓库", Interactables.ActionType.Approve));
         _steps.Enqueue(new StepData("仓管员制退料入库单", "仓管员制作生产退料入库单；点：提交", "仓管员", "仓库", Interactables.ActionType.Fill, UIManager.UIType.ProductionReturn));
         _steps.Enqueue(new StepData("工人签字确认退料", "工人在生产退料入库单上签字", "工人", "仓库", Interactables.ActionType.Approve, UIManager.UIType.ProductionReturn));

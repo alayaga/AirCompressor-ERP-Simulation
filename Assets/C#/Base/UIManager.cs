@@ -24,7 +24,11 @@ public class UIManager : MonoBehaviour
         WeeklyProductionPlan, ProcessReport, ProductionReport, DeliveryNotice,
         FinishedInbound, SalesOutbound, ExitGameUI,
         ProductionSchedule,  // 排产单
-        ProductionReturn     // 生产退料入库单
+        ProductionReturn,    // 生产退料入库单
+        IncomingNotification,  // 收料通知单
+        IncomingInspection,    // 来料检验单
+        BiweeklyPurchasePlan,  // 两周采购计划
+        MonthlySalesPlan       // 月度销售计划
     }
 
     [System.Serializable]

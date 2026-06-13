@@ -14,7 +14,117 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   billType: 20
   billName: "\u6392\u4EA7\u5355"
-  prefillInputData: []
+  prefillInputData:
+  - PC20231111001
+  - 2023-11-11
+  prefillTableData:
+  - columns:
+    - "\u5F2F\u7BA1\u8F66\u95F4"
+    - "\u7BA1\u8DEF\u9884\u5236"
+    - "\u538B\u7F29\u673A\u8FDE\u63A5\u94DC\u7BA1"
+    - "\u03C616mm"
+    - 50
+    - "\u6839"
+    - "\u5F85\u751F\u4EA7"
+    - "\u6025\u5355\u4F18\u5148\uFF0C\u7269\u6599\u5DF2\u9F50\u5957"
+  - columns:
+    - "\u5F2F\u7BA1\u8F66\u95F4"
+    - "\u7BA1\u8DEF\u9884\u5236"
+    - "\u51B7\u5374\u5668\u8FDB\u6C14\u7BA1"
+    - "\u03C625mm"
+    - 50
+    - "\u6839"
+    - "\u5F85\u751F\u4EA7"
+    - "\u6025\u5355\u4F18\u5148\uFF0C\u7269\u6599\u5DF2\u9F50\u5957"
+  - columns:
+    - "\u914D\u7535\u8F66\u95F4"
+    - "\u7535\u6C14\u9884\u88C5"
+    - "\u7535\u63A7\u67DC\u4E3B\u677F"
+    - BD-100A-E01
+    - 50
+    - "\u5757"
+    - "\u5F85\u751F\u4EA7"
+    - "\u9700\u6838\u5BF9\u7535\u6C14BOM\u6E05\u5355"
+  - columns:
+    - "\u914D\u7535\u8F66\u95F4"
+    - "\u7535\u6C14\u9884\u88C5"
+    - "\u64CD\u4F5C\u9762\u677F\u7EC4\u4EF6"
+    - BD-100A-P01
+    - 50
+    - "\u5957"
+    - "\u5F85\u751F\u4EA7"
+    - "\u542B\u663E\u793A\u5C4F\u4E0E\u6309\u952E"
+  - columns:
+    - "\u710A\u63A5\u8F66\u95F4"
+    - "\u673A\u67B6\u710A\u63A5"
+    - "\u4E3B\u673A\u56FA\u5B9A\u67B6"
+    - BD-100A-J01
+    - 50
+    - "\u4EF6"
+    - "\u5F85\u751F\u4EA7"
+    - "\u4F9D\u8D56\u5F2F\u7BA1\u8F66\u95F4\u6765\u6599"
+  - columns:
+    - "\u710A\u63A5\u8F66\u95F4"
+    - "\u7BA1\u8DEF\u710A\u63A5"
+    - "\u6CB9\u6C14\u5206\u79BB\u6876\u652F\u67B6"
+    - BD-100A-J02
+    - 50
+    - "\u4EF6"
+    - "\u5F85\u751F\u4EA7"
+    - "\u9700\u8FDB\u884C\u6C14\u5BC6\u6027\u68C0\u67E5"
+  - columns:
+    - "\u7EC4\u88C5\u8F66\u95F4"
+    - "\u4E3B\u673A\u603B\u88C5"
+    - "\u673A\u5934\u603B\u6210"
+    - BD-100A-T01
+    - 50
+    - "\u53F0"
+    - "\u5F85\u751F\u4EA7"
+    - "\u5305\u542B\u4E3B\u673A\u4E0E\u7535\u673A\u5BF9\u4E2D"
+  - columns:
+    - "\u7EC4\u88C5\u8F66\u95F4"
+    - "\u6574\u673A\u8054\u8C03"
+    - "\u6574\u673A\u6D4B\u8BD5"
+    - BD-100A-F01
+    - 50
+    - "\u53F0"
+    - "\u5F85\u751F\u4EA7"
+    - "\u542B\u538B\u529B\u3001\u7535\u6D41\u6D4B\u8BD5"
+  - columns:
+    - "\u7EC4\u88C5\u8F66\u95F4"
+    - "\u7EC8\u68C0\u5305\u88C5"
+    - "\u6210\u54C1\u5305\u88C5"
+    - BD-100A-B01
+    - 50
+    - "\u53F0"
+    - "\u5F85\u751F\u4EA7"
+    - "\u8D34\u6807\u3001\u6253\u6728\u7BB1\u5165\u5E93"
+  previewTableData: []
+  fillAttachmentSprite: {fileID: 21300000, guid: 56d51374e67666143906b6cce6de7db1,
+    type: 3}
+  tableColumnHeaders:
+  - "\u8D1F\u8D23\u8F66\u95F4"
+  - "\u5DE5\u5E8F\u540D\u79F0"
+  - "\u4EA7\u54C1/\u90E8\u4EF6\u540D\u79F0"
+  - "\u89C4\u683C\u578B\u53F7"
+  - "\u8BA1\u5212\u6570\u91CF"
+  - "\u5355\u4F4D"
+  - "\u751F\u4EA7\u72B6\u6001"
+  - "\u5907\u6CE8"
+  fillBannerText: "\u5DF2\u586B\u5199"
+  saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
+  submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
+  approveBannerText: "\u5DF2\u5BA1\u6838\uFF01"
+  approveConfirmText: "\u662F\u5426\u4E0B\u63A8\uFF1F"
+  pushDownBannerText: "\u5DF2\u4E0B\u63A8\uFF01"
+  shipBannerText: "\u5DF2\u901A\u77E5\u4ED3\u5E93\u53D1\u8D27"
+  shipAllowed: 0
+  shipFailAlertText: "\u6761\u4EF6\u4E0D\u6EE1\u8DB3\uFF0C\u65E0\u6CD5\u53D1\u8D27"
+  signBannerText: "\u5DF2\u7B7E\u540D\uFF01"
+  signHintText: 
+  showSignHintOnFill: 0
+  fillSignFixedContent: 
   roleSettings:
-  - roleName: PMC
+  - roleName: "PMC\u4E3B\u7BA1"
     visibleButtons: 0700000008000000010000000b000000
+  rolePrefillOverrides: []

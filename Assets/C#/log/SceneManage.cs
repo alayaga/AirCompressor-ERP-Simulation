@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 开始界面与流程选择管理器
-/// 🔧 已集成：标准/定制流程选择 → 通知 DemandManager 固定需求(2台) → 加载主场景
+/// 已集成：标准/定制流程选择 > 通知 DemandManager 固定需求(2台) > 加载主场景
 /// </summary>
 public class SceneManage : MonoBehaviour
 {
@@ -51,7 +51,7 @@ public class SceneManage : MonoBehaviour
     }
 
     /// <summary>
-    /// 🔧 核心对接方法：设置流程类型并生成固定调试需求
+    /// 核心对接方法：设置流程类型并生成固定调试需求
     /// </summary>
     private void PrepareDemandForFlow(DemandManager.WorkflowType type)
     {

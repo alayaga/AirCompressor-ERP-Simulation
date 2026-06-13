@@ -18,6 +18,9 @@ public class BillView : MonoBehaviour
     [SerializeField] private InputBoxGenerator inputBoxGenerator2;
     [SerializeField] private SettingTableGenerator settingTableGenerator;
 
+    [Header("上传附件")]
+    [SerializeField] private Image attachmentImage;
+
     [Header("7个标准按钮")]
     [SerializeField] private Button fillBtn;
     [SerializeField] private Button saveBtn;
@@ -41,6 +44,16 @@ public class BillView : MonoBehaviour
     [SerializeField] private TMP_Text alertPopupText;
     [SerializeField] private Button alertOkBtn;
 
+    [Header("签字区域提示文字")]
+    [Tooltip("签字时显示的姓名（工人签字位置）")]
+    [SerializeField] private TMP_Text signHintText;
+
+    [Tooltip("填写时显示的姓名（仓管员填写位置）")]
+    [SerializeField] private TMP_Text fillSignNameText;
+
+    [Tooltip("签字按钮下方的固定文本（如声明文字），填写时显示")]
+    [SerializeField] private TMP_Text fillSignFixedText;
+
     #endregion
 
     #region 公开属性
@@ -54,6 +67,9 @@ public class BillView : MonoBehaviour
     /// <summary>面板是否处于打开状态</summary>
     public bool IsOpen => gameObject.activeSelf;
 
+    /// <summary>运行时发货开关，由流程在打开单据前设置</summary>
+    public bool AllowShip { get; set; } = false;
+
     #endregion
 
     #region 运行时状态
@@ -61,10 +77,12 @@ public class BillView : MonoBehaviour
     private Interactables.ActionType _stepAction;
     private List<Interactables.ActionType> _roleButtons = new List<Interactables.ActionType>();
     private BillData _billData;
+    private string _currentRole;
 
     // 保存/恢复：退出后再次进入时保留已填数据
     private string[] _savedInputData;
     private string[][] _savedTableRows;
+    private string _savedFillSignName; // 保留仓管员姓名，供工人签字步骤显示
     private bool _hasSavedData = false;
     private bool _hasFilled = false; // 是否点击过"填写"或恢复了已保存数据
 
@@ -91,6 +109,7 @@ public class BillView : MonoBehaviour
         HideBanner();
         HideConfirmPopup();
         HideAlertPopup();
+        HideSignHint();
     }
 
     /// <summary>
@@ -112,6 +131,9 @@ public class BillView : MonoBehaviour
         if (settingTableGenerator == null) settingTableGenerator = GetComponentInChildren<SettingTableGenerator>(true);
 
         if (bannerText    == null) bannerText    = FindTextInChildren("Banner");
+        if (signHintText == null) signHintText = FindTextInChildren("SignHint");
+        if (fillSignNameText == null) fillSignNameText = FindTextInChildren("FillSignName");
+        if (fillSignFixedText == null) fillSignFixedText = FindTextInChildren("SignFixed");
         if (confirmPopup  == null) confirmPopup  = FindChildByName("ConfirmPopup");
         if (alertPopup    == null) alertPopup    = FindChildByName("AlertPopup");
 
@@ -180,11 +202,13 @@ public class BillView : MonoBehaviour
     /// <param name="stepAction">流程步骤的 ActionType</param>
     /// <param name="roleButtons">BillData 返回的角色可见按钮列表</param>
     /// <param name="billData">单据配置数据（弹窗文字等）</param>
-    public void Open(Interactables.ActionType stepAction, List<Interactables.ActionType> roleButtons, BillData billData = null)
+    /// <param name="roleName">当前角色名，用于匹配角色预填数据覆盖</param>
+    public void Open(Interactables.ActionType stepAction, List<Interactables.ActionType> roleButtons, BillData billData = null, string roleName = null)
     {
         _stepAction = stepAction;
         _roleButtons = roleButtons ?? new List<Interactables.ActionType>();
         _billData = billData;
+        _currentRole = roleName;
         IsCompleted = false;
         WasCancelled = false;
         _hasFilled = false;
@@ -192,10 +216,21 @@ public class BillView : MonoBehaviour
         HideConfirmPopup();
         HideAlertPopup();
         HideBanner();
+        HideSignHint();
 
         // 计算并应用按钮显隐
         var visibleButtons = ComputeVisibleButtons(_stepAction, _roleButtons);
         ApplyButtonVisibility(visibleButtons);
+
+        // 打开时预显示：固定文本始终显示，仓管员姓名优先用保存值
+        if (_billData != null && _billData.showSignHintOnFill)
+        {
+            ShowFillSignFixedText();
+            RestoreFillSignName();
+        }
+
+        // 打开时预显示表格预览数据（部分数据，不点填写就能看到）
+        ShowPreviewTable();
 
         // 如果之前保存过数据（退出后重新进入），自动恢复
         if (_hasSavedData)
@@ -212,6 +247,27 @@ public class BillView : MonoBehaviour
     public void Close()
     {
         gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 打开单据时预显示表格预览数据（部分数据），不点填写就能看到
+    /// </summary>
+    private void ShowPreviewTable()
+    {
+        if (settingTableGenerator == null || _billData == null) return;
+        var previewData = _billData.GetPreviewTableForRole(_currentRole);
+        if (previewData == null || previewData.Length == 0) return;
+
+        var columnHeaders = _billData.tableColumnHeaders;
+        if (columnHeaders != null && columnHeaders.Length > 0)
+            settingTableGenerator.SetColumnHeaders(columnHeaders);
+
+        settingTableGenerator.ClearTable();
+        settingTableGenerator.CreateHeaderRow();
+        foreach (var row in previewData)
+            settingTableGenerator.AddRow(row.columns);
+        settingTableGenerator.UpdateContentSize();
+        Debug.Log($"[BillView] 预览表格数据已显示 {previewData.Length} 行");
     }
 
     /// <summary>
@@ -239,6 +295,7 @@ public class BillView : MonoBehaviour
             settingTableGenerator.CreateHeaderRow();
             foreach (var row in tableData)
                 settingTableGenerator.AddRow(row.columns);
+            settingTableGenerator.UpdateContentSize();
             Debug.Log($"[BillView] 已填入 {tableData.Length} 行表格数据");
         }
     }
@@ -336,7 +393,7 @@ public class BillView : MonoBehaviour
 
     private void OnFillClicked()
     {
-        // 已有保存的表格数据 → 不覆盖
+        // 已有保存的表格数据 >不覆盖
         bool hasSavedTable = _savedTableRows != null && _savedTableRows.Length > 0;
         if (hasSavedTable)
         {
@@ -345,13 +402,28 @@ public class BillView : MonoBehaviour
             _hasFilled = true;
             return;
         }
-        // 从模板填充
+        // 从模板填充（优先角色覆盖数据）
         if (_billData != null)
         {
-            FillData(_billData.prefillInputData, _billData.prefillTableData, _billData.tableColumnHeaders);
+            var inputData = _billData.GetPrefillInputForRole(_currentRole) ?? _billData.prefillInputData;
+            var tableData = _billData.GetPrefillTableForRole(_currentRole) ?? _billData.prefillTableData;
+            FillData(inputData, tableData, _billData.tableColumnHeaders);
+
+            // 切换上传附件图片
+            if (_billData.fillAttachmentSprite != null && attachmentImage != null)
+                attachmentImage.sprite = _billData.fillAttachmentSprite;
+
             Debug.Log("[BillView] 填写 — 已填入预配置数据");
         }
         _hasFilled = true;
+
+        // 部分单据（如领料单、退料入库单）点填写即显示填写位姓名 + 固定文本
+        if (_billData != null && _billData.showSignHintOnFill)
+        {
+            ShowFillSignName();
+            ShowFillSignFixedText();
+        }
+
         ShowBanner(_billData != null ? _billData.fillBannerText : "已填写");
         Debug.Log("[BillView] 填写");
     }
@@ -426,7 +498,12 @@ public class BillView : MonoBehaviour
 
     private void OnSignClicked()
     {
+        // 签字时：恢复仓管员姓名 + 固定文本 + 签字位工人姓名
+        RestoreFillSignName();
+        ShowFillSignFixedText();
+        ShowSignHint();
         ClearSavedData();
+        _savedFillSignName = null; // 签字完成后清除，不再需要保留
         ShowBanner(_billData != null ? _billData.signBannerText : "已签名！");
         Debug.Log("[BillView] 签名 — 完成");
         StartCoroutine(DelayedComplete());
@@ -443,9 +520,25 @@ public class BillView : MonoBehaviour
 
     private void OnExitClicked()
     {
+        // View 步骤：退出即视为完成，3 秒后自动推进流程
+        if (_stepAction == Interactables.ActionType.View)
+        {
+            Debug.Log("[BillView] 查看完成，3s后自动推进");
+            StartCoroutine(DelayedViewComplete());
+            return;
+        }
+
         Debug.Log("[BillView] 退出（不完成步骤）");
         WasCancelled = true;
         gameObject.SetActive(false);
+    }
+
+    /// <summary>View 步骤退出后延迟 3 秒完成</summary>
+    private System.Collections.IEnumerator DelayedViewComplete()
+    {
+        SetButtonsInteractable(false);
+        yield return new WaitForSeconds(3f);
+        IsCompleted = true;
     }
 
     /// <summary>恢复已保存的数据到输入框和表格</summary>
@@ -462,6 +555,7 @@ public class BillView : MonoBehaviour
             settingTableGenerator.CreateHeaderRow();
             foreach (var row in _savedTableRows)
                 settingTableGenerator.AddRow(row);
+            settingTableGenerator.UpdateContentSize();
         }
     }
 
@@ -471,15 +565,21 @@ public class BillView : MonoBehaviour
         _hasFilled = false;
         _savedInputData = null;
         _savedTableRows = null;
+        // 注意：_savedFillSignName 不在这里清除，需跨步骤保留到签字完成
     }
 
     /// <summary>
     /// 发货条件检查。子类可重写以实现业务逻辑。
-    /// 默认返回不可发货（货未配齐）。
     /// </summary>
     protected virtual bool CheckShipConditions(out string failReason)
     {
-        failReason = "货未配齐，无法发货。请等待生产完成后由仓管质检入库，再行发货。";
+        // 运行时开关（流程控制）或 BillData 静态配置，任一允许即可
+        if (AllowShip || (_billData != null && _billData.shipAllowed))
+        {
+            failReason = "";
+            return true;
+        }
+        failReason = _billData != null ? _billData.shipFailAlertText : "条件不满足，无法发货";
         return false;
     }
 
@@ -513,6 +613,70 @@ public class BillView : MonoBehaviour
             _bannerCoroutine = null;
         }
         if (bannerText != null) bannerText.gameObject.SetActive(false);
+    }
+
+    /// <summary>显示填写位的姓名（如仓管员）。若无独立 FillSignName 则回退到 SignHint。同时保存供后续步骤恢复</summary>
+    private void ShowFillSignName()
+    {
+        var target = fillSignNameText != null ? fillSignNameText : signHintText;
+        if (target == null)
+        {
+            Debug.LogWarning("[BillView] ShowFillSignName: fillSignNameText 和 signHintText 都为 null，请检查预制体中是否有命名为 FillSignName 或 SignHint 的 TMP_Text");
+            return;
+        }
+        var hint = _billData != null ? _billData.GetSignHintForRole(_currentRole) : "";
+        Debug.Log($"[BillView] ShowFillSignName: target={target.name}, role={_currentRole}, hint={hint}");
+        if (!string.IsNullOrEmpty(hint))
+        {
+            target.text = hint;
+            target.gameObject.SetActive(true);
+            _savedFillSignName = hint;
+        }
+        else
+        {
+            Debug.LogWarning($"[BillView] ShowFillSignName: 角色 '{_currentRole}' 的 signHintText 为空，请在 BillData 的 RolePrefillOverrides 中配置");
+        }
+    }
+
+    /// <summary>恢复已保存的仓管员姓名（用于工人签字步骤打开时）</summary>
+    private void RestoreFillSignName()
+    {
+        if (string.IsNullOrEmpty(_savedFillSignName)) return;
+        var target = fillSignNameText != null ? fillSignNameText : signHintText;
+        if (target == null) return;
+        target.text = _savedFillSignName;
+        target.gameObject.SetActive(true);
+    }
+
+    /// <summary>显示签字位的姓名（如工人），签字按钮点击时调用</summary>
+    private void ShowSignHint()
+    {
+        if (signHintText == null) return;
+        var hint = _billData != null ? _billData.GetSignHintForRole(_currentRole) : "";
+        if (!string.IsNullOrEmpty(hint))
+        {
+            signHintText.text = hint;
+            signHintText.gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>显示签字按钮下方的固定文本（声明文字），填写时显示</summary>
+    private void ShowFillSignFixedText()
+    {
+        if (fillSignFixedText == null || _billData == null) return;
+        if (!string.IsNullOrEmpty(_billData.fillSignFixedContent))
+        {
+            fillSignFixedText.text = _billData.fillSignFixedContent;
+            fillSignFixedText.gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>隐藏签字区域所有提示文字</summary>
+    private void HideSignHint()
+    {
+        if (signHintText != null) signHintText.gameObject.SetActive(false);
+        if (fillSignNameText != null) fillSignNameText.gameObject.SetActive(false);
+        if (fillSignFixedText != null) fillSignFixedText.gameObject.SetActive(false);
     }
 
     private void ShowConfirm(string message, Action onYes, Action onNo)
@@ -553,7 +717,7 @@ public class BillView : MonoBehaviour
             confirmYesBtn.onClick.RemoveAllListeners();
             confirmYesBtn.onClick.AddListener(() =>
             {
-                Debug.Log($"[BillView] ★ 确认弹窗 — 点击了「是/同意」");
+                Debug.Log($"[BillView] 确认弹窗 — 点击了「是/同意」");
                 HideConfirmPopup();
                 onYes?.Invoke();
             });
@@ -569,7 +733,7 @@ public class BillView : MonoBehaviour
             confirmNoBtn.onClick.RemoveAllListeners();
             confirmNoBtn.onClick.AddListener(() =>
             {
-                Debug.Log($"[BillView] ★ 确认弹窗 — 点击了「否/拒绝」");
+                Debug.Log($"[BillView] 确认弹窗 — 点击了「否/拒绝」");
                 HideConfirmPopup();
                 onNo?.Invoke();
             });

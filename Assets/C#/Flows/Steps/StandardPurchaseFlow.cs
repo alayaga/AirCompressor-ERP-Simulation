@@ -61,13 +61,7 @@ public class StandardPurchaseFlow : FlowBase
 
             Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
             bool isAutoStep = _currentStep.targetNPC == "供应商" || _currentStep.targetNPC == "系统";
-            if (_currentStep.billType != null)
-            {
-                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
-
-                if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
-            }
-            else if (isAutoStep)
+            if (isAutoStep)
             {
                 Debug.Log($"[StandardPurchaseFlow] 自动步骤：{_currentStep.stepName}，等待5秒后自动完成");
                 yield return new WaitForSeconds(5f);
@@ -75,7 +69,21 @@ public class StandardPurchaseFlow : FlowBase
             }
             else
             {
+                // 先等待玩家走到NPC前按E交互
                 yield return new WaitUntil(() => _isStepCompleted);
+            }
+
+            // 交互完成后，如果步骤关联了单据，再打开单据面板
+            if (_currentStep.billType != null)
+            {
+                bool stepDone = false;
+                while (!stepDone)
+                {
+                    _isStepCompleted = false;
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
+                    if (_isStepCompleted) stepDone = true;
+                    else yield return new WaitUntil(() => _isStepCompleted);
+                }
             }
 
             Debug.Log($"[完成] {_currentStep.stepName}");
@@ -93,16 +101,16 @@ public class StandardPurchaseFlow : FlowBase
         // PMC查看BOM单开始，经采购主管审核后，跟单员执行采购到入库的完整流程
 
         _steps.Enqueue(new StepData("PMC查看BOM单", "PMC查看标准产品的BOM单", "PMC主管", "PMC部", Interactables.ActionType.View, UIManager.UIType.ProductionBOM));
-        _steps.Enqueue(new StepData("PMC制作两周采购计划", "PMC制作两周采购计划；点：提交；采购主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("PMC制作两周采购计划", "PMC制作两周采购计划；点：提交；采购主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.BiweeklyPurchasePlan));
         _steps.Enqueue(new StepData("采购主管审核采购计划", "采购主管审核两周采购计划，点击审核后自动下推", "采购主管", "采购部", Interactables.ActionType.Approve, UIManager.UIType.PurchaseRequest));
         _steps.Enqueue(new StepData("跟单员查看采购计划", "跟单员查看采购计划", "跟单员", "采购部", Interactables.ActionType.View, UIManager.UIType.PurchaseRequest));
         _steps.Enqueue(new StepData("跟单员填采购订单", "跟单员填写采购订单并邮件给供应商", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.PurchaseOrder));
-        _steps.Enqueue(new StepData("供应商送货", "供应商电话联系跟单员后送货", "供应商", "供应商处", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("供应商填送货通知单", "供应商填写送货通知单（随货）", "供应商", "供应商处", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("供应商送货", "供应商电话联系跟单员后送货，货和单一起到", "供应商", "供应商处", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("跟单员查看送货通知单", "跟单员查看送货通知单（随货到达）", "跟单员", "采购部", Interactables.ActionType.View, UIManager.UIType.ReceiptNotice));
         _steps.Enqueue(new StepData("仓库到货收货", "仓库进行到货收货", "仓管员", "质检区", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("跟单员制收料通知单", "跟单员制作收料通知单，点击提交后自动下推", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.ReceiptNotice));
-        _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单，进行质检", "仓管员", "质检区", Interactables.ActionType.View, UIManager.UIType.ReceiptNotice));
-        _steps.Enqueue(new StepData("仓管员填来料检验单", "仓管员填写来料检验单，点击提交后自动下推", "仓管员", "质检区", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("跟单员制收料通知单", "跟单员制作收料通知单，点击提交后自动下推", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.IncomingNotification));
+        _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单，进行质检", "仓管员", "质检区", Interactables.ActionType.View, UIManager.UIType.IncomingNotification));
+        _steps.Enqueue(new StepData("仓管员填来料检验单", "仓管员填写来料检验单，点击提交后自动下推", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.IncomingInspection));
         _steps.Enqueue(new StepData("仓管员填采购入库单", "仓管员填写采购入库单", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.PurchaseInbound));
     }
 

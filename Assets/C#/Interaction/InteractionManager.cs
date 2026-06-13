@@ -243,6 +243,11 @@ public class InteractionManager : MonoBehaviour
             var currentStep = mainFlow.GetCurrentStep();
             return currentStep?.targetNPC;
         }
+        else if (flow is CustomPurchaseFlow customPurchaseFlow)
+        {
+            var currentStep = customPurchaseFlow.GetCurrentStep();
+            return currentStep?.targetNPC;
+        }
         else if (flow is StandardPurchaseFlow purchaseFlow)
         {
             var currentStep = purchaseFlow.GetCurrentStep();

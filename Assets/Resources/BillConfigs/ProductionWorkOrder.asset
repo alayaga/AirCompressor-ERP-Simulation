@@ -15,8 +15,173 @@ MonoBehaviour:
   billType: 4
   billName: "\u751F\u4EA7\u5DE5\u5355"
   prefillInputData: []
+  prefillTableData: []
+  previewTableData: []
+  fillAttachmentSprite: {fileID: 0}
+  tableColumnHeaders:
+  - "\u751F\u4EA7\u5DE5\u5355\u53F7"
+  - "\u4EA7\u54C1/\u90E8\u4EF6"
+  - "\u5DE5\u5E8F\u540D\u79F0"
+  - "\u5DE5\u4F5C\u4E2D\u5FC3/\u8BBE\u5907"
+  - "\u56FE\u7EB8/\u5DE5\u827A\u7F16\u53F7"
+  - "\u8BA1\u5212\u6570\u91CF"
+  - "\u5355\u4F4D"
+  - "\u72B6\u6001"
+  fillBannerText: "\u5DF2\u586B\u5199"
+  saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
+  submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
+  approveBannerText: "\u5DF2\u5BA1\u6838\uFF01"
+  approveConfirmText: "\u662F\u5426\u4E0B\u63A8\uFF1F"
+  pushDownBannerText: "\u5DF2\u4E0B\u63A8\uFF01"
+  shipBannerText: "\u5DF2\u901A\u77E5\u4ED3\u5E93\u53D1\u8D27"
+  shipAllowed: 0
+  shipFailAlertText: "\u6761\u4EF6\u4E0D\u6EE1\u8DB3\uFF0C\u65E0\u6CD5\u53D1\u8D27"
+  signBannerText: "\u5DF2\u7B7E\u540D\uFF01"
+  signHintText: 
+  showSignHintOnFill: 0
+  fillSignFixedContent: 
   roleSettings:
   - roleName: "\u751F\u4EA7\u4E3B\u7BA1"
     visibleButtons: 0700000008000000010000000b000000
   - roleName: "\u8F66\u95F4\u7EC4\u957F"
     visibleButtons: 0b000000
+  rolePrefillOverrides:
+  - roleName: "1\u8F66\u95F4\u4E3B\u7BA1"
+    prefillInputData:
+    - OP20231113001
+    - DPC20231113
+    - "\u7B2C\u4E00\u8F66\u95F4"
+    - 2023-11-13 08:30
+    - 2023-11-13 17:00
+    prefillTableData:
+    - columns:
+      - WO20231110001
+      - "\u4E3B\u673A\u58F3\u4F53"
+      - "\u7C97\u94E3"
+      - "CNC-05 (\u7ACB\u5F0F\u52A0\u5DE5\u4E2D\u5FC3)"
+      - DWG-DA55-CUS-R1
+      - 1
+      - "\u4EF6"
+      - "\u5F85\u5F00\u5DE5"
+    - columns:
+      - WO20231110001
+      - "\u4E3B\u673A\u58F3\u4F53"
+      - "\u7CBE\u9557"
+      - "CNC-08(\u5367\u5F0F\u9557\u5E8A)"
+      - DWG-DA55-CUS-R1
+      - 1
+      - "\u4EF6"
+      - "\u5F85\u4E0A\u7EBF"
+    previewTableData: []
+    signHintText: 
+  - roleName: "2\u8F66\u95F4\u4E3B\u7BA1"
+    prefillInputData:
+    - OP20231113003
+    - DPC20231113
+    - "\u7B2C\u4E8C\u8F66\u95F4"
+    - 2023-11-13 08:30
+    - 2023-11-13 17:00
+    prefillTableData:
+    - columns:
+      - OP20231113003
+      - "\u673A\u67B6\u677F\u6750"
+      - "\u7EC4\u5BF9\u4E0E\u5B9A\u4F4D"
+      - "\u7EC4\u5BF9\u5E73\u53F0"
+      - DWG-FRAME-R3
+      - 10
+      - "\u4EF6"
+      - "\u5F85\u5F00\u5DE5"
+    - columns:
+      - OP20231113003
+      - "\u673A\u67B6\u4E3B\u4F53"
+      - "CO2\u4FDD\u62A4\u710A"
+      - "\u710A\u63A5\u673A\u5668\u4EBA(ROB-200)"
+      - WPS-WELD-05
+      - 10
+      - "\u4EF6"
+      - "\u5F85\u5F00\u5DE5"
+    - columns:
+      - OP20231113003
+      - "\u710A\u63A5\u673A\u67B6"
+      - "\u6253\u78E8\u4E0E\u63A2\u4F24"
+      - "\u89D2\u78E8\u673A/\u63A2\u4F24\u4EEA"
+      - QC-WELD-02
+      - 10
+      - "\u4EF6"
+      - "\u5F85\u5F00\u5DE5"
+    previewTableData: []
+    signHintText: 
+  - roleName: "3\u8F66\u95F4\u4E3B\u7BA1"
+    prefillInputData:
+    - OP20231113004
+    - DPC20231113
+    - "\u7B2C\u4E09\u8F66\u95F4"
+    - 2023-11-13 08:30
+    - 2023-11-13 17:00
+    prefillTableData:
+    - columns:
+      - OP20231113004
+      - "\u7535\u63A7\u7BB1\u4F53"
+      - "\u5143\u5668\u4EF6\u6392\u5E03"
+      - "\u88C5\u914D\u5DE5\u4F5C\u53F0"
+      - DWG-PANEL-R4
+      - 50
+      - "\u53F0"
+      - "\u5F85\u5F00\u5DE5"
+    - columns:
+      - OP20231113004
+      - "\u63A7\u5236\u7535\u67DC"
+      - "\u7AEF\u5B50\u63A5\u7EBF"
+      - "\u538B\u7EBF\u94B3/\u87BA\u4E1D\u5200"
+      - ELE-WIRING-03
+      - 50
+      - "\u53F0"
+      - "\u5F85\u5F00\u5DE5"
+    - columns:
+      - OP20231113004
+      - "\u63A5\u7EBF\u7535\u67DC"
+      - "\u901A\u7535\u6D4B\u8BD5"
+      - "\u8010\u538B\u6D4B\u8BD5\u4EEA"
+      - TEST-ELE-O1
+      - 50
+      - "\u53F0"
+      - "\u5F85\u5F00\u5DE5"
+    previewTableData: []
+    signHintText: 
+  - roleName: "4\u8F66\u95F4\u4E3B\u7BA1"
+    prefillInputData:
+    - OP20231113005
+    - DPC20231113
+    - "\u7B2C\u56DB\u8F66\u95F4"
+    - 2023-11-13 08:30
+    - 2023-11-13 17:00
+    prefillTableData:
+    - columns:
+      - OP20231113005
+      - "\u4E3B\u673A\u4E0E\u7535\u673A"
+      - "\u4E3B\u673A\u5BF9\u4E2D\u5B89\u88C5"
+      - "\u540A\u88C5\u5E26/\u767E\u5206\u8868"
+      - ASS-P01
+      - 50
+      - "\u53F0"
+      - "\u5F85\u5F00\u5DE5"
+    - columns:
+      - OP20231113005
+      - "\u6574\u673A\u90E8\u4EF6"
+      - "\u7BA1\u8DEF\u4E0E\u7EBF\u8DEF\u8FDE\u63A5"
+      - "\u626D\u77E9\u6273\u624B"
+      - ASS-P02
+      - 50
+      - "\u53F0"
+      - "\u5F85\u5F00\u5DE5"
+    - columns:
+      - OP20231113005
+      - "\u6574\u673A\u603B\u6210"
+      - "\u6574\u673A\u8C03\u8BD5\u4E0E\u55B7\u6F06"
+      - "\u6D4B\u8BD5\u53F0/\u55B7\u67AA"
+      - ASS-P03
+      - 50
+      - "\u53F0"
+      - "\u5F85\u5F00\u5DE5"
+    previewTableData: []
+    signHintText: 

@@ -20,8 +20,9 @@ public class StandardSalesFlow : FlowBase
         public string targetLocation;
         public Interactables.ActionType actionType;
         public bool isBranchChoice = false; // 是否为分支选择步骤
-        
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, bool isBranch = false)
+        public UIManager.UIType? billType;  // 关联单据类型
+
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, bool isBranch = false, UIManager.UIType? billType = null)
         {
             stepName = name;
             description = desc;
@@ -29,6 +30,7 @@ public class StandardSalesFlow : FlowBase
             targetLocation = location;
             actionType = action;
             isBranchChoice = isBranch;
+            this.billType = billType;
         }
     }
     
@@ -165,11 +167,16 @@ public class StandardSalesFlow : FlowBase
             }
             else
             {
+                // 有关联单据的步骤，打开单据面板
+                if (_currentStep.billType != null)
+                {
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
+                }
                 // 如果是系统步骤（目标NPC为"系统"），自动完成
-                if (_currentStep.targetNPC == "系统")
+                else if (_currentStep.targetNPC == "系统")
                 {
                     Debug.Log($"[StandardSalesFlow] 系统步骤自动完成: {_currentStep.stepName}");
-                    yield return new WaitForSeconds(1.5f); // 给玩家一点时间看提示
+                    yield return new WaitForSeconds(1.5f);
                     _isStepCompleted = true;
                 }
                 else
@@ -200,7 +207,10 @@ public class StandardSalesFlow : FlowBase
         _mainSteps.Clear();
 
         // 主流程开始
-        _mainSteps.Enqueue(new StepData("流程开始", "欢迎进入标准产品流程，即将进行分支选择", "系统", "主界面", Interactables.ActionType.View));
+        _mainSteps.Enqueue(new StepData("流程开始", "欢迎进入标准产品流程", "系统", "主界面", Interactables.ActionType.View));
+
+        // 第一步：销售总监填写下月月度销售计划
+        _mainSteps.Enqueue(new StepData("销售总监填写月度销售计划", "销售总监填写下月月度销售计划；点：提交", "销售总监", "销售办公室", Interactables.ActionType.Fill, billType: UIManager.UIType.MonthlySalesPlan));
 
         // 分支选择步骤1（首次选择）
         _mainSteps.Enqueue(new StepData("选择分支", "请选择要完成的流程分支\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程 [5]生产采购", "系统", "主界面", Interactables.ActionType.View, true));

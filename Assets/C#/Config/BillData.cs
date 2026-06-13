@@ -26,6 +26,25 @@ public class BillData : ScriptableObject
         public List<Interactables.ActionType> visibleButtons;
     }
 
+    [System.Serializable]
+    public class RolePrefillOverride
+    {
+        [Tooltip("角色名称")]
+        public string roleName;
+
+        [Tooltip("该角色对应的预填输入框数据")]
+        public string[] prefillInputData;
+
+        [Tooltip("该角色对应的预填表格数据")]
+        public TableRow[] prefillTableData;
+
+        [Tooltip("该角色对应的预览表格数据（打开时显示，点填写后替换）")]
+        public TableRow[] previewTableData;
+
+        [Tooltip("该角色对应的签字区域提示文字（如工人姓名），覆盖默认 signHintText")]
+        public string signHintText;
+    }
+
     [Header("单据标识")]
     [Tooltip("单据类型")]
     public UIManager.UIType billType;
@@ -37,8 +56,16 @@ public class BillData : ScriptableObject
     [Tooltip("点击「填写」后自动填入输入框的内容")]
     public string[] prefillInputData;
 
-    [Tooltip("点击「填写」后自动填入表格的行数据")]
+    [Tooltip("点击「填写」后自动填入表格的行数据（完整数据，会替换预览数据）")]
     public TableRow[] prefillTableData;
+
+    [Header("预览数据")]
+    [Tooltip("打开单据时预先显示的表格行（部分数据，不点填写就能看到）。点填写后会被 prefillTableData 替换")]
+    public TableRow[] previewTableData;
+
+    [Header("上传附件")]
+    [Tooltip("点击「填写」后切换显示的附件图片（如 PDF 图标）")]
+    public Sprite fillAttachmentSprite;
 
     [Header("表格列配置")]
     [Tooltip("表格列标题（与prefillTableData每行的列一一对应）")]
@@ -66,19 +93,37 @@ public class BillData : ScriptableObject
     [Tooltip("点击「发货」后的横幅文字")]
     public string shipBannerText = "已通知仓库发货";
 
+    [Tooltip("是否允许发货（勾选后点击发货按钮直接通过，不勾选则弹警告）")]
+    public bool shipAllowed = false;
+
     [Tooltip("发货条件不满足时的警告弹窗文字")]
     public string shipFailAlertText = "条件不满足，无法发货";
 
     [Tooltip("点击「签字」后的横幅文字")]
     public string signBannerText = "已签名！";
 
+    [Header("签字区域")]
+    [Tooltip("签字区域下方显示的文字（如工人姓名），由 GetSignHintForRole 获取")]
+    public string signHintText = "";
+
+    [Tooltip("勾选后点击「填写」也会显示签字区域文字（适用于领料单等工人自填自签的场景）；不勾选则只有「签字」按钮才显示")]
+    public bool showSignHintOnFill = false;
+
+    [Tooltip("签字按钮下方的固定文本内容（如声明文字），填写时显示。支持 \\n 换行")]
+    [Multiline(3)]
+    public string fillSignFixedContent = "";
+
     [Header("角色按钮权限")]
     [Tooltip("每种角色对应的按钮权限（精确匹配 + 模糊匹配）")]
     public List<RoleButtonSetting> roleSettings;
 
+    [Header("角色预填数据覆盖")]
+    [Tooltip("按角色覆盖预填数据（精确匹配 >模糊匹配），未匹配则使用默认 prefillInputData / prefillTableData")]
+    public List<RolePrefillOverride> rolePrefillOverrides;
+
     /// <summary>
     /// 获取指定角色在当前单据上的可见按钮列表
-    /// 匹配逻辑：精确匹配 → 模糊匹配（Config角色名是Flow目标NPC的子串）
+    /// 匹配逻辑：精确匹配 >模糊匹配（Config角色名是Flow目标NPC的子串）
     /// </summary>
     public List<Interactables.ActionType> GetButtonsForRole(string roleName)
     {
@@ -102,13 +147,68 @@ public class BillData : ScriptableObject
             if (!string.IsNullOrEmpty(setting.roleName) &&
                 roleName.Contains(setting.roleName, System.StringComparison.OrdinalIgnoreCase))
             {
-                Debug.Log($"[BillData] 模糊匹配: Config角色'{setting.roleName}' → Flow目标'{roleName}'");
+                Debug.Log($"[BillData] 模糊匹配: Config角色'{setting.roleName}' >Flow目标'{roleName}'");
                 return setting.visibleButtons;
             }
         }
 
         Debug.LogWarning($"[BillData] 未找到角色'{roleName}'的按钮配置，使用默认空列表");
         return new List<Interactables.ActionType>();
+    }
+
+    /// <summary>获取角色对应的预填输入框数据，未匹配返回 null</summary>
+    public string[] GetPrefillInputForRole(string roleName)
+    {
+        var matched = MatchRole(rolePrefillOverrides, roleName);
+        return matched?.prefillInputData;
+    }
+
+    /// <summary>获取角色对应的预填表格数据，未匹配返回 null</summary>
+    public TableRow[] GetPrefillTableForRole(string roleName)
+    {
+        var matched = MatchRole(rolePrefillOverrides, roleName);
+        return matched?.prefillTableData;
+    }
+
+    /// <summary>获取角色对应的预览表格数据（打开时显示），未匹配返回默认 previewTableData</summary>
+    public TableRow[] GetPreviewTableForRole(string roleName)
+    {
+        var matched = MatchRole(rolePrefillOverrides, roleName);
+        return matched != null && matched.previewTableData != null && matched.previewTableData.Length > 0
+            ? matched.previewTableData
+            : previewTableData;
+    }
+
+    /// <summary>获取角色对应的签字区域提示文字，未匹配返回默认 signHintText</summary>
+    public string GetSignHintForRole(string roleName)
+    {
+        var matched = MatchRole(rolePrefillOverrides, roleName);
+        return matched != null && !string.IsNullOrEmpty(matched.signHintText)
+            ? matched.signHintText
+            : signHintText;
+    }
+
+    private RolePrefillOverride MatchRole(List<RolePrefillOverride> list, string roleName)
+    {
+        if (string.IsNullOrEmpty(roleName) || list == null) return null;
+
+        // 精确匹配
+        foreach (var item in list)
+        {
+            if (item.roleName.Equals(roleName, System.StringComparison.OrdinalIgnoreCase))
+                return item;
+        }
+        // 模糊匹配
+        foreach (var item in list)
+        {
+            if (!string.IsNullOrEmpty(item.roleName) &&
+                roleName.Contains(item.roleName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log($"[BillData] 预填模糊匹配: Config'{item.roleName}' >Flow'{roleName}'");
+                return item;
+            }
+        }
+        return null;
     }
 }
 
@@ -132,7 +232,7 @@ public static class BillDataLoader
             if (!_cache.ContainsKey(config.billType))
             {
                 _cache[config.billType] = config;
-                Debug.Log($"[BillDataLoader] 加载配置: {config.billType} → {config.billName}");
+                Debug.Log($"[BillDataLoader] 加载配置: {config.billType} >{config.billName}");
             }
             else
             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 需求管理器
 /// 负责在游戏开始时生成客户需求（空压机产品数量）
-/// 🔧 调试阶段：固定需求为 2 台，支持标准/定制流程类型扩展
+/// 调试阶段：固定需求为 2 台，支持标准/定制流程类型扩展
 /// </summary>
 public class DemandManager : MonoBehaviour
 {
@@ -44,8 +44,8 @@ public class DemandManager : MonoBehaviour
     [SerializeField]
     private float maxUnitPrice = 30000.0f;
 
-    // 🔧 新增：调试模式开关（Inspector 可勾）
-    [Header("🔧 调试配置")]
+    // 新增：调试模式开关（Inspector 可勾）
+    [Header("调试配置")]
     [Tooltip("调试阶段启用：固定需求数量，忽略随机范围")]
     [SerializeField]
     private bool isDebugMode = true;
@@ -75,7 +75,7 @@ public class DemandManager : MonoBehaviour
         public string customerName;
         public float unitPrice;
 
-        // 🔧 新增：携带流程类型，供下游模块判断
+        // 新增：携带流程类型，供下游模块判断
         public WorkflowType workflowType;
     }
     #endregion
@@ -89,12 +89,12 @@ public class DemandManager : MonoBehaviour
             return;
         }
         _instance = this;
-        DontDestroyOnLoad(gameObject); // 🔧 防止场景切换时单例丢失
+        DontDestroyOnLoad(gameObject); // 防止场景切换时单例丢失
     }
 
     private void Start()
     {
-        // 🔧 调试阶段：直接生成固定需求
+        // 调试阶段：直接生成固定需求
         // 正式阶段可改为：等待开始界面传入类型后再生成
         GenerateNewDemand();
     }
@@ -111,7 +111,7 @@ public class DemandManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 🔧 新增：由开始界面调用，设置流程类型并生成需求
+    /// 新增：由开始界面调用，设置流程类型并生成需求
     /// </summary>
     public void GenerateDemandByWorkflow(WorkflowType type)
     {
@@ -122,12 +122,12 @@ public class DemandManager : MonoBehaviour
 
     public void GenerateNewDemand()
     {
-        // 🔧 调试逻辑：固定 2 台
+        // 调试逻辑：固定 2 台
         int demandCount = isDebugMode ? debugFixedDemandCount : Random.Range(minAirCompressorDemand, maxAirCompressorDemand + 1);
 
         string customerName = GenerateCustomerName();
 
-        // 🔧 调试阶段：固定单价便于测试（可取消注释启用随机）
+        // 调试阶段：固定单价便于测试（可取消注释启用随机）
         float unitPrice = isDebugMode ? 25000.0f : Mathf.Round(Random.Range(minUnitPrice, maxUnitPrice) * 100) / 100;
 
         currentDemand = new CustomerDemand
@@ -135,7 +135,7 @@ public class DemandManager : MonoBehaviour
             airCompressorCount = demandCount,
             customerName = customerName,
             unitPrice = unitPrice,
-            workflowType = currentWorkflowType // 🔧 携带流程类型
+            workflowType = currentWorkflowType // 携带流程类型
         };
 
         Debug.Log($"[Demand] 已生成 | 客户:{customerName} | 数量:{demandCount}台 | 类型:{currentWorkflowType}");
@@ -148,7 +148,7 @@ public class DemandManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 🔧 新增：供开始界面调用，设置流程类型（不立即生成需求）
+    /// 新增：供开始界面调用，设置流程类型（不立即生成需求）
     /// </summary>
     public void SetWorkflowType(WorkflowType type)
     {

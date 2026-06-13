@@ -134,6 +134,13 @@ public class SettingTableGenerator : MonoBehaviour
         }
         AddRow(emptyRow1);
         AddRow(emptyRow2);
+
+        // 设置 Content 宽度 = 表格总列宽，使横向滚动生效
+        if (tableParent is RectTransform parentRt)
+        {
+            float totalWidth = indexColumnWidth + columnHeaders.Length * cellWidth;
+            parentRt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, totalWidth);
+        }
     }
     
     public string AddRow(string[] rowData)
@@ -290,6 +297,16 @@ public class SettingTableGenerator : MonoBehaviour
 
         rows.Clear();
         dataCells.Clear();
+    }
+
+    /// <summary>更新 Content 宽度为表格总列宽，使横向滚动生效</summary>
+    public void UpdateContentSize()
+    {
+        if (tableParent is RectTransform parentRt)
+        {
+            float totalWidth = indexColumnWidth + columnHeaders.Length * cellWidth;
+            parentRt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, totalWidth);
+        }
     }
     #endregion
 

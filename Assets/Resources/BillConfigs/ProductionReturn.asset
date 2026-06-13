@@ -15,8 +15,77 @@ MonoBehaviour:
   billType: 21
   billName: "\u751F\u4EA7\u9000\u6599\u5165\u5E93\u5355"
   prefillInputData: []
+  prefillTableData: []
+  previewTableData: []
+  fillAttachmentSprite: {fileID: 0}
+  tableColumnHeaders:
+  - "\u7269\u6599\u7F16\u7801"
+  - "\u7269\u6599\u540D\u79F0"
+  - "\u89C4\u683C\u578B\u53F7"
+  - "\u5355\u4F4D"
+  - "\u9000\u5E93\u6570\u91CF"
+  - "\u9000\u5E93\u539F\u56E0"
+  - "\u5B58\u653E\u8D27\u4F4D"
+  - "\u5907\u6CE8"
+  fillBannerText: "\u5DF2\u586B\u5199"
+  saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
+  submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
+  approveBannerText: "\u5DF2\u5BA1\u6838\uFF01"
+  approveConfirmText: "\u662F\u5426\u4E0B\u63A8\uFF1F"
+  pushDownBannerText: "\u5DF2\u4E0B\u63A8\uFF01"
+  shipBannerText: "\u5DF2\u901A\u77E5\u4ED3\u5E93\u53D1\u8D27"
+  shipAllowed: 0
+  shipFailAlertText: "\u6761\u4EF6\u4E0D\u6EE1\u8DB3\uFF0C\u65E0\u6CD5\u53D1\u8D27"
+  signBannerText: "\u5DF2\u7B7E\u540D\uFF01"
+  signHintText: 
+  showSignHintOnFill: 1
+  fillSignFixedContent: "\u9879\u76EE                              \u7ED3\u679C/\u7B7E\u5B57\n\u8D28\u68C0\u72B6\u6001            
+    \u514D\u68C0/\u5916\u89C2\u5B8C\u597D\n\u4ED3\u5E93\u9A8C\u6536            \n\u9000\u5E93\u4EBA"
   roleSettings:
   - roleName: "\u4ED3\u7BA1\u5458"
     visibleButtons: 08000000010000000b000000
   - roleName: "\u5DE5\u4EBA"
     visibleButtons: 0a000000080000000b000000
+  rolePrefillOverrides:
+  - roleName: "\u4ED3\u7BA1\u5458B"
+    prefillInputData:
+    - TL20231113003
+    - 2023-11-13
+    - "\u751F\u4EA7\u4F59\u6599\u9000\u5E93"
+    - "\u539F\u6750\u6599\u4ED3/\u673A\u52A0\u533A"
+    - "\u7B2C\u4E00\u8F66\u95F4/\u5F2F\u7BA1\u4E00\u73ED"
+    - "\u5F20\u4E09"
+    - LL20231113001
+    prefillTableData:
+    - columns:
+      - RM-IRON-250
+      - "\u94F8\u94C1\u6BDB\u576F"
+      - "HT250-\u5B9A\u5236"
+      - "\u4EF6"
+      - 0.05
+      - "\u751F\u4EA7\u4F59\u6599"
+      - RAW-A12-05
+      - "\u826F\u54C1\uFF0C\u53EF\u518D\u6B21\u7528\u4E8E\u5176\u4ED6\u8BA2\u5355"
+    previewTableData: []
+    signHintText: "\u738B\u4E03"
+  - roleName: "1\u8F66\u95F4\u5DE5\u4EBA"
+    prefillInputData:
+    - TL20231113003
+    - 2023-11-13
+    - "\u751F\u4EA7\u4F59\u6599\u9000\u5E93"
+    - "\u539F\u6750\u6599\u4ED3/\u673A\u52A0\u533A"
+    - "\u7B2C\u4E00\u8F66\u95F4/\u5F2F\u7BA1\u4E00\u73ED"
+    - "\u5F20\u4E09"
+    - LL20231113001
+    prefillTableData:
+    - columns:
+      - RM-IRON-250
+      - "\u94F8\u94C1\u6BDB\u576F"
+      - "HT250-\u5B9A\u5236"
+      - "\u4EF6"
+      - 0.05
+      - "\u751F\u4EA7\u4F59\u6599"
+      - RAW-A12-05
+      - "\u826F\u54C1\uFF0C\u53EF\u518D\u6B21\u7528\u4E8E\u5176\u4ED6\u8BA2\u5355"
+    previewTableData: []
+    signHintText: "\u5F20\u4E09"

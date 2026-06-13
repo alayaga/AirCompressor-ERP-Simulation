@@ -139,7 +139,7 @@ public abstract class FlowBase
             yield break;
         }
 
-        // ✅ 修改：将 PlayerController 改为 SimpleFirstPersonController
+        // 修改：将 PlayerController 改为 SimpleFirstPersonController
         SimpleFirstPersonController playerController = playerObject.GetComponent<SimpleFirstPersonController>();
         playerController?.SetPlayerInputEnabled(true);
 
@@ -165,9 +165,9 @@ public abstract class FlowBase
     /// </summary>
     /// <param name="stepActionType">流程步骤的 ActionType，决定按钮可见性</param>
     protected IEnumerator WaitForBillComplete(UIManager.UIType billType, string roleName,
-        Interactables.ActionType stepActionType = Interactables.ActionType.View)
+        Interactables.ActionType stepActionType = Interactables.ActionType.View, bool allowShip = false)
     {
-        Debug.Log($"[FlowBase] OPEN BILL: {billType}, 角色: {roleName}, stepAction: {stepActionType}");
+        Debug.Log($"[FlowBase] OPEN BILL: {billType}, 角色: {roleName}, stepAction: {stepActionType}, allowShip: {allowShip}");
 
         // 1. 获取单据配置数据
         var billData = BillDataLoader.GetConfig(billType);
@@ -197,17 +197,23 @@ public abstract class FlowBase
         var billView = panel.GetComponent<BillView>();
         if (billView == null)
         {
-            Debug.LogError($"[FlowBase] FAIL: 面板上没有 BillView 组件! 请替换旧的 BillPanelBase → BillView");
+            Debug.LogError($"[FlowBase] FAIL: 面板上没有 BillView 组件! 请替换旧的 BillPanelBase > BillView");
             UIManager.Instance.HideUI(billType);
             yield break;
         }
 
         // 6. 打开单据（设置按钮显隐，传入BillData供弹窗文字使用）
-        billView.Open(stepActionType, buttons, billData);
-        Debug.Log($"[FlowBase] OK: BillView.Open(action={stepActionType})");
+        billView.AllowShip = allowShip;
+        billView.Open(stepActionType, buttons, billData, roleName);
+        Debug.Log($"[FlowBase] OK: BillView.Open(action={stepActionType}, role={roleName})");
 
-        // 7. Fill 步骤：不自动填数据，等玩家点击"填写"按钮后再由 BillView.OnFillClicked 填入
-        // （数据已通过 billView.Open 传入，BillView 持有 _billData 引用）
+        // 7. 非 Fill 步骤（如 Approve/View）：自动填入预填数据（优先角色覆盖）
+        if (stepActionType != Interactables.ActionType.Fill && billData != null)
+        {
+            var inputData = billData.GetPrefillInputForRole(roleName) ?? billData.prefillInputData;
+            var tableData = billData.GetPrefillTableForRole(roleName) ?? billData.prefillTableData;
+            billView.FillData(inputData, tableData, billData.tableColumnHeaders);
+        }
 
         // 8. 隐藏准心 + 解锁鼠标 + 禁用玩家移动
         HideCrosshair();

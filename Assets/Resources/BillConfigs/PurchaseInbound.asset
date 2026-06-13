@@ -10,62 +10,55 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 795f5b8ebe91798409ee19b447f2f9fc, type: 3}
-  m_Name: DeliveryNotice
+  m_Name: PurchaseInbound
   m_EditorClassIdentifier: 
-  billType: 16
-  billName: "\u53D1\u8D27\u901A\u77E5\u5355"
+  billType: 12
+  billName: "\u91C7\u8D2D\u5165\u5E93\u5355"
   prefillInputData:
-  - FHD20231207001
-  - 2023-12-07
-  - XSDD20231102001
-  - "\u6C5F\u82CF\u534E\u79D1\u673A\u68B0\u5236\u9020\u6709\u9650\u516C\u53F8"
-  - "\u6C5F\u82CF\u7701\u82CF\u5DDE\u5E02\u5DE5\u4E1A\u56ED\u533Ax\u8DEFXX\u53F7"
-  - "\u5F20\u603B/138xxxx1234"
-  - "\u6C7D\u8FD0(\u81EA\u6709\u8D27\u8F66)"
-  - 2023-12-15
-  - "\u5F85\u5BA1\u6838"
+  - RK-20231109-088
+  - RC-20231109-012
+  - IQC-20231109-045
+  - "\u4F5B\u5C71XX\u7535\u673A\u5382 "
+  - '2023.11.09 '
+  - "\u539F\u6750\u6599\u4ED3\uFF08A\u533A\uFF09 "
   prefillTableData:
   - columns:
-    - PRD-DA55-CUS
-    - "\u6C38\u78C1\u53D8\u9891\u87BA\u6746\u7A7A\u538B\u673A"
-    - DA-55A-CUS
-    - "\u53F0"
-    - 1
-    - 0
-    - 1
-    - "\u6210\u54C1\u4ED3"
-    - "\u5B9A\u5236\u6574\u673A"
+    - VALVE-205
+    - "\u7535\u78C1\u9600"
+    - "220V/\u5E38\u95ED"
+    - "\u4E2A"
+    - 150
+    - 150
+    - A-02-05
+    - "\u68C0\u9A8C\u5408\u683C"
   - columns:
-    - ACC-TANK-3.0
-    - "\u50A8\u6C14\u7F50"
-    - C-3.0/1.0
-    - "\u53F0"
-    - 2
-    - 0
-    - 2
-    - "\u6210\u54C1\u4ED3"
-    - "\u6807\u51C6\u4EF6"
-  - columns:
-    - ACC-PLC-MOD
-    - "\u667A\u80FD\u8054\u63A7\u7CFB\u7EDF"
-    - PLC-MOD
+    - SCREW-M10
+    - "\u9540\u950C\u87BA\u6813"
+    - M10*40
     - "\u5957"
-    - 1
+    - 500
+    - 500
+    - A-03-12
+    - "\u68C0\u9A8C\u5408\u683C"
+  - columns:
+    - MOTOR-100A
+    - "\u4E3B\u7535\u673A"
+    - 7.5KW/380V
+    - "\u53F0"
+    - 30
     - 0
-    - 1
-    - "\u6210\u54C1\u4ED3"
-    - "\u5B9A\u5236\u6A21\u5757"
+    - /
+    - "\u672A\u5165\u5E93(\u68C0\u9A8C\u4E0D\u5408\u683C)"
   previewTableData: []
   fillAttachmentSprite: {fileID: 0}
   tableColumnHeaders:
-  - "\u4EA7\u54C1\u7F16\u7801"
-  - "\u4EA7\u54C1\u540D\u79F0"
+  - "\u7269\u6599\u7F16\u7801"
+  - "\u7269\u6599\u540D\u79F0"
   - "\u89C4\u683C\u578B\u53F7"
   - "\u5355\u4F4D"
-  - "\u901A\u77E5\u53D1\u8D27\u6570\u91CF"
-  - "\u5DF2\u53D1\u8D27\u6570\u91CF"
-  - "\u672A\u53D1\u6570\u91CF"
-  - "\u6765\u6E90\u4ED3\u5E93"
+  - "\u91C7\u8D2D\u6570\u91CF"
+  - "\u5165\u5E93\u6570\u91CF"
+  - "\u50A8\u4F4D"
   - "\u5907\u6CE8"
   fillBannerText: "\u5DF2\u586B\u5199"
   saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
@@ -82,7 +75,5 @@ MonoBehaviour:
   fillSignFixedContent: 
   roleSettings:
   - roleName: "\u4ED3\u7BA1\u5458"
-    visibleButtons: 08000000010000000b000000
-  - roleName: "\u4ED3\u5E93\u4E3B\u7BA1"
-    visibleButtons: 020000000b000000
+    visibleButtons: 0700000008000000010000000b000000
   rolePrefillOverrides: []

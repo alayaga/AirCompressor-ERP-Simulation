@@ -10,15 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 795f5b8ebe91798409ee19b447f2f9fc, type: 3}
-  m_Name: PickList
+  m_Name: ReceiptNotice
   m_EditorClassIdentifier: 
-  billType: 6
-  billName: "\u9886\u6599\u5355"
+  billType: 11
+  billName: "\u9001\u8D27\u901A\u77E5\u5355"
   prefillInputData: []
   prefillTableData: []
   previewTableData: []
   fillAttachmentSprite: {fileID: 0}
-  tableColumnHeaders: []
+  tableColumnHeaders:
+  - "\u7269\u6599\u7F16\u7801"
+  - "\u7269\u6599\u540D\u79F0"
+  - "\u89C4\u683C\u578B\u53F7"
+  - "\u5355\u4F4D"
+  - "\u8BA2\u8D2D\u6570\u91CF"
+  - "\u5907\u6CE8"
   fillBannerText: "\u5DF2\u586B\u5199"
   saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
   submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
@@ -29,41 +35,40 @@ MonoBehaviour:
   shipAllowed: 0
   shipFailAlertText: "\u6761\u4EF6\u4E0D\u6EE1\u8DB3\uFF0C\u65E0\u6CD5\u53D1\u8D27"
   signBannerText: "\u5DF2\u7B7E\u540D\uFF01"
-  signHintText: "\u5F20\u4E09"
-  showSignHintOnFill: 1
+  signHintText: 
+  showSignHintOnFill: 0
   fillSignFixedContent: 
   roleSettings:
-  - roleName: "\u5DE5\u4EBA"
+  - roleName: "\u4F9B\u5E94\u5546"
     visibleButtons: 0700000008000000010000000b000000
   rolePrefillOverrides:
-  - roleName: "1\u8F66\u95F4\u5DE5\u4EBA"
+  - roleName: "\u8DDF\u5355\u5458"
     prefillInputData:
-    - LL20231113001
-    - "\u7B2C\u4E00\u8F66\u95F4/\u6570\u63A7\u4E00\u73ED"
-    - "\u5F20\u4E09"
-    - 2023-11-13
-    - "\u539F\u6750\u79D1\u4ED3/\u673A\u52A0\u8F85\u79D1\u4ED3"
+    - SH-20231109-057
+    - PO20231103001
+    - "\u4F5B\u5C71XX\u7535\u673A\u5382"
+    - "XX\u7701XX\u5E02XX\u533AXX\u8DEFXX\u53F7(\u4ED3\u5E93\u7269\u6D41\u90E8]"
     prefillTableData:
     - columns:
-      - RM-IRON-250
-      - "\u94F8\u94C1\u6BDB\u576F"
-      - "HT250-\u5B9A\u5236"
-      - "\u4EF6"
-      - 105
-      - "\u7528\u4E8E\u4E3B\u673A\u58F3\u4F53\u7C97\u94E3"
+      - MOTOR-100A
+      - "\u4E3B\u7535\u673A"
+      - 7.5KW/380V
+      - "\u53F0"
+      - 30
+      - "\u542B\u5907\u54C11\u53F0(\u89C1\u5305\u88C5\u6E05\u5355)"
     - columns:
-      - CONN-GSK-12
-      - "\u5BC6\u5C01\u56FE"
-      - "Q120mm\u5546\u6CB9"
+      - VALVE-205
+      - "\u7535\u78C1\u9600"
+      - "220V/\u5E38\u95ED"
       - "\u4E2A"
-      - 2
-      - "\u4E3B\u673A\u9662\u76D6\u5BC6\u5C01"
+      - 150
+      - 
     - columns:
-      - FLUID-CUT
-      - "\u5207\u524A\u6DB2"
-      - "\u6C34\u6EB6\u6027"
-      - "\u5347"
-      - 5
-      - "CNC\u8BBE\u5907\u7528"
+      - SCREW-M10
+      - "\u9540\u950C\u87BA\u6813"
+      - M10*40
+      - "\u5957"
+      - 500
+      - 
     previewTableData: []
     signHintText: 

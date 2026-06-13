@@ -14,7 +14,79 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   billType: 13
   billName: "\u4E00\u5468\u751F\u4EA7\u8BA1\u5212"
-  prefillInputData: []
+  prefillInputData:
+  - "2023\u5E7411\u670813\u65E5- 2023\u5E7411\u670817\u65E5"
+  - "\u8BA1\u5212\u7269\u63A7\u4E2D\u5FC3"
+  - "2023\u5E7411\u670810\u65E5"
+  - "\u672C\u5468\u91CD\u70B9\u4FDD\u969CSO20231110001(\u6025\u5355)\u7684\u7269\u6599\u6D41\u8F6C;\u5468\u4E09\u5F2F\u7BA1\u8F66\u95F4\u8BBE\u5907\u4FDD\u517B\uFF0C\u5DF2\u907F\u5F00\u5173\u952E\u4EFB\u52A1"
+  prefillTableData:
+  - columns:
+    - "\u7D27\u6025"
+    - S020231110001
+    - BD-100A
+    - 50
+    - 2023-11-13
+    - "\u5F2F\u7BA1\u8F66\u95F4"
+    - "\u767D\u73ED(08:00-17:00)"
+    - "\u9F50\u5957"
+    - "\u6025\u5355\u7BA1\u8DEF\u9884\u5236(\u94DC\u7BA1/\u94A2\u7BA1\u5F2F\u7BA1)"
+  - columns:
+    - "\u7D27\u6025"
+    - S020231110001
+    - BD-100A
+    - 50
+    - 2023-11-13
+    - "\u914D\u7535\u8F66\u95F4"
+    - "\u767D\u73ED(08:00-17:00)"
+    - "\u9F50\u5957"
+    - "\u6025\u5355\u7535\u63A7\u67DC\u9884\u88C5(\u914D\u7535\u76D8\u63A5\u7EBF)"
+  - columns:
+    - "\u7D27\u6025"
+    - S020231110001
+    - BD-100A
+    - 50
+    - 2023-11-14
+    - "\u710A\u63A5\u8F66\u95F4"
+    - "\u767D\u73ED(08:00-17:00)"
+    - "\u9F50\u5957"
+    - "\u673A\u67B6\u710A\u63A5(\u5229\u7528\u5F2F\u7BA1\u8F66\u95F413\u65E5\u52A0
+      \u4EF6)"
+  - columns:
+    - "\u666E\u901A"
+    - S020231110002
+    - BD-200B
+    - 30
+    - 2023-11-13
+    - "\u710A\u63A5\u8F66\u95F4"
+    - "\u767D\u73ED(08:00-17:00) "
+    - "\u9F50\u5957"
+    - "\u5E38\u89C4\u8BA2\u5355\u673A\u67B6\u710A\u63A5"
+  previewTableData: []
+  fillAttachmentSprite: {fileID: 0}
+  tableColumnHeaders:
+  - "\u4F18\u5148\u7EA7"
+  - "\u9500\u552E\u8BA2\u5355\u53F7"
+  - "\u4EA7\u54C1\u578B\u53F7"
+  - "\u6570\u91CF"
+  - "\u6392\u4EA7\u65E5\u671F"
+  - "\u751F\u4EA7\u8F66\u95F4"
+  - "\u8BA1\u5212\u65F6\u6BB5"
+  - "\u7269\u6599\u72B6\u6001"
+  - "\u5907\u6CE8(\u5DE5\u5E8F\u8BF4\u660E)"
+  fillBannerText: "\u5DF2\u586B\u5199"
+  saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
+  submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
+  approveBannerText: "\u5DF2\u5BA1\u6838\uFF01"
+  approveConfirmText: "\u662F\u5426\u4E0B\u63A8\uFF1F"
+  pushDownBannerText: "\u5DF2\u4E0B\u63A8\uFF01"
+  shipBannerText: "\u5DF2\u901A\u77E5\u4ED3\u5E93\u53D1\u8D27"
+  shipAllowed: 0
+  shipFailAlertText: "\u6761\u4EF6\u4E0D\u6EE1\u8DB3\uFF0C\u65E0\u6CD5\u53D1\u8D27"
+  signBannerText: "\u5DF2\u7B7E\u540D\uFF01"
+  signHintText: 
+  showSignHintOnFill: 0
+  fillSignFixedContent: 
   roleSettings:
-  - roleName: PMC
+  - roleName: "PMC\u4E3B\u7BA1"
     visibleButtons: 0700000008000000010000000b000000
+  rolePrefillOverrides: []

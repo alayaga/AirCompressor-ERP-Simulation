@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// 定制产品生产流程（共57步）
+/// 定制产品生产流程（共43步）
 /// 从PMC查看销售订单到产品入库通知销售员的完整生产流程
-/// 车间顺序：1弯管 → 2焊接 → 3配电 → 4总装（流水线依赖）
+/// 车间顺序：1弯管 >2焊接 >3配电 >4总装（流水线依赖）
+/// 仅1车间工人领料和退料，2/3/4车间跳过领料退料
 /// </summary>
 public class CustomProductionFlow : FlowBase
 {
@@ -21,8 +22,9 @@ public class CustomProductionFlow : FlowBase
         public string targetLocation;
         public Interactables.ActionType actionType;
         public UIManager.UIType? billType;
+        public bool allowShip;
 
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null)
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, bool allowShip = false)
         {
             stepName = name;
             description = desc;
@@ -30,6 +32,7 @@ public class CustomProductionFlow : FlowBase
             targetLocation = location;
             actionType = action;
             this.billType = billType;
+            this.allowShip = allowShip;
         }
     }
 
@@ -88,7 +91,7 @@ public class CustomProductionFlow : FlowBase
                 while (!stepDone)
                 {
                     _isStepCompleted = false;
-                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType, _currentStep.allowShip);
                     if (_isStepCompleted)
                         stepDone = true;
                     else
@@ -276,64 +279,13 @@ public class CustomProductionFlow : FlowBase
             UIManager.UIType.DispatchOrder
         ));
 
-        _steps.Enqueue(new StepData(
-            "2车间工人到备料区领料",
-            "查看自己的派工单，根据派工单到备料区领料",
-            "2车间工人",
-            "备料区",
-            Interactables.ActionType.Pick
-        ));
-
-        _steps.Enqueue(new StepData(
-            "2车间工人填写领料单",
-            "填写领料单",
-            "2车间工人",
-            "备料区",
-            Interactables.ActionType.Fill,
-            UIManager.UIType.PickList
-        ));
-
-        // [步骤20] 工人生产 - 需按E触发，将来加入动画控制
+        // [步骤20] 工人生产
         _steps.Enqueue(new StepData(
             "2车间工人生产",
             "工人进行焊接生产操作",
             "2车间工人",
             "2车间-焊接",
             Interactables.ActionType.View
-        ));
-
-        _steps.Enqueue(new StepData(
-            "2车间工人退料实物送仓库",
-            "将生产多余物料退回仓库",
-            "2车间工人",
-            "仓库",
-            Interactables.ActionType.Deliver
-        ));
-
-        _steps.Enqueue(new StepData(
-            "仓管员质检确认退料",
-            "对2车间退料进行质检确认",
-            "仓管员B",
-            "仓库",
-            Interactables.ActionType.Approve
-        ));
-
-        _steps.Enqueue(new StepData(
-            "仓管员制生产退料入库单",
-            "填写生产退料入库单",
-            "仓管员B",
-            "仓库",
-            Interactables.ActionType.Fill,
-            UIManager.UIType.ProductionReturn
-        ));
-
-        _steps.Enqueue(new StepData(
-            "2车间工人签字确认退料",
-            "在生产退料入库单上签字",
-            "2车间工人",
-            "仓库",
-            Interactables.ActionType.Approve,
-            UIManager.UIType.ProductionReturn
         ));
 
         _steps.Enqueue(new StepData(
@@ -375,64 +327,13 @@ public class CustomProductionFlow : FlowBase
             UIManager.UIType.DispatchOrder
         ));
 
-        _steps.Enqueue(new StepData(
-            "3车间工人到备料区领料",
-            "查看自己的派工单，根据派工单到备料区领料",
-            "3车间工人",
-            "备料区",
-            Interactables.ActionType.Pick
-        ));
-
-        _steps.Enqueue(new StepData(
-            "3车间工人填写领料单",
-            "填写领料单",
-            "3车间工人",
-            "备料区",
-            Interactables.ActionType.Fill,
-            UIManager.UIType.PickList
-        ));
-
-        // [步骤31] 工人生产 - 需按E触发，将来加入动画控制
+        // [步骤31] 工人生产
         _steps.Enqueue(new StepData(
             "3车间工人生产",
             "工人进行配电生产操作",
             "3车间工人",
             "3车间-配电",
             Interactables.ActionType.View
-        ));
-
-        _steps.Enqueue(new StepData(
-            "3车间工人退料实物送仓库",
-            "将生产多余物料退回仓库",
-            "3车间工人",
-            "仓库",
-            Interactables.ActionType.Deliver
-        ));
-
-        _steps.Enqueue(new StepData(
-            "仓管员质检确认退料",
-            "对3车间退料进行质检确认",
-            "仓管员B",
-            "仓库",
-            Interactables.ActionType.Approve
-        ));
-
-        _steps.Enqueue(new StepData(
-            "仓管员制生产退料入库单",
-            "填写生产退料入库单",
-            "仓管员B",
-            "仓库",
-            Interactables.ActionType.Fill,
-            UIManager.UIType.ProductionReturn
-        ));
-
-        _steps.Enqueue(new StepData(
-            "3车间工人签字确认退料",
-            "在生产退料入库单上签字",
-            "3车间工人",
-            "仓库",
-            Interactables.ActionType.Approve,
-            UIManager.UIType.ProductionReturn
         ));
 
         _steps.Enqueue(new StepData(
@@ -474,24 +375,7 @@ public class CustomProductionFlow : FlowBase
             UIManager.UIType.DispatchOrder
         ));
 
-        _steps.Enqueue(new StepData(
-            "4车间工人到备料区领料",
-            "查看自己的派工单，根据派工单到备料区领料",
-            "4车间工人",
-            "备料区",
-            Interactables.ActionType.Pick
-        ));
-
-        _steps.Enqueue(new StepData(
-            "4车间工人填写领料单",
-            "填写领料单；点：提交",
-            "4车间工人",
-            "备料区",
-            Interactables.ActionType.Fill,
-            UIManager.UIType.PickList
-        ));
-
-        // [步骤42] 总装 - 需按E触发，将来加入动画控制
+        // [步骤42] 总装
         _steps.Enqueue(new StepData(
             "4车间工人总装",
             "4车间负责组装来自1/2/3车间的半成品",
@@ -576,7 +460,8 @@ public class CustomProductionFlow : FlowBase
             "销售员",
             "销售办公室",
             Interactables.ActionType.Fill,
-            UIManager.UIType.SalesOrder
+            UIManager.UIType.SalesOrder,
+            allowShip: true
         ));
 
         _steps.Enqueue(new StepData(

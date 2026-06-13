@@ -14,9 +14,144 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   billType: 5
   billName: "BOM\u5355"
-  prefillInputData: []
+  prefillInputData:
+  - BOM20231102005
+  - XSDD20231102001
+  - CP-DJ-55A-CUS
+  - "\u6C38\u78C1\u53D8\u9891\u87BA\u6746\u7A7A\u538B\u673A(\u5B9A\u5236)"
+  - DA-55A-CUS
+  - 1
+  prefillTableData:
+  - columns:
+    - 1
+    - 1
+    - CP-DJ-55A-CUS
+    - "\u6C38\u78C1\u53D8\u9891\u87BA\u6746\u7A7A\u538B\u673A"
+    - "DA-55A - \u5B9A\u5236\u7248"
+    - "\u53F0"
+    - 1
+    - "0\uFF05"
+    - "\u603B\u88C5\u4F53\u5B9A\u5236"
+  - columns:
+    - 2
+    - 2
+    - MOT-YVF-55-IE3
+    - "\u4E3B\u9A71\u52A8\u7535\u673A"
+    - YVF2-55KW-380V-IP54-IE3
+    - "\u53F0"
+    - 1
+    - 0%
+    - "\u5339\u914D\u5BA2\u6237\u4F4E\u80FD\u8017\u8981\u6C42"
+  - columns:
+    - 3
+    - 2
+    - COM-HSG-55A
+    - "\u87BA\u6746\u4E3B\u673A\u603B\u6210"
+    - "\u9002\u914D DA-55A \u673A\u578B"
+    - "\u5957"
+    - 1
+    - 0%
+    - "\u542B\u673A\u4F53\u3001\u8F6C\u5B50\u3001\u8F74\u627F"
+  - columns:
+    - 4
+    - 2
+    - VAL-OIL-TM53
+    - "\u6E29\u63A7\u9600\u603B\u6210"
+    - "53 \u5EA6\u5F00\u542F / \u5E26\u65C1\u901A\u9600"
+    - "\u5957"
+    - 1
+    - 0%
+    - "\u5B9A\u5236\u70B9\uFF1A\u63A5\u53E3\u65B9\u5411\u9700\u8C03\u6574"
+  - columns:
+    - 5
+    - 2
+    - COOL-FAN-AL450
+    - "\u51B7\u5374\u98CE\u6247"
+    - "\u03A6450mm / \u94DD\u5236"
+    - "\u4E2A"
+    - 1
+    - 0%
+    - "\u9759\u97F3\u964D\u566A\u5904\u7406"
+  - columns:
+    - 6
+    - 2
+    - FILT-AIR-250
+    - "\u7A7A\u6C14\u8FC7\u6EE4\u5668"
+    - "5\u03BCm / \u5E26\u538B\u5DEE\u62A5\u8B66"
+    - "\u5957"
+    - 1
+    - 0%
+    - "\u52A0\u5927\u8FDB\u6C14\u53E3"
+  - columns:
+    - 7
+    - 2
+    - SEP-OIL-CAN
+    - "\u6CB9\u6C14\u5206\u79BB\u5668\u82AF"
+    - "\u5B9A\u5236\u8010\u538B\u7B49\u7EA7 / 0.8MPa"
+    - "\u4E2A"
+    - 1
+    - 0%
+    - "\u9700\u52A0\u539A\u7AEF\u76D6\u9632\u9707\u52A8"
+  - columns:
+    - 8
+    - 2
+    - TANK-AIR-3.0
+    - "\u50A8\u6C14\u7F50\u7EC4\u4EF6"
+    - "V=3.0m\xB3/P=1.0MPa"
+    - "\u5957"
+    - 1
+    - 0%
+    - "\u5305\u542B\u538B\u529B\u8868\u3001\u5B89\u5168\u9600"
+  - columns:
+    - 9
+    - 2
+    - ELEC-BOX-PLC
+    - "\u7535\u63A7\u7BB1\u603B\u6210"
+    - "PLC \u63A7\u5236\u7CFB\u7EDF"
+    - "\u5957"
+    - 1
+    - 0%
+    - "\u5B9A\u5236\u9879\uFF1A\u542B\u8FDC\u7A0B\u6A21\u5757"
+  - columns:
+    - 10
+    - 3
+    - MOD-REMOTE-WIFI
+    - "\u65E0\u7EBF\u901A\u8BAF\u6A21\u5757"
+    - "4G/WiFi \u6570\u636E\u4F20\u8F93 "
+    - "\u4E2A"
+    - 1
+    - 0%
+    - "\u5C5E\u4E8E\u7535\u63A7\u7BB1\u5185\u90E8\u914D\u4EF6 "
+  previewTableData: []
+  fillAttachmentSprite: {fileID: 21300000, guid: 56d51374e67666143906b6cce6de7db1,
+    type: 3}
+  tableColumnHeaders:
+  - "\u5C42\u7EA7"
+  - "\u7269\u6599\u7F16\u7801"
+  - "\u7269\u6599\u540D\u79F0"
+  - "\u89C4\u683C\u578B\u53F7/\u53C2\u6570"
+  - "\u5355\u4F4D"
+  - "\u5355\u4F4D\u7528\u6599"
+  - "\u5907\u6CE8"
+  - "\u635F\u8017\u7387"
+  fillBannerText: "\u5DF2\u586B\u5199"
+  saveBannerText: "\u5DF2\u4FDD\u5B58\u6210\u529F\uFF01"
+  submitBannerText: "\u5DF2\u63D0\u4EA4\uFF01"
+  approveBannerText: "\u5DF2\u5BA1\u6838\uFF01"
+  approveConfirmText: "\u662F\u5426\u4E0B\u63A8\uFF1F"
+  pushDownBannerText: "\u5DF2\u4E0B\u63A8\uFF01"
+  shipBannerText: "\u5DF2\u901A\u77E5\u4ED3\u5E93\u53D1\u8D27"
+  shipAllowed: 0
+  shipFailAlertText: "\u6761\u4EF6\u4E0D\u6EE1\u8DB3\uFF0C\u65E0\u6CD5\u53D1\u8D27"
+  signBannerText: "\u5DF2\u7B7E\u540D\uFF01"
+  signHintText: 
+  showSignHintOnFill: 0
+  fillSignFixedContent: 
   roleSettings:
   - roleName: "\u6280\u672F\u5458"
     visibleButtons: 0700000008000000010000000b000000
   - roleName: "\u8D22\u52A1"
     visibleButtons: 0b000000
+  - roleName: PMC
+    visibleButtons: 0b000000
+  rolePrefillOverrides: []

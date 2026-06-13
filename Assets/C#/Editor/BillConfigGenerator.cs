@@ -33,14 +33,15 @@ public class BillConfigGenerator : EditorWindow
             { "销售员", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Ship, Interactables.ActionType.Exit } },
             { "销售主管", new List<Interactables.ActionType> { Interactables.ActionType.Approve, Interactables.ActionType.Exit } },
             { "仓管员", new List<Interactables.ActionType> { Interactables.ActionType.Ship, Interactables.ActionType.Exit } },
-            { "PMC", new List<Interactables.ActionType> { Interactables.ActionType.Exit } }
+            { "PMC主管", new List<Interactables.ActionType> { Interactables.ActionType.Exit } }
         });
 
         // BOM单配置
         GenerateBillConfig(UIManager.UIType.ProductionBOM, "BOM单", new Dictionary<string, List<Interactables.ActionType>>
         {
             { "技术员", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } },
-            { "财务", new List<Interactables.ActionType> { Interactables.ActionType.Exit } }
+            { "财务", new List<Interactables.ActionType> { Interactables.ActionType.Exit } },
+            { "PMC主管", new List<Interactables.ActionType> { Interactables.ActionType.Exit } }
         });
 
         // 销售报价单配置
@@ -53,19 +54,19 @@ public class BillConfigGenerator : EditorWindow
         // 一周生产计划配置
         GenerateBillConfig(UIManager.UIType.WeeklyProductionPlan, "一周生产计划", new Dictionary<string, List<Interactables.ActionType>>
         {
-            { "PMC", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
+            { "PMC主管", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
         });
 
         // 排产单配置
         GenerateBillConfig(UIManager.UIType.ProductionSchedule, "排产单", new Dictionary<string, List<Interactables.ActionType>>
         {
-            { "PMC", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
+            { "PMC主管", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
         });
 
         // 生产用料清单配置
         GenerateBillConfig(UIManager.UIType.ProductionMaterialList, "生产用料清单", new Dictionary<string, List<Interactables.ActionType>>
         {
-            { "PMC", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } },
+            { "PMC主管", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } },
             { "仓管员", new List<Interactables.ActionType> { Interactables.ActionType.Exit } }
         });
 
@@ -121,6 +122,60 @@ public class BillConfigGenerator : EditorWindow
         {
             { "仓管员", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } },
             { "仓库主管", new List<Interactables.ActionType> { Interactables.ActionType.Approve, Interactables.ActionType.Exit } }
+        });
+
+        // ========================================================
+        // 采购流程单据配置
+        // ========================================================
+
+        // 采购申请单
+        GenerateBillConfig(UIManager.UIType.PurchaseRequest, "采购申请单", new Dictionary<string, List<Interactables.ActionType>>
+        {
+            { "PMC主管", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } },
+            { "采购主管", new List<Interactables.ActionType> { Interactables.ActionType.Approve, Interactables.ActionType.Exit } }
+        });
+
+        // 采购订单
+        GenerateBillConfig(UIManager.UIType.PurchaseOrder, "采购订单", new Dictionary<string, List<Interactables.ActionType>>
+        {
+            { "跟单员", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
+        });
+
+        // 送货通知单
+        GenerateBillConfig(UIManager.UIType.ReceiptNotice, "送货通知单", new Dictionary<string, List<Interactables.ActionType>>
+        {
+            { "供应商", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
+        });
+
+        // 收料通知单
+        GenerateBillConfig(UIManager.UIType.IncomingNotification, "收料通知单", new Dictionary<string, List<Interactables.ActionType>>
+        {
+            { "跟单员", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
+        });
+
+        // 来料检验单
+        GenerateBillConfig(UIManager.UIType.IncomingInspection, "来料检验单", new Dictionary<string, List<Interactables.ActionType>>
+        {
+            { "仓管员", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
+        });
+
+        // 采购入库单
+        GenerateBillConfig(UIManager.UIType.PurchaseInbound, "采购入库单", new Dictionary<string, List<Interactables.ActionType>>
+        {
+            { "仓管员", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
+        });
+
+        // 两周采购计划
+        GenerateBillConfig(UIManager.UIType.BiweeklyPurchasePlan, "两周采购计划", new Dictionary<string, List<Interactables.ActionType>>
+        {
+            { "PMC主管", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } }
+        });
+
+        // 月度销售计划
+        GenerateBillConfig(UIManager.UIType.MonthlySalesPlan, "月度销售计划", new Dictionary<string, List<Interactables.ActionType>>
+        {
+            { "销售总监", new List<Interactables.ActionType> { Interactables.ActionType.Save, Interactables.ActionType.Submit, Interactables.ActionType.Fill, Interactables.ActionType.Exit } },
+            { "PMC主管", new List<Interactables.ActionType> { Interactables.ActionType.View, Interactables.ActionType.Exit } }
         });
 
         AssetDatabase.Refresh();

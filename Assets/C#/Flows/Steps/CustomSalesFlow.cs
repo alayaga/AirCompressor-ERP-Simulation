@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// 定制产品销售流程
-/// 销售阶段（客户询单→BOM→报价→提交PMC），完成后进入生产/采购分支选择
+/// 销售阶段（客户询单>BOM>报价>提交PMC），完成后进入生产/采购分支选择
 /// </summary>
 public class CustomSalesFlow : FlowBase
 {

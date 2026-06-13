@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// 定制产品采购流程（共13步）
+/// 定制产品采购流程（共12步）
 /// 从PMC查看销售订单到采购入库的完整流程
-/// 步骤4~13与标准产品原料采购流程相同
 /// </summary>
 public class CustomPurchaseFlow : FlowBase
 {
@@ -63,13 +62,7 @@ public class CustomPurchaseFlow : FlowBase
 
             Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
             bool isAutoStep = _currentStep.targetNPC == "供应商" || _currentStep.targetNPC == "系统";
-            if (_currentStep.billType != null)
-            {
-                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
-
-                if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
-            }
-            else if (isAutoStep)
+            if (isAutoStep)
             {
                 Debug.Log($"[CustomPurchaseFlow] 自动步骤：{_currentStep.stepName}，等待5秒后自动完成");
                 yield return new WaitForSeconds(5f);
@@ -77,7 +70,21 @@ public class CustomPurchaseFlow : FlowBase
             }
             else
             {
+                // 先等待玩家走到NPC前按E交互
                 yield return new WaitUntil(() => _isStepCompleted);
+            }
+
+            // 交互完成后，如果步骤关联了单据，再打开单据面板
+            if (_currentStep.billType != null)
+            {
+                bool stepDone = false;
+                while (!stepDone)
+                {
+                    _isStepCompleted = false;
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
+                    if (_isStepCompleted) stepDone = true;
+                    else yield return new WaitUntil(() => _isStepCompleted);
+                }
             }
 
             Debug.Log($"[完成] {_currentStep.stepName}");
@@ -122,11 +129,12 @@ public class CustomPurchaseFlow : FlowBase
             "填写采购申请单；点：提交",
             "PMC主管",
             "计划物控中心",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.PurchaseRequest
         ));
 
         // ========================================================
-        // 阶段2: 采购执行与入库（步骤4~13，与标准采购流程相同）
+        // 阶段2: 采购执行与入库（步骤4~12）
         // ========================================================
 
         _steps.Enqueue(new StepData(
@@ -135,15 +143,6 @@ public class CustomPurchaseFlow : FlowBase
             "采购主管",
             "采购部",
             Interactables.ActionType.Approve,
-            UIManager.UIType.PurchaseRequest
-        ));
-
-        _steps.Enqueue(new StepData(
-            "跟单员查看采购计划",
-            "跟单员查看采购计划",
-            "跟单员",
-            "采购部",
-            Interactables.ActionType.View,
             UIManager.UIType.PurchaseRequest
         ));
 
@@ -158,18 +157,19 @@ public class CustomPurchaseFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "供应商送货",
-            "供应商电话联系跟单员后送货",
+            "供应商电话联系跟单员后送货，货和单一起到",
             "供应商",
             "供应商处",
             Interactables.ActionType.View
         ));
 
         _steps.Enqueue(new StepData(
-            "供应商填写送货通知单",
-            "供应商填写送货通知单（随货）",
-            "供应商",
-            "供应商处",
-            Interactables.ActionType.Fill
+            "跟单员查看送货通知单",
+            "跟单员查看送货通知单（随货到达）",
+            "跟单员",
+            "采购部",
+            Interactables.ActionType.View,
+            UIManager.UIType.ReceiptNotice
         ));
 
         _steps.Enqueue(new StepData(
@@ -186,7 +186,7 @@ public class CustomPurchaseFlow : FlowBase
             "跟单员",
             "采购部",
             Interactables.ActionType.Fill,
-            UIManager.UIType.ReceiptNotice
+            UIManager.UIType.IncomingNotification
         ));
 
         _steps.Enqueue(new StepData(
@@ -195,7 +195,7 @@ public class CustomPurchaseFlow : FlowBase
             "仓管员B",
             "仓库",
             Interactables.ActionType.View,
-            UIManager.UIType.ReceiptNotice
+            UIManager.UIType.IncomingNotification
         ));
 
         _steps.Enqueue(new StepData(
@@ -203,7 +203,8 @@ public class CustomPurchaseFlow : FlowBase
             "仓管员填写来料检验单；点：提交；自动下推",
             "仓管员B",
             "仓库",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            UIManager.UIType.IncomingInspection
         ));
 
         _steps.Enqueue(new StepData(
