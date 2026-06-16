@@ -60,13 +60,8 @@ public class StandardProductionFlow : FlowBase
             ShowCurrentStepToUI();
 
             Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
-            if (_currentStep.billType != null)
-            {
-                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
 
-                if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
-            }
-            else if (_currentStep.targetNPC == "系统")
+            if (_currentStep.targetNPC == "系统")
             {
                 Debug.Log($"[StandardProductionFlow] 系统步骤自动完成: {_currentStep.stepName}");
                 yield return new WaitForSeconds(3f);
@@ -75,6 +70,20 @@ public class StandardProductionFlow : FlowBase
             else
             {
                 yield return new WaitUntil(() => _isStepCompleted);
+            }
+
+            if (_currentStep.billType != null)
+            {
+                bool stepDone = false;
+                while (!stepDone)
+                {
+                    _isStepCompleted = false;
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+                    if (_isStepCompleted)
+                        stepDone = true;
+                    else
+                        yield return new WaitUntil(() => _isStepCompleted);
+                }
             }
 
             Debug.Log($"[完成] {_currentStep.stepName}");

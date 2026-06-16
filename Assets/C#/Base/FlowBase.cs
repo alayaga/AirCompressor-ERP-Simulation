@@ -43,7 +43,13 @@ public abstract class FlowBase
         Debug.Log($"开始流程: {GetType().Name}");
         _isRunning = true;
         OnFlowStart?.Invoke();
-        _currentCoroutine = _coroutineRunner.StartCoroutine(FlowCoroutine());
+        _currentCoroutine = _coroutineRunner.StartCoroutine(RunFlow());
+    }
+
+    private IEnumerator RunFlow()
+    {
+        yield return FlowCoroutine();
+        FinishFlow();
     }
 
     public virtual void StopFlow()

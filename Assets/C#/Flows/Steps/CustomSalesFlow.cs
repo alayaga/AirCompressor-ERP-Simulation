@@ -77,37 +77,37 @@ public class CustomSalesFlow : FlowBase
             // 显示当前步骤到UI
             ShowCurrentStepToUI();
 
-            // 如果是分支选择步骤，等待玩家选择
+            // 如果是分支选择步骤，循环供玩家反复选择
             if (_currentStep.isBranchChoice)
             {
-                Debug.Log("[CustomSalesFlow] 等待玩家选择分支（[1]生产流程 [2]采购流程）");
-
-                while (!_isStepCompleted)
+                while (true)
                 {
-                    if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+                    Debug.Log("[CustomSalesFlow] 等待玩家选择分支（[1]生产流程 [2]采购流程）");
+                    ShowCurrentStepToUI();
+
+                    _isStepCompleted = false;
+                    while (!_isStepCompleted)
                     {
-                        SelectBranch(1);
+                        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+                            SelectBranch(1);
+                        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+                            SelectBranch(2);
+
+                        yield return null;
                     }
-                    else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+
+                    if (_productionBranchSelected)
                     {
-                        SelectBranch(2);
+                        Debug.Log("[CustomSalesFlow] 启动生产流程分支");
+                        yield return StartBranchFlow<CustomProductionFlow>();
+                        _productionBranchSelected = false;
                     }
-
-                    yield return null;
-                }
-
-                // 根据玩家选择启动对应的分支流程
-                if (_productionBranchSelected)
-                {
-                    Debug.Log("[CustomSalesFlow] 启动生产流程分支");
-                    yield return StartBranchFlow<CustomProductionFlow>();
-                    _productionBranchSelected = false;
-                }
-                else if (_purchaseBranchSelected)
-                {
-                    Debug.Log("[CustomSalesFlow] 启动采购流程分支");
-                    yield return StartBranchFlow<CustomPurchaseFlow>();
-                    _purchaseBranchSelected = false;
+                    else if (_purchaseBranchSelected)
+                    {
+                        Debug.Log("[CustomSalesFlow] 启动采购流程分支");
+                        yield return StartBranchFlow<CustomPurchaseFlow>();
+                        _purchaseBranchSelected = false;
+                    }
                 }
             }
             else
@@ -233,13 +233,13 @@ public class CustomSalesFlow : FlowBase
     {
         if (!_isStepCompleted && _currentStep != null && _currentStep.isBranchChoice)
         {
-            if (branchIndex == 1 && !_productionBranchCompleted && !_productionBranchSelected)
+            if (branchIndex == 1 && !_productionBranchSelected)
             {
                 Debug.Log("[CustomSalesFlow] 选择生产流程分支");
                 _productionBranchSelected = true;
                 _isStepCompleted = true;
             }
-            else if (branchIndex == 2 && !_purchaseBranchCompleted && !_purchaseBranchSelected)
+            else if (branchIndex == 2 && !_purchaseBranchSelected)
             {
                 Debug.Log("[CustomSalesFlow] 选择采购流程分支");
                 _purchaseBranchSelected = true;

@@ -58,3 +58,4 @@
 /Assets/VP.studio3d/Industrial_Robot_Pack/Textures/RM9/L_RM_9_AlbedoTransparency.png filter=lfs diff=lfs merge=lfs -text
 /Assets/VP.studio3d/Industrial_Robot_Pack/Textures/RM9/L_RM_9_MetallicSmoothness.png filter=lfs diff=lfs merge=lfs -text
 /Assets/BillRequirement/空压机虚仿平台-单据说明.docx filter=lfs diff=lfs merge=lfs -text
+/Assets/Fonts/江城黑体[[:space:]]400W[[:space:]]SDF.asset filter=lfs diff=lfs merge=lfs -text

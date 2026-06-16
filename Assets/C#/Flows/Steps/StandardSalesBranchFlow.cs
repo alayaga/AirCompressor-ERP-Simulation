@@ -58,17 +58,22 @@ public class StandardSalesBranchFlow : FlowBase
             ShowCurrentStepToUI();
 
             Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
-            // 判断是否有单据交互
+
+            // 手动步骤：等待玩家走到NPC前按E
+            yield return new WaitUntil(() => _isStepCompleted);
+
             if (_currentStep.billType != null)
             {
-                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
-
-                if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
-            }
-            else
-            {
-                // 手动步骤：等待玩家完成（通过按E触发 CompleteStep）
-                yield return new WaitUntil(() => _isStepCompleted);
+                bool stepDone = false;
+                while (!stepDone)
+                {
+                    _isStepCompleted = false;
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+                    if (_isStepCompleted)
+                        stepDone = true;
+                    else
+                        yield return new WaitUntil(() => _isStepCompleted);
+                }
             }
 
             Debug.Log($"[完成] {_currentStep.stepName}");

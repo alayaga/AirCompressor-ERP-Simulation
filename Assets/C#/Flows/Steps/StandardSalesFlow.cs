@@ -84,96 +84,62 @@ public class StandardSalesFlow : FlowBase
             // 显示当前步骤到 UI
             ShowCurrentStepToUI();
 
-            // 如果是分支选择步骤，等待玩家选择
+            // 如果是分支选择步骤，循环供玩家反复选择
             if (_currentStep.isBranchChoice)
             {
-                Debug.Log("[StandardSalesFlow] 等待玩家选择分支（按1销售-PMC, 2销售-发货, 3生产流程, 4采购流程）");
-                
-                // 使用协程检测键盘输入
-                while (!_isStepCompleted)
+                while (true)
                 {
-                    // 检测键盘输入（支持主键盘和数字键盘）
-                    if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+                    Debug.Log("[StandardSalesFlow] 等待玩家选择（[1]销售-PMC [2]销售-发货 [3]生产 [4]采购 [5]生产采购）");
+                    ShowCurrentStepToUI();
+
+                    _isStepCompleted = false;
+                    while (!_isStepCompleted)
                     {
-                        SelectBranch(1);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
-                    {
-                        SelectBranch(2);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
-                    {
-                        SelectBranch(3);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
-                    {
-                        SelectBranch(4);
-                    }
-                    else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
-                    {
-                        SelectBranch(5);
+                        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+                            SelectBranch(1);
+                        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+                            SelectBranch(2);
+                        else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+                            SelectBranch(3);
+                        else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
+                            SelectBranch(4);
+                        else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
+                            SelectBranch(5);
+
+                        yield return null;
                     }
 
-                    yield return null; // 等待下一帧
-                }
-                
-                // 根据玩家选择启动对应的分支流程
-                if (_salesBranchSelected)
-                {
-                    Debug.Log("[StandardSalesFlow] 启动销售-PMC分支流程");
-                    yield return StartBranchFlow<StandardSalesBranchFlow>();
-                    _salesBranchSelected = false;
-                }
-                else if (_deliveryBranchSelected)
-                {
-                    Debug.Log("[StandardSalesFlow] 启动销售-发货分支流程");
-                    yield return StartBranchFlow<StandardDeliveryFlow>();
-                    _deliveryBranchSelected = false;
-                }
-                else if (_productionBranchSelected)
-                {
-                    Debug.Log("[StandardSalesFlow] 启动生产流程分支");
-                    yield return StartBranchFlow<StandardProductionFlow>();
-                    _productionBranchSelected = false;
-                }
-                else if (_purchaseBranchSelected)
-                {
-                    Debug.Log("[StandardSalesFlow] 启动采购流程分支");
-                    yield return StartBranchFlow<StandardPurchaseFlow>();
-                    _purchaseBranchSelected = false;
-                }
-                else if (_productionDeptPurchaseBranchSelected)
-                {
-                    Debug.Log("[StandardSalesFlow] 启动生产部门提交采购流程分支");
-                    yield return StartBranchFlow<ProductionDeptPurchaseFlow>();
-                    _productionDeptPurchaseBranchSelected = false;
-                }
-                else
-                {
-                    // 检查是否所有分支都已完成
-                    bool allCompleted = _salesBranchCompleted && _deliveryBranchCompleted
-                                      && _productionBranchCompleted && _purchaseBranchCompleted
-                                      && _productionDeptPurchaseBranchCompleted;
-                    
-                    if (allCompleted)
+                    if (_salesBranchSelected)
                     {
-                        Debug.Log("[StandardSalesFlow] 所有分支都已完成，跳过分支选择");
+                        yield return StartBranchFlow<StandardSalesBranchFlow>();
+                        _salesBranchSelected = false;
                     }
-                    else
+                    else if (_deliveryBranchSelected)
                     {
-                        Debug.LogWarning("[StandardSalesFlow] 分支选择状态异常，检查是否有未完成的分支");
+                        yield return StartBranchFlow<StandardDeliveryFlow>();
+                        _deliveryBranchSelected = false;
+                    }
+                    else if (_productionBranchSelected)
+                    {
+                        yield return StartBranchFlow<StandardProductionFlow>();
+                        _productionBranchSelected = false;
+                    }
+                    else if (_purchaseBranchSelected)
+                    {
+                        yield return StartBranchFlow<StandardPurchaseFlow>();
+                        _purchaseBranchSelected = false;
+                    }
+                    else if (_productionDeptPurchaseBranchSelected)
+                    {
+                        yield return StartBranchFlow<ProductionDeptPurchaseFlow>();
+                        _productionDeptPurchaseBranchSelected = false;
                     }
                 }
             }
             else
             {
-                // 有关联单据的步骤，打开单据面板
-                if (_currentStep.billType != null)
-                {
-                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
-                }
-                // 如果是系统步骤（目标NPC为"系统"），自动完成
-                else if (_currentStep.targetNPC == "系统")
+                // 系统步骤自动完成，普通步骤等待E交互
+                if (_currentStep.targetNPC == "系统")
                 {
                     Debug.Log($"[StandardSalesFlow] 系统步骤自动完成: {_currentStep.stepName}");
                     yield return new WaitForSeconds(1.5f);
@@ -181,8 +147,23 @@ public class StandardSalesFlow : FlowBase
                 }
                 else
                 {
-                    // 等待玩家完成此步骤
+                    // 等待玩家走到NPC前按E
                     yield return new WaitUntil(() => _isStepCompleted);
+                }
+
+                // 交互完成后，打开单据（支持退出重新进入）
+                if (_currentStep.billType != null)
+                {
+                    bool stepDone = false;
+                    while (!stepDone)
+                    {
+                        _isStepCompleted = false;
+                        yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
+                        if (_isStepCompleted)
+                            stepDone = true;
+                        else
+                            yield return new WaitUntil(() => _isStepCompleted);
+                    }
                 }
             }
 
@@ -288,31 +269,31 @@ public class StandardSalesFlow : FlowBase
     {
         if (!_isStepCompleted && _currentStep != null && _currentStep.isBranchChoice)
         {
-            if (branchIndex == 1 && !_salesBranchCompleted && !_salesBranchSelected)
+            if (branchIndex == 1 && !_salesBranchSelected)
             {
                 Debug.Log("[StandardSalesFlow] 选择销售-PMC流程分支");
                 _salesBranchSelected = true;  // 标记待执行
                 _isStepCompleted = true;
             }
-            else if (branchIndex == 2 && !_deliveryBranchCompleted && !_deliveryBranchSelected)
+            else if (branchIndex == 2 && !_deliveryBranchSelected)
             {
                 Debug.Log("[StandardSalesFlow] 选择销售-发货流程分支");
                 _deliveryBranchSelected = true;  // 标记待执行
                 _isStepCompleted = true;
             }
-            else if (branchIndex == 3 && !_productionBranchCompleted && !_productionBranchSelected)
+            else if (branchIndex == 3 && !_productionBranchSelected)
             {
                 Debug.Log("[StandardSalesFlow] 选择生产流程分支");
                 _productionBranchSelected = true;  // 标记待执行
                 _isStepCompleted = true;
             }
-            else if (branchIndex == 4 && !_purchaseBranchCompleted && !_purchaseBranchSelected)
+            else if (branchIndex == 4 && !_purchaseBranchSelected)
             {
                 Debug.Log("[StandardSalesFlow] 选择采购流程分支");
                 _purchaseBranchSelected = true;  // 标记待执行
                 _isStepCompleted = true;
             }
-            else if (branchIndex == 5 && !_productionDeptPurchaseBranchCompleted && !_productionDeptPurchaseBranchSelected)
+            else if (branchIndex == 5 && !_productionDeptPurchaseBranchSelected)
             {
                 Debug.Log("[StandardSalesFlow] 选择生产部门提交采购流程分支");
                 _productionDeptPurchaseBranchSelected = true;  // 标记待执行

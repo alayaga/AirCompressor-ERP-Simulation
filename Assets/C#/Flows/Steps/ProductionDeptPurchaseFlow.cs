@@ -61,13 +61,8 @@ public class ProductionDeptPurchaseFlow : FlowBase
 
             Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
             bool isAutoStep = _currentStep.targetNPC == "供应商" || _currentStep.targetNPC == "系统";
-            if (_currentStep.billType != null)
-            {
-                yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
 
-                if (!_isStepCompleted) yield return new WaitUntil(() => _isStepCompleted);
-            }
-            else if (isAutoStep)
+            if (isAutoStep)
             {
                 Debug.Log($"[ProductionDeptPurchaseFlow] 自动步骤：{_currentStep.stepName}，等待5秒后自动完成");
                 yield return new WaitForSeconds(5f);
@@ -76,6 +71,20 @@ public class ProductionDeptPurchaseFlow : FlowBase
             else
             {
                 yield return new WaitUntil(() => _isStepCompleted);
+            }
+
+            if (_currentStep.billType != null)
+            {
+                bool stepDone = false;
+                while (!stepDone)
+                {
+                    _isStepCompleted = false;
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+                    if (_isStepCompleted)
+                        stepDone = true;
+                    else
+                        yield return new WaitUntil(() => _isStepCompleted);
+                }
             }
 
             Debug.Log($"[完成] {_currentStep.stepName}");
