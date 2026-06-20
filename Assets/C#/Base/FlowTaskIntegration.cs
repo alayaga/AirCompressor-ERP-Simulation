@@ -186,7 +186,7 @@ public class FlowTaskIntegration : MonoBehaviour
     {
         Debug.Log($"[FlowTaskIntegration] CompleteCurrentStep 被调用");
         Debug.Log($"[FlowTaskIntegration] currentFlow 是否为空: {currentFlow == null}");
-        
+
         // 调用流程的完成方法
         if (currentFlow != null)
         {
@@ -213,12 +213,12 @@ public class FlowTaskIntegration : MonoBehaviour
                     return;
                 }
             }
-            
+
             Debug.Log($"[FlowTaskIntegration] 调用 currentFlow.MarkStepComplete()");
             currentFlow.MarkStepComplete();
         }
     }
-    
+
     /// <summary>
     /// 获取 StandardSalesFlow 当前运行的分支流程
     /// </summary>

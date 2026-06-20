@@ -187,11 +187,8 @@ public class StandardSalesFlow : FlowBase
     {
         _mainSteps.Clear();
 
-        // 主流程开始
-        _mainSteps.Enqueue(new StepData("流程开始", "欢迎进入标准产品流程", "系统", "主界面", Interactables.ActionType.View));
-
-        // 第一步：销售总监填写下月月度销售计划
-        _mainSteps.Enqueue(new StepData("销售总监填写月度销售计划", "销售总监填写下月月度销售计划；点：提交", "销售总监", "销售办公室", Interactables.ActionType.Fill, billType: UIManager.UIType.MonthlySalesPlan));
+        // 主流程开始（系统步骤，3秒后自动进入分支选择）
+        _mainSteps.Enqueue(new StepData("流程开始", "欢迎进入标准产品流程（此步骤自动进行）", "系统", "主界面", Interactables.ActionType.View));
 
         // 分支选择步骤1（首次选择）
         _mainSteps.Enqueue(new StepData("选择分支", "请选择要完成的流程分支\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程 [5]生产采购", "系统", "主界面", Interactables.ActionType.View, true));
@@ -209,7 +206,7 @@ public class StandardSalesFlow : FlowBase
         _mainSteps.Enqueue(new StepData("继续分支", "请选择最后一个分支流程\n[1]销售-PMC [2]销售-发货 [3]生产流程 [4]采购流程 [5]生产采购", "系统", "主界面", Interactables.ActionType.View, true));
 
         // 流程结束
-        _mainSteps.Enqueue(new StepData("流程结束", "所有流程已完成，任务圆满结束！", "系统", "主界面", Interactables.ActionType.View));
+        _mainSteps.Enqueue(new StepData("流程结束", "所有流程已完成，任务圆满结束！（此步骤自动进行）", "系统", "主界面", Interactables.ActionType.View));
     }
 
     /// <summary>
