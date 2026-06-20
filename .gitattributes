@@ -11,6 +11,7 @@
 /Assets/Models/角色模型/男角色/男角色[[:space:]]6/男角色6.fbx filter=lfs diff=lfs merge=lfs -text
 /Assets/Models/角色模型/男角色/男角色[[:space:]]7/男角色7.fbx filter=lfs diff=lfs merge=lfs -text
 /Assets/Models/角色模型/男角色/男角色[[:space:]]8/男角色8.fbx filter=lfs diff=lfs merge=lfs -text
+/Assets/Models/lym/坐着的男角色.fbx filter=lfs diff=lfs merge=lfs -text
 /Assets/FlatScifiGUI/PSD/flat_scifi_gui_green.psd filter=lfs diff=lfs merge=lfs -text
 /Assets/FlatScifiGUI/PSD/flat_scifi_gui_pink.psd filter=lfs diff=lfs merge=lfs -text
 /Assets/FlatScifiGUI/PSD/flat_scifi_gui_purple.psd filter=lfs diff=lfs merge=lfs -text
