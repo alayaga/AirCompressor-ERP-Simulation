@@ -68,7 +68,7 @@ public class StandardSalesBranchFlow : FlowBase
                 while (!stepDone)
                 {
                     _isStepCompleted = false;
-                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
                     if (_isStepCompleted)
                         stepDone = true;
                     else

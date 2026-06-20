@@ -79,7 +79,7 @@ public class ProductionDeptPurchaseFlow : FlowBase
                 while (!stepDone)
                 {
                     _isStepCompleted = false;
-                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
                     if (_isStepCompleted)
                         stepDone = true;
                     else
@@ -104,13 +104,13 @@ public class ProductionDeptPurchaseFlow : FlowBase
         _steps.Enqueue(new StepData("PMC填写采购申请单", "PMC填写采购申请单；自动下推", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.PurchaseRequest));
         _steps.Enqueue(new StepData("采购主管审核采购申请单", "采购主管审核采购申请单；点：审核；跟单员可查看", "采购主管", "采购部", Interactables.ActionType.Approve, UIManager.UIType.PurchaseRequest));
         _steps.Enqueue(new StepData("跟单员填采购订单", "跟单员填写采购订单并邮件给供应商；点：提交", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.PurchaseOrder));
-        _steps.Enqueue(new StepData("供应商送货", "供应商电话联系跟单员后送货", "供应商", "供应商处", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("供应商填送货通知单", "供应商填写送货通知单（随货）；点：提交", "供应商", "供应商处", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("仓库到货收货", "仓库进行到货收货", "仓管员", "质检区", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("供应商送货", "供应商电话联系跟单员后送货（此步骤自动进行）", "供应商", "供应商处", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("供应商填送货通知单", "供应商填写送货通知单（随货）；点：提交（此步骤自动进行）", "供应商", "供应商处", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("仓库到货收货", "仓库进行到货收货", "仓管员B", "质检区", Interactables.ActionType.View));
         _steps.Enqueue(new StepData("跟单员制收料通知单", "跟单员制作收料通知单；点：提交；自动下推", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.ReceiptNotice));
-        _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单并进行质检", "仓管员", "质检区", Interactables.ActionType.View, UIManager.UIType.ReceiptNotice));
-        _steps.Enqueue(new StepData("仓管员填来料检验单", "仓管员填写来料检验单；点：提交；自动下推", "仓管员", "质检区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("仓管员填采购入库单", "仓管员填写采购入库单；点：提交", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.PurchaseInbound));
+        _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单并进行质检", "仓管员B", "质检区", Interactables.ActionType.View, UIManager.UIType.ReceiptNotice));
+        _steps.Enqueue(new StepData("仓管员填来料检验单", "仓管员填写来料检验单；点：提交；自动下推", "仓管员B", "质检区", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("仓管员填采购入库单", "仓管员填写采购入库单；点：提交", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.PurchaseInbound));
     }
 
     #region UI更新方法

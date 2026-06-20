@@ -105,13 +105,13 @@ public class StandardPurchaseFlow : FlowBase
         _steps.Enqueue(new StepData("采购主管审核采购计划", "采购主管审核两周采购计划，点击审核后自动下推", "采购主管", "采购部", Interactables.ActionType.Approve, UIManager.UIType.PurchaseRequest));
         _steps.Enqueue(new StepData("跟单员查看采购计划", "跟单员查看采购计划", "跟单员", "采购部", Interactables.ActionType.View, UIManager.UIType.PurchaseRequest));
         _steps.Enqueue(new StepData("跟单员填采购订单", "跟单员填写采购订单并邮件给供应商", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.PurchaseOrder));
-        _steps.Enqueue(new StepData("供应商送货", "供应商电话联系跟单员后送货，货和单一起到", "供应商", "供应商处", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("供应商送货", "供应商电话联系跟单员后送货，货和单一起到（此步骤自动进行）", "供应商", "供应商处", Interactables.ActionType.View));
         _steps.Enqueue(new StepData("跟单员查看送货通知单", "跟单员查看送货通知单（随货到达）", "跟单员", "采购部", Interactables.ActionType.View, UIManager.UIType.ReceiptNotice));
-        _steps.Enqueue(new StepData("仓库到货收货", "仓库进行到货收货", "仓管员", "质检区", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("仓库到货收货", "仓库进行到货收货", "仓管员B", "质检区", Interactables.ActionType.View));
         _steps.Enqueue(new StepData("跟单员制收料通知单", "跟单员制作收料通知单，点击提交后自动下推", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.IncomingNotification));
-        _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单，进行质检", "仓管员", "质检区", Interactables.ActionType.View, UIManager.UIType.IncomingNotification));
-        _steps.Enqueue(new StepData("仓管员填来料检验单", "仓管员填写来料检验单，点击提交后自动下推", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.IncomingInspection));
-        _steps.Enqueue(new StepData("仓管员填采购入库单", "仓管员填写采购入库单", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.PurchaseInbound));
+        _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单，进行质检", "仓管员B", "质检区", Interactables.ActionType.View, UIManager.UIType.IncomingNotification));
+        _steps.Enqueue(new StepData("仓管员填来料检验单", "仓管员填写来料检验单，点击提交后自动下推", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.IncomingInspection));
+        _steps.Enqueue(new StepData("仓管员填采购入库单", "仓管员填写采购入库单", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.PurchaseInbound));
     }
 
     #region UI更新方法

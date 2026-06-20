@@ -78,7 +78,7 @@ public class StandardProductionFlow : FlowBase
                 while (!stepDone)
                 {
                     _isStepCompleted = false;
-                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC);
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
                     if (_isStepCompleted)
                         stepDone = true;
                     else
@@ -97,38 +97,288 @@ public class StandardProductionFlow : FlowBase
     {
         _steps.Clear();
 
-        // ===== 标准产品生产流程 v1.3 =====
-        // 从PMC制作一周生产计划开始，到完工入库签字结束
+        // ===== 标准产品生产流程 v1.5 =====
+        // targetNPC 使用场景实际命名（1/2/3/4车间，非弯管/焊接/配电/总装）
 
-        // 阶段1：计划与排产
+        // 阶段1：计划与排产（保留 Standard 自身 PMC 步骤）
         _steps.Enqueue(new StepData("制作一周生产计划", "PMC制作一周生产计划；点：提交；生产主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.WeeklyProductionPlan));
         _steps.Enqueue(new StepData("PMC填写每日排产单", "PMC填写每日排产单给仓库仓管员和车间主管；点：提交；自动下推给仓管员（生产用料清单）和车间主管（生产工单）", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.ProductionSchedule));
 
-        // 阶段2：发料与派工
-        _steps.Enqueue(new StepData("仓管员发料到备料区", "仓管员按生产用料清单发料到备料区（位于生产区）", "仓管员", "备料区", Interactables.ActionType.Deliver));
-        _steps.Enqueue(new StepData("车间主管派工", "车间主管按PMC下推的生产工单（已含工序信息）直接派工给班组长；1/2/3/4车间班组长可查看自己车间的生产工单", "车间主管", "生产部", Interactables.ActionType.Fill, UIManager.UIType.ProductionWorkOrder));
-        _steps.Enqueue(new StepData("班组长填写派工单", "1/2/3/4车间班组长查看自己车间的生产工单；填写工人个人的派工单；点：提交", "车间班组长", "生产区", Interactables.ActionType.Fill, UIManager.UIType.DispatchOrder));
+        // ========================================================
+        // 以下复用定制产品生产流程（targetNPC 已对齐场景命名）
+        // ========================================================
 
-        // 阶段3：领料与生产
-        _steps.Enqueue(new StepData("工人到备料区领料", "工人查看自己的派工单，根据派工单到备料区领料", "工人", "备料区", Interactables.ActionType.Pick));
-        _steps.Enqueue(new StepData("工人填写领料单", "工人领料；填写领料单；点：提交", "工人", "备料区", Interactables.ActionType.Fill, UIManager.UIType.PickList));
-        _steps.Enqueue(new StepData("工人生产", "工人进行生产加工", "工人", "生产区", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData(
+            "仓管员发料到备料区",
+            "仓管员按生产用料清单发料到备料区（位于生产区）",
+            "仓管员A",
+            "备料区",
+            Interactables.ActionType.Deliver
+        ));
 
-        // 阶段4：退料分支（与生产并行）
-        _steps.Enqueue(new StepData("退料送仓库", "工人将生产多余物料退回仓库", "工人", "仓库", Interactables.ActionType.Deliver));
-        _steps.Enqueue(new StepData("仓管员质检确认退料", "仓管员对退料进行质检确认", "仓管员", "仓库", Interactables.ActionType.Approve));
-        _steps.Enqueue(new StepData("仓管员制退料入库单", "仓管员制作生产退料入库单；点：提交", "仓管员", "仓库", Interactables.ActionType.Fill, UIManager.UIType.ProductionReturn));
-        _steps.Enqueue(new StepData("工人签字确认退料", "工人在生产退料入库单上签字", "工人", "仓库", Interactables.ActionType.Approve, UIManager.UIType.ProductionReturn));
+        // ========================================================
+        // 阶段2: 1车间（弯管）
+        // ========================================================
 
-        // 阶段5：工序汇报与转运
-        _steps.Enqueue(new StepData("工序汇报", "生产完成后1/2/3车间班组长检查；填写工序汇报单；点：提交", "车间班组长", "生产区", Interactables.ActionType.Fill, UIManager.UIType.ProcessReport));
-        _steps.Enqueue(new StepData("半成品转运", "1/2/3车间员工将半成品送往4车间", "工人", "生产区", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("4车间组装", "4车间负责组装，组装完成后由4车间工人将成品送往仓库", "工人", "生产区", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData(
+            "1车间主管填写生产工单",
+            "填写1车间生产工单",
+            "1车间主管",
+            "1车间-弯管",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionWorkOrder
+        ));
 
-        // 阶段6：质检与入库
-        _steps.Enqueue(new StepData("仓管员质检确认成品", "仓管员对成品进行质检确认", "仓管员", "质检区", Interactables.ActionType.Approve));
-        _steps.Enqueue(new StepData("填写完工入库单", "仓管员填写完工入库单；点：提交；工人可查看", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.FinishedInbound));
-        _steps.Enqueue(new StepData("工人签字确认入库", "工人在完工入库单上签字", "工人", "仓库", Interactables.ActionType.Approve, UIManager.UIType.FinishedInbound));
+        _steps.Enqueue(new StepData(
+            "1车间班组长填写派工单",
+            "查看1车间生产工单；填写工人个人的派工单",
+            "1车间班组长",
+            "1车间-弯管",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DispatchOrder
+        ));
+
+        _steps.Enqueue(new StepData(
+            "1车间工人到备料区领料",
+            "查看自己的派工单，根据派工单到备料区领料",
+            "1车间工人",
+            "备料区",
+            Interactables.ActionType.Pick
+        ));
+
+        _steps.Enqueue(new StepData(
+            "1车间工人填写领料单",
+            "填写领料单；点：提交",
+            "1车间工人",
+            "备料区",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.PickList
+        ));
+
+        _steps.Enqueue(new StepData(
+            "1车间工人生产",
+            "工人进行1车间生产操作",
+            "1车间工人",
+            "1车间-弯管",
+            Interactables.ActionType.View
+        ));
+
+        _steps.Enqueue(new StepData(
+            "1车间工人退料实物送仓库",
+            "将生产多余物料退回仓库",
+            "1车间工人",
+            "仓库",
+            Interactables.ActionType.Deliver
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓管员质检确认退料",
+            "对1车间退料进行质检确认",
+            "仓管员B",
+            "仓库",
+            Interactables.ActionType.Approve
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓管员制生产退料入库单",
+            "填写生产退料入库单",
+            "仓管员B",
+            "仓库",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionReturn
+        ));
+
+        _steps.Enqueue(new StepData(
+            "1车间工人签字确认退料",
+            "在生产退料入库单上签字",
+            "1车间工人",
+            "仓库",
+            Interactables.ActionType.Approve,
+            UIManager.UIType.ProductionReturn
+        ));
+
+        _steps.Enqueue(new StepData(
+            "1车间班组长检查并填写工序汇报单",
+            "1车间生产完成后检查；填写工序汇报单",
+            "1车间班组长",
+            "1车间-弯管",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProcessReport
+        ));
+
+        _steps.Enqueue(new StepData(
+            "1车间工人将半成品送往2车间",
+            "将1车间半成品送往2车间",
+            "1车间工人",
+            "2车间-焊接",
+            Interactables.ActionType.Deliver
+        ));
+
+        // ========================================================
+        // 阶段3: 2车间（焊接）
+        // ========================================================
+
+        _steps.Enqueue(new StepData(
+            "2车间主管填写生产工单",
+            "填写2车间生产工单",
+            "2车间主管",
+            "2车间-焊接",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionWorkOrder
+        ));
+
+        _steps.Enqueue(new StepData(
+            "2车间班组长填写派工单",
+            "查看2车间生产工单；填写工人个人的派工单",
+            "2车间班组长",
+            "2车间-焊接",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DispatchOrder
+        ));
+
+        _steps.Enqueue(new StepData(
+            "2车间工人生产",
+            "工人进行2车间生产操作",
+            "2车间工人",
+            "2车间-焊接",
+            Interactables.ActionType.View
+        ));
+
+        _steps.Enqueue(new StepData(
+            "2车间班组长检查并填写工序汇报单",
+            "2车间生产完成后检查；填写工序汇报单",
+            "2车间班组长",
+            "2车间-焊接",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProcessReport
+        ));
+
+        _steps.Enqueue(new StepData(
+            "2车间工人将半成品送往3车间",
+            "将2车间半成品送往3车间",
+            "2车间工人",
+            "3车间-配电",
+            Interactables.ActionType.Deliver
+        ));
+
+        // ========================================================
+        // 阶段4: 3车间（配电）
+        // ========================================================
+
+        _steps.Enqueue(new StepData(
+            "3车间主管填写生产工单",
+            "填写3车间生产工单",
+            "3车间主管",
+            "3车间-配电",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionWorkOrder
+        ));
+
+        _steps.Enqueue(new StepData(
+            "3车间班组长填写派工单",
+            "查看3车间生产工单；填写工人个人的派工单",
+            "3车间班组长",
+            "3车间-配电",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DispatchOrder
+        ));
+
+        _steps.Enqueue(new StepData(
+            "3车间工人生产",
+            "工人进行3车间生产操作",
+            "3车间工人",
+            "3车间-配电",
+            Interactables.ActionType.View
+        ));
+
+        _steps.Enqueue(new StepData(
+            "3车间班组长检查并填写工序汇报单",
+            "3车间生产完成后检查；填写工序汇报单",
+            "3车间班组长",
+            "3车间-配电",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProcessReport
+        ));
+
+        _steps.Enqueue(new StepData(
+            "3车间工人将半成品送往4车间",
+            "将3车间半成品送往4车间",
+            "3车间工人",
+            "4车间-总装",
+            Interactables.ActionType.Deliver
+        ));
+
+        // ========================================================
+        // 阶段5: 4车间（总装）及入库
+        // ========================================================
+
+        _steps.Enqueue(new StepData(
+            "4车间主管填写生产工单",
+            "填写4车间生产工单",
+            "4车间主管",
+            "4车间-总装",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.ProductionWorkOrder
+        ));
+
+        _steps.Enqueue(new StepData(
+            "4车间班组长填写派工单",
+            "查看4车间生产工单；填写工人个人的派工单",
+            "4车间班组长",
+            "4车间-总装",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.DispatchOrder
+        ));
+
+        _steps.Enqueue(new StepData(
+            "4车间工人总装",
+            "4车间负责组装来自1/2/3车间的半成品",
+            "4车间工人",
+            "4车间-总装",
+            Interactables.ActionType.View
+        ));
+
+        _steps.Enqueue(new StepData(
+            "4车间工人将成品送往仓库",
+            "组装完成后由4车间工人将成品送往仓库",
+            "4车间工人",
+            "仓库",
+            Interactables.ActionType.Deliver
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓管员质检确认成品",
+            "对成品进行质检确认",
+            "仓管员B",
+            "仓库",
+            Interactables.ActionType.Approve
+        ));
+
+        _steps.Enqueue(new StepData(
+            "仓管员填写完工入库单",
+            "填写完工入库单；工人可查看",
+            "仓管员B",
+            "仓库",
+            Interactables.ActionType.Fill,
+            UIManager.UIType.FinishedInbound
+        ));
+
+        _steps.Enqueue(new StepData(
+            "工人在完工入库单签字",
+            "工人在完工入库单上签字",
+            "4车间工人",
+            "仓库",
+            Interactables.ActionType.Approve,
+            UIManager.UIType.FinishedInbound
+        ));
+
+        _steps.Enqueue(new StepData(
+            "自动通知销售员产品入库",
+            "系统自动通知销售员产品已入库",
+            "系统",
+            "-",
+            Interactables.ActionType.View
+        ));
     }
 
     #region UI更新方法

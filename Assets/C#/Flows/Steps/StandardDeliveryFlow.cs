@@ -124,24 +124,24 @@ public class StandardDeliveryFlow : FlowBase
         // ===== 标准产品销售-发货流程 v1.3 =====
 
         // 阶段1：订单接收与审核
-        _steps.Enqueue(new StepData("客户下单", "客户通过官网选择机型、数量，点击下单，自动生成销售订单", "客户", "官网", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("客户下单", "客户通过官网选择机型、数量，点击下单，自动生成销售订单（此步骤自动进行）", "客户", "官网", Interactables.ActionType.View));
         _steps.Enqueue(new StepData("审核销售订单", "销售总监审核销售订单；点：审核；仓库可查看销售订单", "销售总监", "销售部", Interactables.ActionType.Approve, UIManager.UIType.SalesOrder));
-        _steps.Enqueue(new StepData("查看销售订单", "仓管员查看销售订单", "仓管员", "质检区", Interactables.ActionType.View, UIManager.UIType.SalesOrder));
-        _steps.Enqueue(new StepData("检查库存", "仓管员检查现有库存", "仓管员", "仓库", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("查看销售订单", "仓管员查看销售订单", "仓管员B", "质检区", Interactables.ActionType.View, UIManager.UIType.SalesOrder));
+        _steps.Enqueue(new StepData("检查库存", "仓管员检查现有库存", "仓管员B", "质检区", Interactables.ActionType.View));
         // 注意：检查库存后，无现货时会自动启动"标准产品生产流程"子流程
 
         // 阶段2：确认发货（有现货时执行）
         _steps.Enqueue(new StepData("联系客户确认发货", "销售员联系客户确认是否可以发货", "销售员", "销售办公室", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("客户确认可发货", "客户确认可以发货", "客户", "客户处", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("客户确认可发货", "客户确认可以发货（此步骤自动进行）", "客户", "客户处", Interactables.ActionType.View));
         _steps.Enqueue(new StepData("销售订单点发货", "销售员在销售订单点发货；自动下推发货通知单", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder, allowShip: true));
 
         // 阶段3：发货出库
-        _steps.Enqueue(new StepData("填写发货通知单", "仓管员填写发货通知单（由销售订单下推）", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.DeliveryNotice));
+        _steps.Enqueue(new StepData("填写发货通知单", "仓管员填写发货通知单（由销售订单下推）", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.DeliveryNotice));
         _steps.Enqueue(new StepData("审核发货通知单", "仓库主管审核发货通知单", "仓库主管", "仓库部", Interactables.ActionType.Approve, UIManager.UIType.DeliveryNotice));
-        _steps.Enqueue(new StepData("包装出库", "仓库包装出库，发货完成", "仓管员", "质检区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("填写销售出库单", "仓管员填写销售出库单（由发货通知单下推）", "仓管员", "质检区", Interactables.ActionType.Fill, UIManager.UIType.SalesOutbound));
+        _steps.Enqueue(new StepData("包装出库", "仓库包装出库，发货完成", "仓管员B", "质检区", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("填写销售出库单", "仓管员填写销售出库单（由发货通知单下推）", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.SalesOutbound));
         _steps.Enqueue(new StepData("审核销售出库单", "仓库主管审核销售出库单", "仓库主管", "仓库部", Interactables.ActionType.Approve, UIManager.UIType.SalesOutbound));
-        _steps.Enqueue(new StepData("客户签收", "客户收货，在发货通知单上签字", "客户", "客户处", Interactables.ActionType.View, UIManager.UIType.DeliveryNotice));
+        _steps.Enqueue(new StepData("客户签收", "客户收货，在发货通知单上签字（此步骤自动进行）", "客户", "客户处", Interactables.ActionType.View, UIManager.UIType.DeliveryNotice));
     }
 
     /// <summary>
