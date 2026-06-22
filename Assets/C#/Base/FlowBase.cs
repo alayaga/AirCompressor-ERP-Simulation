@@ -87,6 +87,11 @@ public abstract class FlowBase
         // 基类不做任何事，子类可重写
     }
 
+    /// <summary>
+    /// 获取当前步骤名（子类重写以支持对话系统的步骤过滤）
+    /// </summary>
+    public virtual string GetCurrentStepName() => null;
+
     protected MonoBehaviour GetCoroutineRunner()
     {
         if (ObjectManager.Instance != null)

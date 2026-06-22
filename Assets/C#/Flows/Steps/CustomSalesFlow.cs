@@ -355,6 +355,8 @@ public class CustomSalesFlow : FlowBase
         return _currentStep;
     }
 
+    public override string GetCurrentStepName() => _currentStep?.stepName;
+
     public int GetTotalSteps()
     {
         return _totalSteps;
