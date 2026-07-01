@@ -87,7 +87,7 @@ public class ProductionPipelineManager : MonoBehaviour
         InitializeSystem();
     }
 
-    private void InitializeSystem()
+    public void InitializeSystem()
     {
         // 1. 零件物理坐标归位
         if (pipe_Bent != null) pipe_Bent.transform.position = startPos_PipeBent;
@@ -189,7 +189,7 @@ public class ProductionPipelineManager : MonoBehaviour
 
     // ================= 生产工序协程 =================
 
-    private IEnumerator Step1_Bending_Internal()
+    public IEnumerator Step1_Bending_Internal()
     {
         ResetAnimator(worker1_Bender);
         ResetAnimator(pipeBenderMachine);
@@ -216,7 +216,7 @@ public class ProductionPipelineManager : MonoBehaviour
         StopAndHideEffect(benderSmoke);
     }
 
-    private IEnumerator Step2_Welding_Internal()
+    public IEnumerator Step2_Welding_Internal()
     {
         ResetAnimator(worker2_Welder);
         yield return null;
@@ -246,7 +246,7 @@ public class ProductionPipelineManager : MonoBehaviour
         StopAndHideEffect(weldSparks);
     }
 
-    private IEnumerator Step3_Electric_Internal()
+    public IEnumerator Step3_Electric_Internal()
     {
         ResetAnimator(worker3_Electric);
         yield return null;
@@ -270,7 +270,7 @@ public class ProductionPipelineManager : MonoBehaviour
         StopAndHideEffect(electricSmoke);
     }
 
-    private IEnumerator Step4_FinalAssembly_Internal()
+    public IEnumerator Step4_FinalAssembly_Internal()
     {
         ResetAnimator(worker4_Final);
         yield return null;
