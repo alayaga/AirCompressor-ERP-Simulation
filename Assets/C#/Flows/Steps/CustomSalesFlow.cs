@@ -21,8 +21,9 @@ public class CustomSalesFlow : FlowBase
         public Interactables.ActionType actionType;
         public UIManager.UIType? billType;
         public bool isBranchChoice = false;
+        public DialogueConfig dialogueConfig; // 对话配置
 
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, bool isBranch = false)
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, bool isBranch = false, DialogueConfig dialogueConfig = default)
         {
             stepName = name;
             description = desc;
@@ -31,6 +32,7 @@ public class CustomSalesFlow : FlowBase
             actionType = action;
             this.billType = billType;
             isBranchChoice = isBranch;
+            this.dialogueConfig = dialogueConfig;
         }
     }
 
@@ -162,7 +164,11 @@ public class CustomSalesFlow : FlowBase
         _steps.Clear();
 
         // ===== 阶段1：客户询单 =====
-        _steps.Enqueue(new StepData("客户询单", "客户咨询定制产品需求", "销售员", "销售办公室", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("客户询单", "客户咨询定制产品需求", "销售员", "销售办公室", Interactables.ActionType.Fill,
+            dialogueConfig: new DialogueConfig {
+                mode = DialogueMode.Static,
+                data = Resources.Load<DialogueData>("Dialoguedata/Custom_kehuxundan")
+            }));
 
         // ===== 阶段2：销售订单处理 =====
         _steps.Enqueue(new StepData("填写销售订单", "录入客户需求和产品规格", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
@@ -321,6 +327,8 @@ public class CustomSalesFlow : FlowBase
             case Interactables.ActionType.View: return "查看";
             case Interactables.ActionType.Pick: return "领取";
             case Interactables.ActionType.Deliver: return "交付";
+            case Interactables.ActionType.Ship: return "发货";
+            case Interactables.ActionType.Sign: return "签字";
             default: return "操作";
         }
     }
@@ -348,6 +356,14 @@ public class CustomSalesFlow : FlowBase
         }
 
         _isStepCompleted = true;
+    }
+
+    public override DialogueConfig GetCurrentStepDialogueConfig()
+    {
+        // 如果在分支流程中，转发给分支流程
+        if (_isInBranch && _currentBranchFlow != null)
+            return _currentBranchFlow.GetCurrentStepDialogueConfig();
+        return _currentStep?.dialogueConfig ?? DialogueConfig.None;
     }
 
     public StepData GetCurrentStep()

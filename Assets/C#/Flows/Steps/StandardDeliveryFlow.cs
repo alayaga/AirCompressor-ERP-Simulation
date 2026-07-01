@@ -21,7 +21,8 @@ public class StandardDeliveryFlow : FlowBase
         public Interactables.ActionType actionType;
         public UIManager.UIType? billType;  // 对应单据类型，null=无单据
         public bool allowShip;
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, bool allowShip = false)
+        public DialogueConfig dialogueConfig; // 对话配置
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, bool allowShip = false, DialogueConfig dialogueConfig = default)
         {
             stepName = name;
             description = desc;
@@ -30,6 +31,7 @@ public class StandardDeliveryFlow : FlowBase
             actionType = action;
             this.billType = billType;
             this.allowShip = allowShip;
+            this.dialogueConfig = dialogueConfig;
         }
     }
     
@@ -67,6 +69,12 @@ public class StandardDeliveryFlow : FlowBase
             Debug.Log($"[FLOW STEP] {_currentStep.stepName} | billType={_currentStep.billType} | NPC={_currentStep.targetNPC}");
             bool isAutoStep = _currentStep.targetNPC == "客户" || _currentStep.targetNPC == "系统";
 
+            // 查看入库通知步骤：保持"货已配齐"提示在屏幕上
+            if (_currentStep.stepName == "查看入库通知" && TaskGuidePanelNew.Instance != null)
+            {
+                TaskGuidePanelNew.Instance.UpdateHintText("对应订单货品全部入库配齐，可以安排发货");
+            }
+
             if (isAutoStep)
             {
                 Debug.Log($"[StandardDeliveryFlow] 自动步骤：{_currentStep.stepName}，等待5秒后自动完成");
@@ -84,7 +92,7 @@ public class StandardDeliveryFlow : FlowBase
                 while (!stepDone)
                 {
                     _isStepCompleted = false;
-                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
+                    yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType, _currentStep.allowShip);
                     if (_isStepCompleted)
                         stepDone = true;
                     else
@@ -98,6 +106,15 @@ public class StandardDeliveryFlow : FlowBase
             if (_currentStep.stepName == "检查库存")
             {
                 _hasStock = CheckStock();
+
+                // 显示库存检查结果，停留3秒
+                string resultHint = _hasStock
+                    ? "库存充足，可以直接发货"
+                    : "库存不足，将启动生产流程补充库存...";
+                if (TaskGuidePanelNew.Instance != null)
+                    TaskGuidePanelNew.Instance.UpdateHintText(resultHint);
+                yield return new WaitForSeconds(3f);
+
                 if (!_hasStock)
                 {
                     Debug.Log("[StandardDeliveryFlow] 库存不足，启动标准产品生产流程");
@@ -131,9 +148,14 @@ public class StandardDeliveryFlow : FlowBase
         // 注意：检查库存后，无现货时会自动启动"标准产品生产流程"子流程
 
         // 阶段2：确认发货（有现货时执行）
-        _steps.Enqueue(new StepData("联系客户确认发货", "销售员联系客户确认是否可以发货", "销售员", "销售办公室", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("查看入库通知", "【仓库入库通知】对应订单货品全部入库配齐（此步骤自动进行）", "系统", "-", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("联系客户确认发货", "销售员联系客户确认是否可以发货", "销售员", "销售办公室", Interactables.ActionType.Fill,
+            dialogueConfig: new DialogueConfig {
+                mode = DialogueMode.Static,
+                data = Resources.Load<DialogueData>("Dialoguedata/Standard_querengoumaiqueren")
+            }));
         _steps.Enqueue(new StepData("客户确认可发货", "客户确认可以发货（此步骤自动进行）", "客户", "客户处", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("销售订单点发货", "销售员在销售订单点发货；自动下推发货通知单", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder, allowShip: true));
+        _steps.Enqueue(new StepData("销售订单点发货", "销售员在销售订单点发货；自动下推发货通知单", "销售员", "销售办公室", Interactables.ActionType.Ship, UIManager.UIType.SalesOrder, allowShip: true));
 
         // 阶段3：发货出库
         _steps.Enqueue(new StepData("填写发货通知单", "仓管员填写发货通知单（由销售订单下推）", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.DeliveryNotice));
@@ -161,9 +183,17 @@ public class StandardDeliveryFlow : FlowBase
             FlowManager.Instance.RegisterFlow(productionFlow);
         }
 
+        // 将子流程设为当前活跃流程，使 InteractionManager 正确校验 NPC
+        var previousFlow = FlowTaskIntegration.Instance?.GetCurrentFlow();
+        FlowTaskIntegration.Instance?.SetCurrentFlow(productionFlow);
+
         productionFlow.StartFlow();
 
         yield return new WaitUntil(() => !productionFlow.IsRunning);
+
+        // 恢复父流程
+        if (previousFlow != null)
+            FlowTaskIntegration.Instance?.SetCurrentFlow(previousFlow);
 
         _hasStock = true;
 
@@ -261,6 +291,8 @@ public class StandardDeliveryFlow : FlowBase
             case Interactables.ActionType.View: return "查看";
             case Interactables.ActionType.Pick: return "领取";
             case Interactables.ActionType.Deliver: return "交付";
+            case Interactables.ActionType.Ship: return "发货";
+            case Interactables.ActionType.Sign: return "签字";
             default: return "操作";
         }
     }
@@ -276,6 +308,11 @@ public class StandardDeliveryFlow : FlowBase
     {
         Debug.Log($"[StandardDeliveryFlow] MarkStepComplete 被调用！_isStepCompleted 设置为 true");
         _isStepCompleted = true;
+    }
+
+    public override DialogueConfig GetCurrentStepDialogueConfig()
+    {
+        return _currentStep?.dialogueConfig ?? DialogueConfig.None;
     }
 
     /// <summary>

@@ -23,8 +23,9 @@ public class CustomProductionFlow : FlowBase
         public Interactables.ActionType actionType;
         public UIManager.UIType? billType;
         public bool allowShip;
+        public DialogueConfig dialogueConfig; // 对话配置
 
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, bool allowShip = false)
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, bool allowShip = false, DialogueConfig dialogueConfig = default)
         {
             stepName = name;
             description = desc;
@@ -33,6 +34,7 @@ public class CustomProductionFlow : FlowBase
             actionType = action;
             this.billType = billType;
             this.allowShip = allowShip;
+            this.dialogueConfig = dialogueConfig;
         }
     }
 
@@ -443,7 +445,11 @@ public class CustomProductionFlow : FlowBase
             "销售员联系客户，确认是否可以发货",
             "销售员",
             "销售办公室",
-            Interactables.ActionType.Fill
+            Interactables.ActionType.Fill,
+            dialogueConfig: new DialogueConfig {
+                mode = DialogueMode.Static,
+                data = Resources.Load<DialogueData>("Dialoguedata/Standard_querengoumaiqueren")
+            }
         ));
 
         _steps.Enqueue(new StepData(
@@ -459,7 +465,7 @@ public class CustomProductionFlow : FlowBase
             "销售员在销售订单点击发货，自动下推发货通知单",
             "销售员",
             "销售办公室",
-            Interactables.ActionType.Fill,
+            Interactables.ActionType.Ship,
             UIManager.UIType.SalesOrder,
             allowShip: true
         ));
@@ -513,7 +519,11 @@ public class CustomProductionFlow : FlowBase
             "客户收货，在发货通知单上签字",
             "销售员",
             "销售办公室",
-            Interactables.ActionType.View
+            Interactables.ActionType.View,
+            dialogueConfig: new DialogueConfig {
+                mode = DialogueMode.Static,
+                data = Resources.Load<DialogueData>("Dialoguedata/Custom_fahuoquerenshouhuo")
+            }
         ));
     }
 
@@ -568,6 +578,8 @@ public class CustomProductionFlow : FlowBase
             case Interactables.ActionType.View: return "查看";
             case Interactables.ActionType.Pick: return "领取";
             case Interactables.ActionType.Deliver: return "交付";
+            case Interactables.ActionType.Ship: return "发货";
+            case Interactables.ActionType.Sign: return "签字";
             default: return "操作";
         }
     }
@@ -580,6 +592,11 @@ public class CustomProductionFlow : FlowBase
     {
         Debug.Log($"[CustomProductionFlow] MarkStepComplete 被调用！_isStepCompleted 设置为 true");
         _isStepCompleted = true;
+    }
+
+    public override DialogueConfig GetCurrentStepDialogueConfig()
+    {
+        return _currentStep?.dialogueConfig ?? DialogueConfig.None;
     }
 
     public StepData GetCurrentStep()

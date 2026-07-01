@@ -17,7 +17,8 @@ public class StandardSalesBranchFlow : FlowBase
         public string targetLocation;
         public Interactables.ActionType actionType;
         public UIManager.UIType? billType;  // 对应单据类型，null=无单据
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null)
+        public DialogueConfig dialogueConfig; // 对话配置
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, DialogueConfig dialogueConfig = default)
         {
             stepName = name;
             description = desc;
@@ -25,6 +26,7 @@ public class StandardSalesBranchFlow : FlowBase
             targetLocation = location;
             actionType = action;
             this.billType = billType;
+            this.dialogueConfig = dialogueConfig;
         }
     }
     
@@ -149,6 +151,8 @@ public class StandardSalesBranchFlow : FlowBase
             case Interactables.ActionType.View: return "查看";
             case Interactables.ActionType.Pick: return "领取";
             case Interactables.ActionType.Deliver: return "交付";
+            case Interactables.ActionType.Ship: return "发货";
+            case Interactables.ActionType.Sign: return "签字";
             default: return "操作";
         }
     }
@@ -161,6 +165,11 @@ public class StandardSalesBranchFlow : FlowBase
     {
         Debug.Log($"[StandardSalesBranchFlow] MarkStepComplete 被调用！");
         _isStepCompleted = true;
+    }
+
+    public override DialogueConfig GetCurrentStepDialogueConfig()
+    {
+        return _currentStep?.dialogueConfig ?? DialogueConfig.None;
     }
 
     public StepData GetCurrentStep()

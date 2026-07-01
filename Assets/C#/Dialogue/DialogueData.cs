@@ -11,7 +11,8 @@ public class DialogueData : ScriptableObject
     public List<DialogueLine> lines;
 
     [Header("流程集成（可选）")]
-    [Tooltip("对话结束后是否自动完成当前流程步骤")]
+    [Tooltip("【已弃用】此字段不再生效。流程步骤通过 DialogueConfig 控制完成时机。")]
+    [System.Obsolete("此字段已被 DialogueConfig 替代。对话结束时始终由流程控制步骤完成。")]
     public bool completeStepOnEnd = false;
 }
 

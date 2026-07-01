@@ -87,6 +87,15 @@ public abstract class FlowBase
         // 基类不做任何事，子类可重写
     }
 
+    /// <summary>
+    /// 获取当前步骤的对话配置
+    /// 子类可重写以返回各自 StepData 中的 dialogueConfig
+    /// </summary>
+    public virtual DialogueConfig GetCurrentStepDialogueConfig()
+    {
+        return DialogueConfig.None;
+    }
+
     protected MonoBehaviour GetCoroutineRunner()
     {
         if (ObjectManager.Instance != null)
