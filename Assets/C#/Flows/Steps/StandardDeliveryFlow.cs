@@ -158,12 +158,12 @@ public class StandardDeliveryFlow : FlowBase
         _steps.Enqueue(new StepData("销售订单点发货", "销售员在销售订单点发货；自动下推发货通知单", "销售员", "销售办公室", Interactables.ActionType.Ship, UIManager.UIType.SalesOrder, allowShip: true));
 
         // 阶段3：发货出库
-        _steps.Enqueue(new StepData("填写发货通知单", "仓管员填写发货通知单（由销售订单下推）", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.DeliveryNotice));
-        _steps.Enqueue(new StepData("审核发货通知单", "仓库主管审核发货通知单", "仓库主管", "仓库部", Interactables.ActionType.Approve, UIManager.UIType.DeliveryNotice));
-        _steps.Enqueue(new StepData("包装出库", "仓库包装出库，发货完成", "仓管员B", "质检区", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("填写销售出库单", "仓管员填写销售出库单（由发货通知单下推）", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.SalesOutbound));
-        _steps.Enqueue(new StepData("审核销售出库单", "仓库主管审核销售出库单", "仓库主管", "仓库部", Interactables.ActionType.Approve, UIManager.UIType.SalesOutbound));
-        _steps.Enqueue(new StepData("客户签收", "客户收货，在发货通知单上签字（此步骤自动进行）", "客户", "客户处", Interactables.ActionType.View, UIManager.UIType.DeliveryNotice));
+        _steps.Enqueue(new StepData("填写发货通知单", "填写发货通知单，明确发货产品、数量、收货地址，提交后仓库主管可审核", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.DeliveryNotice));
+        _steps.Enqueue(new StepData("审核发货通知单", "核对发货信息与订单匹配度，确认无误后完成审核", "仓库主管", "仓库部", Interactables.ActionType.Approve, UIManager.UIType.DeliveryNotice));
+        _steps.Enqueue(new StepData("包装出库", "对出库产品进行包装、贴标，完成后交给物流，发货完成", "仓管员B", "质检区", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("填写销售出库单", "根据发货通知单，填写销售出库单并提交", "仓管员B", "质检区", Interactables.ActionType.Fill, UIManager.UIType.SalesOutbound));
+        _steps.Enqueue(new StepData("审核销售出库单", "核对出库信息与库存数据，确认无误后完成审核", "仓库主管", "仓库部", Interactables.ActionType.Approve, UIManager.UIType.SalesOutbound));
+        _steps.Enqueue(new StepData("客户签收", "客户收到货品，核对无误后在发货通知单上签字确认收货", "客户", "客户处", Interactables.ActionType.View, UIManager.UIType.DeliveryNotice));
     }
 
     /// <summary>

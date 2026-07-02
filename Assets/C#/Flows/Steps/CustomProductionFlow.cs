@@ -136,7 +136,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "制定一周生产计划",
-            "制定一周生产计划；填：一周生产计划；点：提交",
+            "填写一周生产计划表并提交",
             "PMC主管",
             "计划物控中心",
             Interactables.ActionType.Fill,
@@ -145,7 +145,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "PMC填写每日排产单",
-            "填写每日排产单；点：提交。自动下推给仓库仓管员（生产用料清单）和车间主管（生产工单）",
+            "填写每日排产单并提交，自动下发对应单据",
             "PMC主管",
             "计划物控中心",
             Interactables.ActionType.Fill,
@@ -154,7 +154,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员发料到备料区",
-            "仓管员按生产用料清单发料到备料区（位于生产区）",
+            "按照生产用料清单，将物料发放至生产区备料区",
             "仓管员A",
             "备料区",
             Interactables.ActionType.Deliver
@@ -184,7 +184,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间工人到备料区领料",
-            "查看自己的派工单，根据派工单到备料区领料",
+            "根据派工单，前往备料区领取生产物料",
             "1车间工人",
             "备料区",
             Interactables.ActionType.Pick
@@ -192,7 +192,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间工人填写领料单",
-            "填写领料单；点：提交",
+            "填写领料单并提交",
             "1车间工人",
             "备料区",
             Interactables.ActionType.Fill,
@@ -202,7 +202,7 @@ public class CustomProductionFlow : FlowBase
         // [步骤9] 工人生产 - 需按E触发，将来加入动画控制
         _steps.Enqueue(new StepData(
             "1车间工人生产",
-            "工人进行1车间生产操作",
+            "开展生产作业",
             "1车间工人",
             "1车间-弯管",
             Interactables.ActionType.View
@@ -210,7 +210,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间工人退料实物送仓库",
-            "将生产多余物料退回仓库",
+            "将生产多余物料、边角料退回仓库",
             "1车间工人",
             "仓库",
             Interactables.ActionType.Deliver
@@ -218,7 +218,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员质检确认退料",
-            "对1车间退料进行质检确认",
+            "对退回物料开展质检工作",
             "仓管员B",
             "仓库",
             Interactables.ActionType.Approve
@@ -226,7 +226,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员制生产退料入库单",
-            "填写生产退料入库单",
+            "填写生产退料入库单并提交",
             "仓管员B",
             "仓库",
             Interactables.ActionType.Fill,
@@ -235,7 +235,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间工人签字确认退料",
-            "在生产退料入库单上签字",
+            "在生产退料入库单上签字确认",
             "1车间工人",
             "仓库",
             Interactables.ActionType.Approve,
@@ -244,7 +244,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间班组长检查并填写工序汇报单",
-            "1车间生产完成后检查；填写工序汇报单",
+            "检查本工序生产情况，填写工序汇报单并提交",
             "1车间班组长",
             "1车间-弯管",
             Interactables.ActionType.Fill,
@@ -253,7 +253,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间工人将半成品送往2车间",
-            "将1车间半成品送往2车间",
+            "将本工序生产的半成品转运至下一工序对应车间，完成交接",
             "1车间工人",
             "2车间-焊接",
             Interactables.ActionType.Deliver
@@ -284,7 +284,7 @@ public class CustomProductionFlow : FlowBase
         // [步骤20] 工人生产
         _steps.Enqueue(new StepData(
             "2车间工人生产",
-            "工人进行2车间生产操作",
+            "开展生产作业",
             "2车间工人",
             "2车间-焊接",
             Interactables.ActionType.View
@@ -292,7 +292,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间班组长检查并填写工序汇报单",
-            "2车间生产完成后检查；填写工序汇报单",
+            "检查本工序生产情况，填写工序汇报单并提交",
             "2车间班组长",
             "2车间-焊接",
             Interactables.ActionType.Fill,
@@ -301,7 +301,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间工人将半成品送往3车间",
-            "将2车间半成品送往3车间",
+            "将本工序生产的半成品转运至下一工序对应车间，完成交接",
             "2车间工人",
             "3车间-配电",
             Interactables.ActionType.Deliver
@@ -332,7 +332,7 @@ public class CustomProductionFlow : FlowBase
         // [步骤31] 工人生产
         _steps.Enqueue(new StepData(
             "3车间工人生产",
-            "工人进行3车间生产操作",
+            "开展生产作业",
             "3车间工人",
             "3车间-配电",
             Interactables.ActionType.View
@@ -340,7 +340,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间班组长检查并填写工序汇报单",
-            "3车间生产完成后检查；填写工序汇报单",
+            "检查本工序生产情况，填写工序汇报单并提交",
             "3车间班组长",
             "3车间-配电",
             Interactables.ActionType.Fill,
@@ -349,7 +349,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间工人将半成品送往4车间",
-            "将3车间半成品送往4车间",
+            "将本工序生产的半成品转运至下一工序对应车间，完成交接",
             "3车间工人",
             "4车间-总装",
             Interactables.ActionType.Deliver
@@ -380,7 +380,7 @@ public class CustomProductionFlow : FlowBase
         // [步骤42] 总装
         _steps.Enqueue(new StepData(
             "4车间工人总装",
-            "4车间负责组装来自1/2/3车间的半成品",
+            "对来自各车间的半成品进行整机总装",
             "4车间工人",
             "4车间-总装",
             Interactables.ActionType.View
@@ -396,7 +396,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员质检确认成品",
-            "对成品进行质检确认",
+            "对完工成品开展全项质检工作",
             "仓管员B",
             "仓库",
             Interactables.ActionType.Approve
@@ -404,7 +404,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员填写完工入库单",
-            "填写完工入库单；工人可查看",
+            "填写完工入库单并提交，工人可查看",
             "仓管员B",
             "仓库",
             Interactables.ActionType.Fill,
@@ -413,7 +413,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "工人在完工入库单签字",
-            "工人在完工入库单上签字",
+            "在完工入库单上签字，确认成品信息无误",
             "4车间工人",
             "仓库",
             Interactables.ActionType.Approve,
@@ -422,7 +422,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "自动通知销售员产品入库",
-            "系统自动通知销售员产品已入库",
+            "系统自动推送产品入库通知，告知销售员订单货品已配齐",
             "系统",
             "-",
             Interactables.ActionType.View
@@ -434,7 +434,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "销售员查看入库通知",
-            "销售员查看产品入库通知，确认货已配齐",
+            "查看系统推送的产品入库通知，确认订单货品已全部配齐",
             "销售员",
             "销售办公室",
             Interactables.ActionType.View
@@ -442,7 +442,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "联系客户确认发货",
-            "销售员联系客户，确认是否可以发货",
+            "告知客户货品已完工入库，沟通确认当前是否可以安排发货",
             "销售员",
             "销售办公室",
             Interactables.ActionType.Fill,
@@ -454,7 +454,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "客户确认可发货",
-            "客户确认可以发货",
+            "客户回复同意发货，敲定发货时间与收货相关要求",
             "销售员",
             "销售办公室",
             Interactables.ActionType.View
@@ -462,7 +462,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "销售员点击发货",
-            "销售员在销售订单点击发货，自动下推发货通知单",
+            "填写发货通知单，明确发货产品、数量、收货地址，提交后销售总监可审核",
             "销售员",
             "销售办公室",
             Interactables.ActionType.Ship,
@@ -481,7 +481,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓库主管审核发货通知单",
-            "仓库主管审核发货通知单",
+            "核对发货信息与订单匹配度，确认无误后完成审核",
             "仓库主管",
             "仓库",
             Interactables.ActionType.Approve,
@@ -490,7 +490,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓库包装出库",
-            "仓库包装出库，发货完成",
+            "将包装好的定制产品移交物流，完成成品出库，同步更新库存数据",
             "仓管员B",
             "仓库",
             Interactables.ActionType.Fill
@@ -498,7 +498,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员填写销售出库单",
-            "仓管员填写销售出库单（由发货通知单下推）",
+            "根据审核后的发货通知单，填写销售出库单并提交",
             "仓管员B",
             "仓库",
             Interactables.ActionType.Fill,
@@ -507,7 +507,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓库主管审核销售出库单",
-            "仓库主管审核销售出库单",
+            "核对出库信息与库存数据，确认无误后完成审核",
             "仓库主管",
             "仓库",
             Interactables.ActionType.Approve,
@@ -516,7 +516,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "客户收货签字",
-            "客户收货，在发货通知单上签字",
+            "客户收到货品，核对无误后在发货通知单上签字确认收货",
             "销售员",
             "销售办公室",
             Interactables.ActionType.View,

@@ -103,8 +103,8 @@ public class StandardProductionFlow : FlowBase
         // targetNPC 使用场景实际命名（1/2/3/4车间，非弯管/焊接/配电/总装）
 
         // 阶段1：计划与排产（保留 Standard 自身 PMC 步骤）
-        _steps.Enqueue(new StepData("制作一周生产计划", "PMC制作一周生产计划；点：提交；生产主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.WeeklyProductionPlan));
-        _steps.Enqueue(new StepData("PMC填写每日排产单", "PMC填写每日排产单给仓库仓管员和车间主管；点：提交；自动下推给仓管员（生产用料清单）和车间主管（生产工单）", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.ProductionSchedule));
+        _steps.Enqueue(new StepData("制作一周生产计划", "根据销售计划与库存情况，制作一周生产计划并提交", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.WeeklyProductionPlan));
+        _steps.Enqueue(new StepData("PMC填写每日排产单", "填写每日排产单，点击提交后生产主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.ProductionSchedule));
 
         // ========================================================
         // 以下复用定制产品生产流程（targetNPC 已对齐场景命名）
@@ -112,7 +112,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员发料到备料区",
-            "仓管员按生产用料清单发料到备料区（位于生产区）",
+            "根据排产单与生产用料清单，将物料发放到备料区",
             "仓管员A",
             "备料区",
             Interactables.ActionType.Deliver
@@ -159,7 +159,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间工人生产",
-            "工人进行1车间生产操作",
+            "按工序要求，进行弯管生产操作",
             "1车间工人",
             "1车间-弯管",
             Interactables.ActionType.View
@@ -201,7 +201,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间班组长检查并填写工序汇报单",
-            "1车间生产完成后检查；填写工序汇报单",
+            "检查本工序生产完成情况，填写工序汇报单并提交",
             "1车间班组长",
             "1车间-弯管",
             Interactables.ActionType.Fill,
@@ -210,7 +210,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间工人将半成品送往2车间",
-            "将1车间半成品送往2车间",
+            "将本工序生产的半成品转运至下一工序对应车间，完成交接",
             "1车间工人",
             "2车间-焊接",
             Interactables.ActionType.Deliver
@@ -240,7 +240,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间工人生产",
-            "工人进行2车间生产操作",
+            "按工序要求，进行焊接生产操作",
             "2车间工人",
             "2车间-焊接",
             Interactables.ActionType.View
@@ -248,7 +248,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间班组长检查并填写工序汇报单",
-            "2车间生产完成后检查；填写工序汇报单",
+            "检查本工序生产完成情况，填写工序汇报单并提交",
             "2车间班组长",
             "2车间-焊接",
             Interactables.ActionType.Fill,
@@ -257,7 +257,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间工人将半成品送往3车间",
-            "将2车间半成品送往3车间",
+            "将本工序生产的半成品转运至下一工序对应车间，完成交接",
             "2车间工人",
             "3车间-配电",
             Interactables.ActionType.Deliver
@@ -287,7 +287,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间工人生产",
-            "工人进行3车间生产操作",
+            "按工序要求，进行配电生产操作",
             "3车间工人",
             "3车间-配电",
             Interactables.ActionType.View
@@ -295,7 +295,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间班组长检查并填写工序汇报单",
-            "3车间生产完成后检查；填写工序汇报单",
+            "检查本工序生产完成情况，填写工序汇报单并提交",
             "3车间班组长",
             "3车间-配电",
             Interactables.ActionType.Fill,
@@ -304,7 +304,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间工人将半成品送往4车间",
-            "将3车间半成品送往4车间",
+            "将本工序生产的半成品转运至下一工序对应车间，完成交接",
             "3车间工人",
             "4车间-总装",
             Interactables.ActionType.Deliver
@@ -334,7 +334,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "4车间工人总装",
-            "4车间负责组装来自1/2/3车间的半成品",
+            "对来自各车间的半成品进行整机总装，完成后将成品送往仓库",
             "4车间工人",
             "4车间-总装",
             Interactables.ActionType.View
@@ -350,7 +350,7 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员质检确认成品",
-            "对成品进行质检确认",
+            "总装完成的成品经质检合格后，完成入库",
             "仓管员B",
             "仓库",
             Interactables.ActionType.Approve
