@@ -20,7 +20,8 @@ public class ProductionDeptPurchaseFlow : FlowBase
         public string targetLocation;
         public Interactables.ActionType actionType;
         public UIManager.UIType? billType;  // 对应单据类型，null=无单据
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null)
+        public DialogueConfig dialogueConfig; // 对话配置
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, DialogueConfig dialogueConfig = default)
         {
             stepName = name;
             description = desc;
@@ -28,6 +29,7 @@ public class ProductionDeptPurchaseFlow : FlowBase
             targetLocation = location;
             actionType = action;
             this.billType = billType;
+            this.dialogueConfig = dialogueConfig;
         }
     }
 
@@ -106,7 +108,11 @@ public class ProductionDeptPurchaseFlow : FlowBase
         _steps.Enqueue(new StepData("跟单员填采购订单", "跟单员填写采购订单并邮件给供应商；点：提交", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.PurchaseOrder));
         _steps.Enqueue(new StepData("供应商送货", "供应商电话联系跟单员后送货（此步骤自动进行）", "供应商", "供应商处", Interactables.ActionType.View));
         _steps.Enqueue(new StepData("供应商填送货通知单", "供应商填写送货通知单（随货）；点：提交（此步骤自动进行）", "供应商", "供应商处", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("仓库到货收货", "仓库进行到货收货", "仓管员B", "质检区", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("仓库到货收货", "仓库进行到货收货", "仓管员B", "质检区", Interactables.ActionType.View,
+            dialogueConfig: new DialogueConfig {
+                mode = DialogueMode.Static,
+                data = Resources.Load<DialogueData>("Dialoguedata/Cangguan_zhijian")
+            }));
         _steps.Enqueue(new StepData("跟单员制收料通知单", "跟单员制作收料通知单；点：提交；自动下推", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.ReceiptNotice));
         _steps.Enqueue(new StepData("仓管员查看收料通知单", "仓管员查看收料通知单并进行质检", "仓管员B", "质检区", Interactables.ActionType.View, UIManager.UIType.ReceiptNotice));
         _steps.Enqueue(new StepData("仓管员填来料检验单", "仓管员填写来料检验单；点：提交；自动下推", "仓管员B", "质检区", Interactables.ActionType.Fill));
@@ -179,6 +185,8 @@ public class ProductionDeptPurchaseFlow : FlowBase
             case Interactables.ActionType.View: return "查看";
             case Interactables.ActionType.Pick: return "领取";
             case Interactables.ActionType.Deliver: return "交付";
+            case Interactables.ActionType.Ship: return "发货";
+            case Interactables.ActionType.Sign: return "签字";
             default: return "操作";
         }
     }
@@ -194,6 +202,11 @@ public class ProductionDeptPurchaseFlow : FlowBase
     {
         Debug.Log($"[ProductionDeptPurchaseFlow] MarkStepComplete 被调用！_isStepCompleted 设置为 true");
         _isStepCompleted = true;
+    }
+
+    public override DialogueConfig GetCurrentStepDialogueConfig()
+    {
+        return _currentStep?.dialogueConfig ?? DialogueConfig.None;
     }
 
     /// <summary>

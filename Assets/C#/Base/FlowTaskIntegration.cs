@@ -271,6 +271,15 @@ public class FlowTaskIntegration : MonoBehaviour
     public FlowTaskConfig GetCurrentFlowConfig() => currentConfig;
     public int GetCurrentStepIndex() => currentStepIndex;
     public FlowBase GetCurrentFlow() => currentFlow;
+
+    /// <summary>
+    /// 设置当前活跃流程（子流程启动时调用）
+    /// </summary>
+    public void SetCurrentFlow(FlowBase flow)
+    {
+        currentFlow = flow;
+        Debug.Log($"[FlowTaskIntegration] 当前流程切换为: {flow?.GetType().Name ?? "null"}");
+    }
 }
 
 [System.Serializable]

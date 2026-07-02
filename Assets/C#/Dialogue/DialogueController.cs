@@ -82,6 +82,19 @@ public class DialogueController : MonoBehaviour
     }
 
     /// <summary>
+    /// 启动一段对话（指定模式，为 LLM 预留）
+    /// </summary>
+    public void StartDialogue(DialogueData data, DialogueMode mode)
+    {
+        if (mode == DialogueMode.LLM)
+        {
+            Debug.LogWarning("[DialogueController] LLM 对话模式尚未实现，回退到 Static 模式");
+            // 未来：从 LLM 服务获取对话内容，动态填充 DialogueData
+        }
+        StartDialogue(data);
+    }
+
+    /// <summary>
     /// 推进到下一句。由 Update 检测按键后调用，也可外部直接调用。
     /// </summary>
     public void NextLine()
@@ -134,11 +147,9 @@ public class DialogueController : MonoBehaviour
         // 恢复旧版指定组件
         SetComponentsEnabled(true);
 
-        // 流程步骤完成（由 DialogueData 配置决定）
-        if (currentDialogue != null && currentDialogue.completeStepOnEnd)
-        {
-            FlowStepTracker.CompleteStep();
-        }
+        // 对话结束始终完成当前流程步骤
+        // （流程步骤通过 DialogueConfig 控制是否播放对话，不再依赖资产字段）
+        FlowStepTracker.CompleteStep();
 
         currentDialogue = null;
         currentIndex = 0;

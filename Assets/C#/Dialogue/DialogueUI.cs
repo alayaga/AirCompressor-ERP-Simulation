@@ -11,6 +11,13 @@ public class DialogueUI : MonoBehaviour
     [Tooltip("整个对话UI的根节点，用于整体显示/隐藏")]
     public GameObject panel;
 
+    private void Start()
+    {
+        // 确保对话面板在场景加载时默认隐藏
+        if (panel != null)
+            panel.SetActive(false);
+    }
+
     [Header("Text")]
     [Tooltip("显示当前说话人的名字")]
     public TextMeshProUGUI speakerNameText;

@@ -21,8 +21,9 @@ public class StandardSalesFlow : FlowBase
         public Interactables.ActionType actionType;
         public bool isBranchChoice = false; // 是否为分支选择步骤
         public UIManager.UIType? billType;  // 关联单据类型
+        public DialogueConfig dialogueConfig; // 对话配置
 
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, bool isBranch = false, UIManager.UIType? billType = null)
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, bool isBranch = false, UIManager.UIType? billType = null, DialogueConfig dialogueConfig = default)
         {
             stepName = name;
             description = desc;
@@ -31,6 +32,7 @@ public class StandardSalesFlow : FlowBase
             actionType = action;
             isBranchChoice = isBranch;
             this.billType = billType;
+            this.dialogueConfig = dialogueConfig;
         }
     }
     
@@ -376,6 +378,8 @@ public class StandardSalesFlow : FlowBase
             case Interactables.ActionType.View: return "查看";
             case Interactables.ActionType.Pick: return "领取";
             case Interactables.ActionType.Deliver: return "交付";
+            case Interactables.ActionType.Ship: return "发货";
+            case Interactables.ActionType.Sign: return "签字";
             default: return "操作";
         }
     }
@@ -404,6 +408,14 @@ public class StandardSalesFlow : FlowBase
         }
         
         _isStepCompleted = true;
+    }
+
+    public override DialogueConfig GetCurrentStepDialogueConfig()
+    {
+        // 如果在分支流程中，转发给分支流程
+        if (_isInBranch && _currentBranchFlow != null)
+            return _currentBranchFlow.GetCurrentStepDialogueConfig();
+        return _currentStep?.dialogueConfig ?? DialogueConfig.None;
     }
 
     public StepData GetCurrentStep()

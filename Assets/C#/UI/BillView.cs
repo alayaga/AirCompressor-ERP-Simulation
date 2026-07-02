@@ -328,6 +328,11 @@ public class BillView : MonoBehaviour
                 if (roleButtons.Contains(Interactables.ActionType.Ship))
                     result.Add(Interactables.ActionType.Ship);
                 break;
+            case Interactables.ActionType.Ship:
+                // 发货模式：仅显示发货按钮
+                if (roleButtons.Contains(Interactables.ActionType.Ship))
+                    result.Add(Interactables.ActionType.Ship);
+                break;
             case Interactables.ActionType.View:
                 break; // View模式仅 Exit
         }

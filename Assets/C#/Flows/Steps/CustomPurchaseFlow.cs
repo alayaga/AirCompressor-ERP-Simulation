@@ -20,8 +20,9 @@ public class CustomPurchaseFlow : FlowBase
         public string targetLocation;
         public Interactables.ActionType actionType;
         public UIManager.UIType? billType;
+        public DialogueConfig dialogueConfig; // 对话配置
 
-        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null)
+        public StepData(string name, string desc, string npc, string location, Interactables.ActionType action, UIManager.UIType? billType = null, DialogueConfig dialogueConfig = default)
         {
             stepName = name;
             description = desc;
@@ -29,6 +30,7 @@ public class CustomPurchaseFlow : FlowBase
             targetLocation = location;
             actionType = action;
             this.billType = billType;
+            this.dialogueConfig = dialogueConfig;
         }
     }
 
@@ -177,7 +179,11 @@ public class CustomPurchaseFlow : FlowBase
             "仓库进行到货收货",
             "仓管员B",
             "仓库",
-            Interactables.ActionType.View
+            Interactables.ActionType.View,
+            dialogueConfig: new DialogueConfig {
+                mode = DialogueMode.Static,
+                data = Resources.Load<DialogueData>("Dialoguedata/Cangguan_zhijian")
+            }
         ));
 
         _steps.Enqueue(new StepData(
@@ -268,6 +274,8 @@ public class CustomPurchaseFlow : FlowBase
             case Interactables.ActionType.View: return "查看";
             case Interactables.ActionType.Pick: return "领取";
             case Interactables.ActionType.Deliver: return "交付";
+            case Interactables.ActionType.Ship: return "发货";
+            case Interactables.ActionType.Sign: return "签字";
             default: return "操作";
         }
     }
@@ -280,6 +288,11 @@ public class CustomPurchaseFlow : FlowBase
     {
         Debug.Log($"[CustomPurchaseFlow] MarkStepComplete 被调用！_isStepCompleted 设置为 true");
         _isStepCompleted = true;
+    }
+
+    public override DialogueConfig GetCurrentStepDialogueConfig()
+    {
+        return _currentStep?.dialogueConfig ?? DialogueConfig.None;
     }
 
     public StepData GetCurrentStep()
