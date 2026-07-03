@@ -187,7 +187,7 @@ public class CustomSalesFlow : FlowBase
         _steps.Enqueue(new StepData("客户确认", "客户确认报价并敲定订单", "销售员", "销售办公室", Interactables.ActionType.View));
 
         // ===== 阶段6：提交PMC =====
-        _steps.Enqueue(new StepData("提交销售订单给PMC", "提交订单，供 PMC 查看", "销售员", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
+        _steps.Enqueue(new StepData("提交销售订单给PMC", "提交订单，供 PMC 查看", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
 
         // ===== 阶段7：分支选择（生产/采购）=====
         _steps.Enqueue(new StepData(
