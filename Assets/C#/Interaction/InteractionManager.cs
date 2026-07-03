@@ -144,6 +144,40 @@ public class InteractionManager : MonoBehaviour
 
         Debug.Log($"[交互] 与 {target.npcName} 交互，执行 {target.actionType}");
 
+        // 检查是否挂载了 WorkshopAnimationTrigger，且当前步骤匹配动画触发条件
+        var animTrigger = target.GetComponent<WorkshopAnimationTrigger>();
+        Debug.Log($"[交互-DEBUG] WorkshopAnimationTrigger 组件: {(animTrigger != null ? "找到" : "未找到")}");
+        if (animTrigger != null)
+        {
+            bool shouldTrigger = animTrigger.ShouldTriggerAnimation();
+            Debug.Log($"[交互-DEBUG] ShouldTriggerAnimation 结果: {shouldTrigger}");
+            if (shouldTrigger)
+            {
+                Debug.Log($"[交互] 触发车间动画: {animTrigger.workshopId}");
+                SetInteractionEnabled(false);
+                animTrigger.TriggerAnimation(() =>
+                {
+                    SetInteractionEnabled(true);
+                    target.OnInteract();
+                });
+                return;
+            }
+        }
+
+        // 检查是否挂载了 QualityInspectionTrigger，且当前步骤匹配质检触发条件
+        var inspectionTrigger = target.GetComponent<QualityInspectionTrigger>();
+        if (inspectionTrigger != null && inspectionTrigger.ShouldTriggerInspection())
+        {
+            Debug.Log($"[交互] 触发展检动画: {inspectionTrigger.inspectionType}");
+            SetInteractionEnabled(false);
+            inspectionTrigger.TriggerInspection(() =>
+            {
+                SetInteractionEnabled(true);
+                target.OnInteract();
+            });
+            return;
+        }
+
         // 调用交互物的 OnInteract 方法
         target.OnInteract();
     }

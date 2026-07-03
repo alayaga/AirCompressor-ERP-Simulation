@@ -18,8 +18,11 @@ public class QualityInspectionManager : MonoBehaviour
     [Header("--- 视觉特效 ---")]
     public GameObject passEffect;
 
+    public event System.Action OnInspectionComplete;
+
     // 防抖锁：防止动画播放中途被再次触发
     private bool isInspecting = false;
+    public bool IsInspecting => isInspecting;
 
     void Start()
     {
@@ -43,28 +46,28 @@ public class QualityInspectionManager : MonoBehaviour
     // 开放给外部调用的两个独立接口
     // ==========================================
 
-    public void CallInspectCompressor()
+    public void CallInspectCompressor(System.Action onComplete = null)
     {
         if (isInspecting) return;
-        StartCoroutine(InspectionRoutine(airCompressor));
+        StartCoroutine(InspectionRoutine(airCompressor, onComplete));
     }
 
-    public void CallInspectRawMaterial()
+    public void CallInspectRawMaterial(System.Action onComplete = null)
     {
         if (isInspecting) return;
-        StartCoroutine(InspectionRoutine(rawMaterialBox));
+        StartCoroutine(InspectionRoutine(rawMaterialBox, onComplete));
     }
 
     // ==========================================
     // 底层通用动画流水线
     // ==========================================
 
-    private IEnumerator InspectionRoutine(GameObject itemTarget)
+    private IEnumerator InspectionRoutine(GameObject itemTarget, System.Action onComplete = null)
     {
         isInspecting = true;
         InitializeScreen(); // 再次确保场地干净
 
-        // 阶段 1：物品上台，显示“开始检测”
+        // 阶段 1：物品上台，显示”开始检测”
         itemTarget.SetActive(true);
         state1_Start.SetActive(true);
         yield return new WaitForSeconds(1.0f);
@@ -91,5 +94,7 @@ public class QualityInspectionManager : MonoBehaviour
         // 动画结束：现场归零，解锁防抖
         InitializeScreen();
         isInspecting = false;
+
+        onComplete?.Invoke();
     }
 }
