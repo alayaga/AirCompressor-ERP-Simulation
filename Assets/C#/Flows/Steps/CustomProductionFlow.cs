@@ -5,8 +5,8 @@ using System.Collections.Generic;
 /// <summary>
 /// 定制产品生产流程（共43步）
 /// 从PMC查看销售订单到产品入库通知销售员的完整生产流程
-/// 车间顺序：1弯管 >2焊接 >3配电 >4总装（流水线依赖）
-/// 仅弯管车间工人领料和退料，2/3/4车间跳过领料退料
+/// 车间顺序：弯管（1车间）> 焊接（2车间）> 配电（3车间）> 总装（4车间）（流水线依赖）
+/// 仅弯管车间（1车间）工人领料和退料，焊接（2车间）/配电（3车间）/总装（4车间）跳过领料退料
 /// </summary>
 public class CustomProductionFlow : FlowBase
 {
@@ -161,12 +161,12 @@ public class CustomProductionFlow : FlowBase
         ));
 
         // ========================================================
-        // 阶段2: 1车间/弯管（步骤5~15）
+        // 阶段2: 弯管车间（1车间）- 步骤5~15
         // ========================================================
 
         _steps.Enqueue(new StepData(
             "1车间主管填写生产工单",
-            "填写1车间生产工单",
+            "填写弯管车间（1车间）生产工单",
             "1车间主管",
             "1车间-弯管",
             Interactables.ActionType.Fill,
@@ -175,7 +175,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间班组长填写派工单",
-            "查看1车间生产工单；填写工人个人的派工单",
+            "查看弯管车间（1车间）生产工单；填写工人个人的派工单",
             "1车间班组长",
             "1车间-弯管",
             Interactables.ActionType.Fill,
@@ -202,7 +202,11 @@ public class CustomProductionFlow : FlowBase
         // [步骤9] 工人生产 - 需按E触发，将来加入动画控制
         _steps.Enqueue(new StepData(
             "1车间工人生产",
+<<<<<<< Updated upstream
             "开展生产作业",
+=======
+            "工人进行弯管车间（1车间）生产操作",
+>>>>>>> Stashed changes
             "1车间工人",
             "1车间-弯管",
             Interactables.ActionType.View
@@ -218,7 +222,11 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "仓管员质检确认退料",
+<<<<<<< Updated upstream
             "对退回物料开展质检工作",
+=======
+            "对弯管车间（1车间）退料进行质检确认",
+>>>>>>> Stashed changes
             "仓管员B",
             "仓库",
             Interactables.ActionType.Approve
@@ -244,7 +252,11 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间班组长检查并填写工序汇报单",
+<<<<<<< Updated upstream
             "检查本工序生产情况，填写工序汇报单并提交",
+=======
+            "弯管车间（1车间）生产完成后检查；填写工序汇报单",
+>>>>>>> Stashed changes
             "1车间班组长",
             "1车间-弯管",
             Interactables.ActionType.Fill,
@@ -253,19 +265,23 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "1车间工人将半成品送往2车间",
+<<<<<<< Updated upstream
             "将本工序生产的半成品转运至下一工序对应车间，完成交接",
+=======
+            "将弯管车间（1车间）半成品送往焊接车间（2车间）",
+>>>>>>> Stashed changes
             "1车间工人",
             "2车间-焊接",
             Interactables.ActionType.Deliver
         ));
 
         // ========================================================
-        // 阶段3: 2车间/焊接（步骤16~26）
+        // 阶段3: 焊接车间（2车间）- 步骤16~26
         // ========================================================
 
         _steps.Enqueue(new StepData(
             "2车间主管填写生产工单",
-            "填写2车间生产工单",
+            "填写焊接车间（2车间）生产工单",
             "2车间主管",
             "2车间-焊接",
             Interactables.ActionType.Fill,
@@ -274,7 +290,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间班组长填写派工单",
-            "查看2车间生产工单；填写工人个人的派工单",
+            "查看焊接车间（2车间）生产工单；填写工人个人的派工单",
             "2车间班组长",
             "2车间-焊接",
             Interactables.ActionType.Fill,
@@ -284,7 +300,11 @@ public class CustomProductionFlow : FlowBase
         // [步骤20] 工人生产
         _steps.Enqueue(new StepData(
             "2车间工人生产",
+<<<<<<< Updated upstream
             "开展生产作业",
+=======
+            "工人进行焊接车间（2车间）生产操作",
+>>>>>>> Stashed changes
             "2车间工人",
             "2车间-焊接",
             Interactables.ActionType.View
@@ -292,7 +312,11 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间班组长检查并填写工序汇报单",
+<<<<<<< Updated upstream
             "检查本工序生产情况，填写工序汇报单并提交",
+=======
+            "焊接车间（2车间）生产完成后检查；填写工序汇报单",
+>>>>>>> Stashed changes
             "2车间班组长",
             "2车间-焊接",
             Interactables.ActionType.Fill,
@@ -301,19 +325,23 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间工人将半成品送往3车间",
+<<<<<<< Updated upstream
             "将本工序生产的半成品转运至下一工序对应车间，完成交接",
+=======
+            "将焊接车间（2车间）半成品送往配电车间（3车间）",
+>>>>>>> Stashed changes
             "2车间工人",
             "3车间-配电",
             Interactables.ActionType.Deliver
         ));
 
         // ========================================================
-        // 阶段4: 3车间/配电（步骤27~37）
+        // 阶段4: 配电车间（3车间）- 步骤27~37
         // ========================================================
 
         _steps.Enqueue(new StepData(
             "3车间主管填写生产工单",
-            "填写3车间生产工单",
+            "填写配电车间（3车间）生产工单",
             "3车间主管",
             "3车间-配电",
             Interactables.ActionType.Fill,
@@ -322,7 +350,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间班组长填写派工单",
-            "查看3车间生产工单；填写工人个人的派工单",
+            "查看配电车间（3车间）生产工单；填写工人个人的派工单",
             "3车间班组长",
             "3车间-配电",
             Interactables.ActionType.Fill,
@@ -332,7 +360,11 @@ public class CustomProductionFlow : FlowBase
         // [步骤31] 工人生产
         _steps.Enqueue(new StepData(
             "3车间工人生产",
+<<<<<<< Updated upstream
             "开展生产作业",
+=======
+            "工人进行配电车间（3车间）生产操作",
+>>>>>>> Stashed changes
             "3车间工人",
             "3车间-配电",
             Interactables.ActionType.View
@@ -340,7 +372,11 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间班组长检查并填写工序汇报单",
+<<<<<<< Updated upstream
             "检查本工序生产情况，填写工序汇报单并提交",
+=======
+            "配电车间（3车间）生产完成后检查；填写工序汇报单",
+>>>>>>> Stashed changes
             "3车间班组长",
             "3车间-配电",
             Interactables.ActionType.Fill,
@@ -349,19 +385,23 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间工人将半成品送往4车间",
+<<<<<<< Updated upstream
             "将本工序生产的半成品转运至下一工序对应车间，完成交接",
+=======
+            "将配电车间（3车间）半成品送往总装车间（4车间）",
+>>>>>>> Stashed changes
             "3车间工人",
             "4车间-总装",
             Interactables.ActionType.Deliver
         ));
 
         // ========================================================
-        // 阶段5: 4车间/总装及入库（步骤38~47）
+        // 阶段5: 总装车间（4车间）及入库 - 步骤38~47
         // ========================================================
 
         _steps.Enqueue(new StepData(
             "4车间主管填写生产工单",
-            "填写4车间生产工单",
+            "填写总装车间（4车间）生产工单",
             "4车间主管",
             "4车间-总装",
             Interactables.ActionType.Fill,
@@ -370,7 +410,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "4车间班组长填写派工单",
-            "查看4车间生产工单；填写工人个人的派工单",
+            "查看总装车间（4车间）生产工单；填写工人个人的派工单",
             "4车间班组长",
             "4车间-总装",
             Interactables.ActionType.Fill,
@@ -380,7 +420,11 @@ public class CustomProductionFlow : FlowBase
         // [步骤42] 总装
         _steps.Enqueue(new StepData(
             "4车间工人总装",
+<<<<<<< Updated upstream
             "对来自各车间的半成品进行整机总装",
+=======
+            "总装车间（4车间）负责组装来自弯管（1车间）/焊接（2车间）/配电（3车间）的半成品",
+>>>>>>> Stashed changes
             "4车间工人",
             "4车间-总装",
             Interactables.ActionType.View
@@ -388,7 +432,7 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "4车间工人将成品送往仓库",
-            "组装完成后由4车间工人将成品送往仓库",
+            "组装完成后由总装车间工人（4车间）将成品送往仓库",
             "4车间工人",
             "仓库",
             Interactables.ActionType.Deliver
@@ -413,7 +457,11 @@ public class CustomProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "工人在完工入库单签字",
+<<<<<<< Updated upstream
             "在完工入库单上签字，确认成品信息无误",
+=======
+            "总装车间工人在完工入库单上签字",
+>>>>>>> Stashed changes
             "4车间工人",
             "仓库",
             Interactables.ActionType.Approve,

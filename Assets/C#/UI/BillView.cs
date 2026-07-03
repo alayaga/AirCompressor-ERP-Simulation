@@ -208,6 +208,12 @@ public class BillView : MonoBehaviour
         _stepAction = stepAction;
         _roleButtons = roleButtons ?? new List<Interactables.ActionType>();
         _billData = billData;
+
+        // 角色变更时清除上一个角色的保存数据，防止跨车间数据污染
+        if (!string.IsNullOrEmpty(_currentRole) && _currentRole != roleName)
+        {
+            ClearSavedData();
+        }
         _currentRole = roleName;
         IsCompleted = false;
         WasCancelled = false;
@@ -232,7 +238,7 @@ public class BillView : MonoBehaviour
         // 打开时预显示表格预览数据（部分数据，不点填写就能看到）
         ShowPreviewTable();
 
-        // 如果之前保存过数据（退出后重新进入），自动恢复
+        // 如果之前保存过数据（退出后重新进入），仅限同一角色恢复
         if (_hasSavedData)
         {
             RestoreSavedData();
@@ -255,6 +261,10 @@ public class BillView : MonoBehaviour
     private void ShowPreviewTable()
     {
         if (settingTableGenerator == null || _billData == null) return;
+
+        // 无论是否有预览数据，先清空表格，防止显示上一个角色的残留数据
+        settingTableGenerator.ClearTable();
+
         var previewData = _billData.GetPreviewTableForRole(_currentRole);
         if (previewData == null || previewData.Length == 0) return;
 
@@ -262,7 +272,6 @@ public class BillView : MonoBehaviour
         if (columnHeaders != null && columnHeaders.Length > 0)
             settingTableGenerator.SetColumnHeaders(columnHeaders);
 
-        settingTableGenerator.ClearTable();
         settingTableGenerator.CreateHeaderRow();
         foreach (var row in previewData)
             settingTableGenerator.AddRow(row.columns);
