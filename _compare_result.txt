@@ -1,0 +1,161 @@
+文件                        步骤名                    旧字数    新字数    差值     增幅      
+-------------------------------------------------------------------------------------
+CustomProductionFlow      仓库包装出库                 11     29     18++++  +164% !!
+StandardSalesBranchFlow   回复交期                   11     26     15++++  +136% !!
+StandardProductionFlow    半成品转运(通用)              12     26     14++++  +117% !!
+StandardDeliveryFlow      填写发货通知单                19     33     14++++  +74% !!
+StandardDeliveryFlow      包装出库                   11     25     14++++  +127% !!
+CustomProductionFlow      1车间半成品转运               12     26     14++++  +117% !!
+CustomProductionFlow      2车间半成品转运               12     26     14++++  +117% !!
+CustomProductionFlow      3车间半成品转运               12     26     14++++  +117% !!
+CustomProductionFlow      客户确认可发货                8      22     14++++  +175% !!
+CustomSalesFlow           审核销售订单                 10     22     12++++  +120% !!
+StandardDeliveryFlow      审核发货通知单                11     22     11++++  +100% !!
+CustomProductionFlow      自动通知销售员产品入库            14     25     11++++  +79% !!
+CustomProductionFlow      销售员点击发货                22     33     11++++  +50% !!
+CustomProductionFlow      仓库主管审核发货通知单            11     22     11++++  +100% !!
+CustomProductionFlow      客户收货签字                 14     25     11++++  +79% !!
+StandardDeliveryFlow      审核销售出库单                11     21     10++++  +91%
+CustomSalesFlow           填写销售订单                 11     21     10++++  +91%
+CustomProductionFlow      联系客户确认发货               16     26     10++++  +62%
+CustomProductionFlow      仓库主管审核销售出库单            11     21     10++++  +91%
+StandardProductionFlow    仓管员质检确认成品              9      18     9+++++  +100%
+CustomSalesFlow           填写BOM单                 13     22     9+++++  +69%
+CustomSalesFlow           计算成本并确认价格              7      15     8+++++  +114%
+StandardProductionFlow    4车间工人总装                20     27     7+++++  +35%
+CustomProductionFlow      工人在完工入库单签字             11     18     7+++++  +64%
+CustomProductionFlow      销售员查看入库通知              18     25     7+++++  +39%
+StandardSalesBranchFlow   填写销售计划                 19     25     6+++++  +32%
+StandardSalesBranchFlow   制作采购计划                 24     30     6+++++  +25%
+CustomSalesFlow           客户询单                   10     16     6+++++  +60%
+StandardProductionFlow    工序汇报(通用)               18     22     4+++++  +22%
+CustomProductionFlow      1车间工人退料实物送仓库           11     15     4+++++  +36%
+CustomProductionFlow      仓管员质检确认成品              9      13     4+++++  +44%
+StandardProductionFlow    1车间工人生产                11     14     3+++++  +27%
+StandardProductionFlow    2车间工人生产                11     14     3+++++  +27%
+StandardProductionFlow    3车间工人生产                11     14     3+++++  +27%
+CustomSalesFlow           提交销售订单给PMC             10     13     3+++++  +30%
+CustomProductionFlow      仓管员制生产退料入库单            9      12     3+++++  +33%
+CustomProductionFlow      仓管员填写完工入库单             13     16     3+++++  +23%
+StandardSalesBranchFlow   查看销售计划                 19     21     2+++++  +11%
+StandardDeliveryFlow      客户签收                   23     25     2+++++  +9%
+CustomProductionFlow      1车间工人签字确认退料            11     13     2+++++  +18%
+CustomProductionFlow      1车间工序汇报                18     20     2+++++  +11%
+CustomProductionFlow      2车间工序汇报                18     20     2+++++  +11%
+CustomProductionFlow      3车间工序汇报                18     20     2+++++  +11%
+CustomProductionFlow      仓管员填写销售出库单             20     22     2+++++  +10%
+CustomSalesFlow           报价给客户                  9      9      0+++++  +0%
+CustomSalesFlow           客户确认                   11     11     0+++++  +0%
+CustomProductionFlow      PMC查看销售订单              20     20     0+++++  +0%
+StandardSalesBranchFlow   制作生产计划                 24     23     -1++++  -4%
+StandardProductionFlow    制作一周生产计划               24     23     -1++++  -4%
+StandardProductionFlow    仓管员发料到备料区              23     22     -1++++  -4%
+CustomSalesFlow           查看BOM单                 9      8      -1++++  -11%
+CustomSalesFlow           查看报价单                  12     11     -1++++  -8%
+CustomProductionFlow      仓管员质检确认退料              12     11     -1++++  -8%
+StandardDeliveryFlow      填写销售出库单                20     18     -2++++  -10%
+CustomProductionFlow      仓管员发料到备料区              23     21     -2++++  -9%
+CustomProductionFlow      1车间工人填写领料单             10     8      -2++++  -20%
+CustomProductionFlow      1车间工人到备料区领料            20     17     -3++++  -15%
+CustomProductionFlow      4车间工人总装                20     16     -4++++  -20%
+CustomProductionFlow      1车间工人生产                11     6      -5++++  -45%
+CustomProductionFlow      2车间工人生产                11     6      -5++++  -45%
+CustomProductionFlow      3车间工人生产                11     6      -5++++  -45%
+CustomProductionFlow      制定一周生产计划               22     12     -10+++  -45%
+CustomSalesFlow           选择后续流程                 27     13     -14+++  -52%
+CustomProductionFlow      PMC填写每日排产单             42     19     -23+++  -55%
+StandardProductionFlow    PMC填写每日排产单             54     20     -34+++  -63%
+
+=====================================================================================
+!! 新文案比旧文案多出超过10个字的步骤（需要重点检查UI是否挤在一起）：
+=====================================================================================
+  [CustomProductionFlow]
+    步骤: 仓库包装出库
+    旧(11字): ...
+    新(29字): ...
+    增加: +18字 (164%)
+
+  [StandardSalesBranchFlow]
+    步骤: 回复交期
+    旧(11字): ...
+    新(26字): ...
+    增加: +15字 (136%)
+
+  [StandardProductionFlow]
+    步骤: 半成品转运(通用)
+    旧(12字): ...
+    新(26字): ...
+    增加: +14字 (117%)
+
+  [StandardDeliveryFlow]
+    步骤: 填写发货通知单
+    旧(19字): ...
+    新(33字): ...
+    增加: +14字 (74%)
+
+  [StandardDeliveryFlow]
+    步骤: 包装出库
+    旧(11字): ...
+    新(25字): ...
+    增加: +14字 (127%)
+
+  [CustomProductionFlow]
+    步骤: 1车间半成品转运
+    旧(12字): ...
+    新(26字): ...
+    增加: +14字 (117%)
+
+  [CustomProductionFlow]
+    步骤: 2车间半成品转运
+    旧(12字): ...
+    新(26字): ...
+    增加: +14字 (117%)
+
+  [CustomProductionFlow]
+    步骤: 3车间半成品转运
+    旧(12字): ...
+    新(26字): ...
+    增加: +14字 (117%)
+
+  [CustomProductionFlow]
+    步骤: 客户确认可发货
+    旧(8字): ...
+    新(22字): ...
+    增加: +14字 (175%)
+
+  [CustomSalesFlow]
+    步骤: 审核销售订单
+    旧(10字): ...
+    新(22字): ...
+    增加: +12字 (120%)
+
+  [StandardDeliveryFlow]
+    步骤: 审核发货通知单
+    旧(11字): ...
+    新(22字): ...
+    增加: +11字 (100%)
+
+  [CustomProductionFlow]
+    步骤: 自动通知销售员产品入库
+    旧(14字): ...
+    新(25字): ...
+    增加: +11字 (79%)
+
+  [CustomProductionFlow]
+    步骤: 销售员点击发货
+    旧(22字): ...
+    新(33字): ...
+    增加: +11字 (50%)
+
+  [CustomProductionFlow]
+    步骤: 仓库主管审核发货通知单
+    旧(11字): ...
+    新(22字): ...
+    增加: +11字 (100%)
+
+  [CustomProductionFlow]
+    步骤: 客户收货签字
+    旧(14字): ...
+    新(25字): ...
+    增加: +11字 (79%)
+

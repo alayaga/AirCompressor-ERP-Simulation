@@ -1,0 +1,652 @@
+[
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓库包装出库",
+    "old_len": 11,
+    "new_len": 29,
+    "diff": 18,
+    "pct": 164,
+    "old": "仓库包装出库，发货完成",
+    "new": "将包装好的定制产品移交物流，完成成品出库，同步更新库存数据"
+  },
+  {
+    "file": "StandardSalesBranchFlow",
+    "step": "回复交期",
+    "old_len": 11,
+    "new_len": 26,
+    "diff": 15,
+    "pct": 136,
+    "old": "PMC回复销售产品交期",
+    "new": "根据生产计划与采购周期，向销售部回复产品预计交付时间"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "半成品转运(通用)",
+    "old_len": 12,
+    "new_len": 26,
+    "diff": 14,
+    "pct": 117,
+    "old": "将X车间半成品送往Y车间",
+    "new": "将本工序生产的半成品转运至下一工序对应车间，完成交接"
+  },
+  {
+    "file": "StandardDeliveryFlow",
+    "step": "填写发货通知单",
+    "old_len": 19,
+    "new_len": 33,
+    "diff": 14,
+    "pct": 74,
+    "old": "仓管员填写发货通知单（由销售订单下推）",
+    "new": "填写发货通知单，明确发货产品、数量、收货地址，提交后仓库主管可审核"
+  },
+  {
+    "file": "StandardDeliveryFlow",
+    "step": "包装出库",
+    "old_len": 11,
+    "new_len": 25,
+    "diff": 14,
+    "pct": 127,
+    "old": "仓库包装出库，发货完成",
+    "new": "对出库产品进行包装、贴标，完成后交给物流，发货完成"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "1车间半成品转运",
+    "old_len": 12,
+    "new_len": 26,
+    "diff": 14,
+    "pct": 117,
+    "old": "将1车间半成品送往2车间",
+    "new": "将本工序生产的半成品转运至下一工序对应车间，完成交接"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "2车间半成品转运",
+    "old_len": 12,
+    "new_len": 26,
+    "diff": 14,
+    "pct": 117,
+    "old": "将2车间半成品送往3车间",
+    "new": "将本工序生产的半成品转运至下一工序对应车间，完成交接"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "3车间半成品转运",
+    "old_len": 12,
+    "new_len": 26,
+    "diff": 14,
+    "pct": 117,
+    "old": "将3车间半成品送往4车间",
+    "new": "将本工序生产的半成品转运至下一工序对应车间，完成交接"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "客户确认可发货",
+    "old_len": 8,
+    "new_len": 22,
+    "diff": 14,
+    "pct": 175,
+    "old": "客户确认可以发货",
+    "new": "客户回复同意发货，敲定发货时间与收货相关要求"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "审核销售订单",
+    "old_len": 10,
+    "new_len": 22,
+    "diff": 12,
+    "pct": 120,
+    "old": "销售总监审核订单内容",
+    "new": "审核订单内容，审核通过后自动下推 BOM 单"
+  },
+  {
+    "file": "StandardDeliveryFlow",
+    "step": "审核发货通知单",
+    "old_len": 11,
+    "new_len": 22,
+    "diff": 11,
+    "pct": 100,
+    "old": "仓库主管审核发货通知单",
+    "new": "核对发货信息与订单匹配度，确认无误后完成审核"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "自动通知销售员产品入库",
+    "old_len": 14,
+    "new_len": 25,
+    "diff": 11,
+    "pct": 79,
+    "old": "系统自动通知销售员产品已入库",
+    "new": "系统自动推送产品入库通知，告知销售员订单货品已配齐"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "销售员点击发货",
+    "old_len": 22,
+    "new_len": 33,
+    "diff": 11,
+    "pct": 50,
+    "old": "销售员在销售订单点击发货，自动下推发货通知单",
+    "new": "填写发货通知单，明确发货产品、数量、收货地址，提交后销售总监可审核"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓库主管审核发货通知单",
+    "old_len": 11,
+    "new_len": 22,
+    "diff": 11,
+    "pct": 100,
+    "old": "仓库主管审核发货通知单",
+    "new": "核对发货信息与订单匹配度，确认无误后完成审核"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "客户收货签字",
+    "old_len": 14,
+    "new_len": 25,
+    "diff": 11,
+    "pct": 79,
+    "old": "客户收货，在发货通知单上签字",
+    "new": "客户收到货品，核对无误后在发货通知单上签字确认收货"
+  },
+  {
+    "file": "StandardDeliveryFlow",
+    "step": "审核销售出库单",
+    "old_len": 11,
+    "new_len": 21,
+    "diff": 10,
+    "pct": 91,
+    "old": "仓库主管审核销售出库单",
+    "new": "核对出库信息与库存数据，确认无误后完成审核"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "填写销售订单",
+    "old_len": 11,
+    "new_len": 21,
+    "diff": 10,
+    "pct": 91,
+    "old": "录入客户需求和产品规格",
+    "new": "录入客户需求、产品规格；填写销售订单并提交"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "联系客户确认发货",
+    "old_len": 16,
+    "new_len": 26,
+    "diff": 10,
+    "pct": 62,
+    "old": "销售员联系客户，确认是否可以发货",
+    "new": "告知客户货品已完工入库，沟通确认当前是否可以安排发货"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓库主管审核销售出库单",
+    "old_len": 11,
+    "new_len": 21,
+    "diff": 10,
+    "pct": 91,
+    "old": "仓库主管审核销售出库单",
+    "new": "核对出库信息与库存数据，确认无误后完成审核"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "仓管员质检确认成品",
+    "old_len": 9,
+    "new_len": 18,
+    "diff": 9,
+    "pct": 100,
+    "old": "对成品进行质检确认",
+    "new": "总装完成的成品经质检合格后，完成入库"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "填写BOM单",
+    "old_len": 13,
+    "new_len": 22,
+    "diff": 9,
+    "pct": 69,
+    "old": "技术部根据订单生成物料清单",
+    "new": "根据订单生成物料清单；填写 BOM 单并提交"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "计算成本并确认价格",
+    "old_len": 7,
+    "new_len": 15,
+    "diff": 8,
+    "pct": 114,
+    "old": "填写销售报价单",
+    "new": "核算成本，填写销售报价单并提交"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "4车间工人总装",
+    "old_len": 20,
+    "new_len": 27,
+    "diff": 7,
+    "pct": 35,
+    "old": "4车间负责组装来自1/2/3车间的半成品",
+    "new": "对来自各车间的半成品进行整机总装，完成后将成品送往仓库"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "工人在完工入库单签字",
+    "old_len": 11,
+    "new_len": 18,
+    "diff": 7,
+    "pct": 64,
+    "old": "工人在完工入库单上签字",
+    "new": "在完工入库单上签字，确认成品信息无误"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "销售员查看入库通知",
+    "old_len": 18,
+    "new_len": 25,
+    "diff": 7,
+    "pct": 39,
+    "old": "销售员查看产品入库通知，确认货已配齐",
+    "new": "查看系统推送的产品入库通知，确认订单货品已全部配齐"
+  },
+  {
+    "file": "StandardSalesBranchFlow",
+    "step": "填写销售计划",
+    "old_len": 19,
+    "new_len": 25,
+    "diff": 6,
+    "pct": 32,
+    "old": "销售总监填写下月月度销售计划；点：提交",
+    "new": "填写下月月度销售计划，明确各机型销售目标与交付周期"
+  },
+  {
+    "file": "StandardSalesBranchFlow",
+    "step": "制作采购计划",
+    "old_len": 24,
+    "new_len": 30,
+    "diff": 6,
+    "pct": 25,
+    "old": "PMC制作两周采购计划；点：提交；采购主管可查看",
+    "new": "根据生产计划、BOM 清单与库存情况，制作两周采购计划并提交"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "客户询单",
+    "old_len": 10,
+    "new_len": 16,
+    "diff": 6,
+    "pct": 60,
+    "old": "客户咨询定制产品需求",
+    "new": "对接客户，记录定制空压机产品需求"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "工序汇报(通用)",
+    "old_len": 18,
+    "new_len": 22,
+    "diff": 4,
+    "pct": 22,
+    "old": "X车间生产完成后检查；填写工序汇报单",
+    "new": "检查本工序生产完成情况，填写工序汇报单并提交"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "1车间工人退料实物送仓库",
+    "old_len": 11,
+    "new_len": 15,
+    "diff": 4,
+    "pct": 36,
+    "old": "将生产多余物料退回仓库",
+    "new": "将生产多余物料、边角料退回仓库"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓管员质检确认成品",
+    "old_len": 9,
+    "new_len": 13,
+    "diff": 4,
+    "pct": 44,
+    "old": "对成品进行质检确认",
+    "new": "对完工成品开展全项质检工作"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "1车间工人生产",
+    "old_len": 11,
+    "new_len": 14,
+    "diff": 3,
+    "pct": 27,
+    "old": "工人进行1车间生产操作",
+    "new": "按工序要求，进行弯管生产操作"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "2车间工人生产",
+    "old_len": 11,
+    "new_len": 14,
+    "diff": 3,
+    "pct": 27,
+    "old": "工人进行2车间生产操作",
+    "new": "按工序要求，进行焊接生产操作"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "3车间工人生产",
+    "old_len": 11,
+    "new_len": 14,
+    "diff": 3,
+    "pct": 27,
+    "old": "工人进行3车间生产操作",
+    "new": "按工序要求，进行配电生产操作"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "提交销售订单给PMC",
+    "old_len": 10,
+    "new_len": 13,
+    "diff": 3,
+    "pct": 30,
+    "old": "PMC可查看销售订单",
+    "new": "提交订单，供 PMC 查看"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓管员制生产退料入库单",
+    "old_len": 9,
+    "new_len": 12,
+    "diff": 3,
+    "pct": 33,
+    "old": "填写生产退料入库单",
+    "new": "填写生产退料入库单并提交"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓管员填写完工入库单",
+    "old_len": 13,
+    "new_len": 16,
+    "diff": 3,
+    "pct": 23,
+    "old": "填写完工入库单；工人可查看",
+    "new": "填写完工入库单并提交，工人可查看"
+  },
+  {
+    "file": "StandardSalesBranchFlow",
+    "step": "查看销售计划",
+    "old_len": 19,
+    "new_len": 21,
+    "diff": 2,
+    "pct": 11,
+    "old": "PMC查看订单、库存、在制、在途等情况",
+    "new": "查看销售计划、订单、库存、在制、在途等情况"
+  },
+  {
+    "file": "StandardDeliveryFlow",
+    "step": "客户签收",
+    "old_len": 23,
+    "new_len": 25,
+    "diff": 2,
+    "pct": 9,
+    "old": "客户收货，在发货通知单上签字（此步骤自动进行）",
+    "new": "客户收到货品，核对无误后在发货通知单上签字确认收货"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "1车间工人签字确认退料",
+    "old_len": 11,
+    "new_len": 13,
+    "diff": 2,
+    "pct": 18,
+    "old": "在生产退料入库单上签字",
+    "new": "在生产退料入库单上签字确认"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "1车间工序汇报",
+    "old_len": 18,
+    "new_len": 20,
+    "diff": 2,
+    "pct": 11,
+    "old": "1车间生产完成后检查；填写工序汇报单",
+    "new": "检查本工序生产情况，填写工序汇报单并提交"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "2车间工序汇报",
+    "old_len": 18,
+    "new_len": 20,
+    "diff": 2,
+    "pct": 11,
+    "old": "2车间生产完成后检查；填写工序汇报单",
+    "new": "检查本工序生产情况，填写工序汇报单并提交"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "3车间工序汇报",
+    "old_len": 18,
+    "new_len": 20,
+    "diff": 2,
+    "pct": 11,
+    "old": "3车间生产完成后检查；填写工序汇报单",
+    "new": "检查本工序生产情况，填写工序汇报单并提交"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓管员填写销售出库单",
+    "old_len": 20,
+    "new_len": 22,
+    "diff": 2,
+    "pct": 10,
+    "old": "仓管员填写销售出库单（由发货通知单下推）",
+    "new": "根据审核后的发货通知单，填写销售出库单并提交"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "报价给客户",
+    "old_len": 9,
+    "new_len": 9,
+    "diff": 0,
+    "pct": 0,
+    "old": "将报价单发送给客户",
+    "new": "向客户同步产品报价"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "客户确认",
+    "old_len": 11,
+    "new_len": 11,
+    "diff": 0,
+    "pct": 0,
+    "old": "客户确认报价并签订合同",
+    "new": "客户确认报价并敲定订单"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "PMC查看销售订单",
+    "old_len": 20,
+    "new_len": 20,
+    "diff": 0,
+    "pct": 0,
+    "old": "PMC查看销售订单内容，了解定制产品需求",
+    "new": "PMC查看销售订单内容，了解定制产品需求"
+  },
+  {
+    "file": "StandardSalesBranchFlow",
+    "step": "制作生产计划",
+    "old_len": 24,
+    "new_len": 23,
+    "diff": -1,
+    "pct": -4,
+    "old": "PMC制作一周生产计划；点：提交；生产主管可查看",
+    "new": "根据销售计划与库存情况，制作一周生产计划并提交"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "制作一周生产计划",
+    "old_len": 24,
+    "new_len": 23,
+    "diff": -1,
+    "pct": -4,
+    "old": "PMC制作一周生产计划；点：提交；生产主管可查看",
+    "new": "根据销售计划与库存情况，制作一周生产计划并提交"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "仓管员发料到备料区",
+    "old_len": 23,
+    "new_len": 22,
+    "diff": -1,
+    "pct": -4,
+    "old": "仓管员按生产用料清单发料到备料区（位于生产区）",
+    "new": "根据排产单与生产用料清单，将物料发放到备料区"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "查看BOM单",
+    "old_len": 9,
+    "new_len": 8,
+    "diff": -1,
+    "pct": -11,
+    "old": "财务部查看物料清单",
+    "new": "查看物料清单内容"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "查看报价单",
+    "old_len": 12,
+    "new_len": 11,
+    "diff": -1,
+    "pct": -8,
+    "old": "销售员查看财务核算的报价",
+    "new": "查看已生成的销售报价单"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓管员质检确认退料",
+    "old_len": 12,
+    "new_len": 11,
+    "diff": -1,
+    "pct": -8,
+    "old": "对1车间退料进行质检确认",
+    "new": "对退回物料开展质检工作"
+  },
+  {
+    "file": "StandardDeliveryFlow",
+    "step": "填写销售出库单",
+    "old_len": 20,
+    "new_len": 18,
+    "diff": -2,
+    "pct": -10,
+    "old": "仓管员填写销售出库单（由发货通知单下推）",
+    "new": "根据发货通知单，填写销售出库单并提交"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "仓管员发料到备料区",
+    "old_len": 23,
+    "new_len": 21,
+    "diff": -2,
+    "pct": -9,
+    "old": "仓管员按生产用料清单发料到备料区（位于生产区）",
+    "new": "按照生产用料清单，将物料发放至生产区备料区"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "1车间工人填写领料单",
+    "old_len": 10,
+    "new_len": 8,
+    "diff": -2,
+    "pct": -20,
+    "old": "填写领料单；点：提交",
+    "new": "填写领料单并提交"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "1车间工人到备料区领料",
+    "old_len": 20,
+    "new_len": 17,
+    "diff": -3,
+    "pct": -15,
+    "old": "查看自己的派工单，根据派工单到备料区领料",
+    "new": "根据派工单，前往备料区领取生产物料"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "4车间工人总装",
+    "old_len": 20,
+    "new_len": 16,
+    "diff": -4,
+    "pct": -20,
+    "old": "4车间负责组装来自1/2/3车间的半成品",
+    "new": "对来自各车间的半成品进行整机总装"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "1车间工人生产",
+    "old_len": 11,
+    "new_len": 6,
+    "diff": -5,
+    "pct": -45,
+    "old": "工人进行1车间生产操作",
+    "new": "开展生产作业"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "2车间工人生产",
+    "old_len": 11,
+    "new_len": 6,
+    "diff": -5,
+    "pct": -45,
+    "old": "工人进行2车间生产操作",
+    "new": "开展生产作业"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "3车间工人生产",
+    "old_len": 11,
+    "new_len": 6,
+    "diff": -5,
+    "pct": -45,
+    "old": "工人进行3车间生产操作",
+    "new": "开展生产作业"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "制定一周生产计划",
+    "old_len": 22,
+    "new_len": 12,
+    "diff": -10,
+    "pct": -45,
+    "old": "制定一周生产计划；填：一周生产计划；点：提交",
+    "new": "填写一周生产计划表并提交"
+  },
+  {
+    "file": "CustomSalesFlow",
+    "step": "选择后续流程",
+    "old_len": 27,
+    "new_len": 13,
+    "diff": -14,
+    "pct": -52,
+    "old": "请选择要继续的流程分支\n[1]生产流程 [2]采购流程",
+    "new": "选择生产流程或采购流程分支"
+  },
+  {
+    "file": "CustomProductionFlow",
+    "step": "PMC填写每日排产单",
+    "old_len": 42,
+    "new_len": 19,
+    "diff": -23,
+    "pct": -55,
+    "old": "填写每日排产单；点：提交。自动下推给仓库仓管员（生产用料清单）和车间主管（生产工单）",
+    "new": "填写每日排产单并提交，自动下发对应单据"
+  },
+  {
+    "file": "StandardProductionFlow",
+    "step": "PMC填写每日排产单",
+    "old_len": 54,
+    "new_len": 20,
+    "diff": -34,
+    "pct": -63,
+    "old": "PMC填写每日排产单给仓库仓管员和车间主管；点：提交；自动下推给仓管员（生产用料清单）和车间主管（生产工单）",
+    "new": "填写每日排产单，点击提交后生产主管可查看"
+  }
+]

@@ -93,11 +93,11 @@ public class StandardSalesBranchFlow : FlowBase
     {
         _steps.Clear();
 
-        _steps.Enqueue(new StepData("填写销售计划", "销售总监填写下月月度销售计划；点：提交", "销售总监", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.MonthlySalesPlan));
-        _steps.Enqueue(new StepData("查看销售计划", "PMC查看订单、库存、在制、在途等情况", "PMC主管", "计划物控中心", Interactables.ActionType.View));
-        _steps.Enqueue(new StepData("回复交期", "PMC回复销售产品交期", "PMC主管", "计划物控中心", Interactables.ActionType.Fill));
-        _steps.Enqueue(new StepData("制作生产计划", "PMC制作一周生产计划；点：提交；生产主管可查看", "PMC主管", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.WeeklyProductionPlan));
-        _steps.Enqueue(new StepData("制作采购计划", "PMC制作两周采购计划；点：提交；采购主管可查看", "PMC主管", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.BiweeklyPurchasePlan));
+        _steps.Enqueue(new StepData("填写销售计划", "填写下月月度销售计划，明确各机型销售目标与交付周期", "销售总监", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.MonthlySalesPlan));
+        _steps.Enqueue(new StepData("查看销售计划", "查看销售计划、订单、库存、在制、在途等情况", "PMC主管", "计划物控中心", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("回复交期", "根据生产计划与采购周期，向销售部回复产品预计交付时间", "PMC主管", "计划物控中心", Interactables.ActionType.Fill));
+        _steps.Enqueue(new StepData("制作生产计划", "根据销售计划与库存情况，制作一周生产计划并提交", "PMC主管", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.WeeklyProductionPlan));
+        _steps.Enqueue(new StepData("制作采购计划", "根据生产计划、BOM 清单与库存情况，制作两周采购计划并提交", "PMC主管", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.BiweeklyPurchasePlan));
     }
 
     #region UI更新方法

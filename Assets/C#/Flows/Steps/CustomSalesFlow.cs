@@ -164,35 +164,35 @@ public class CustomSalesFlow : FlowBase
         _steps.Clear();
 
         // ===== 阶段1：客户询单 =====
-        _steps.Enqueue(new StepData("客户询单", "客户咨询定制产品需求", "销售员", "销售办公室", Interactables.ActionType.Fill,
+        _steps.Enqueue(new StepData("客户询单", "对接客户，记录定制空压机产品需求", "销售员", "销售办公室", Interactables.ActionType.Fill,
             dialogueConfig: new DialogueConfig {
                 mode = DialogueMode.Static,
                 data = Resources.Load<DialogueData>("Dialoguedata/Custom_kehuxundan")
             }));
 
         // ===== 阶段2：销售订单处理 =====
-        _steps.Enqueue(new StepData("填写销售订单", "录入客户需求和产品规格", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
-        _steps.Enqueue(new StepData("审核销售订单", "销售总监审核订单内容", "销售总监", "销售办公室", Interactables.ActionType.Approve, UIManager.UIType.SalesOrder));
+        _steps.Enqueue(new StepData("填写销售订单", "录入客户需求、产品规格；填写销售订单并提交", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
+        _steps.Enqueue(new StepData("审核销售订单", "审核订单内容，审核通过后自动下推 BOM 单", "销售总监", "销售办公室", Interactables.ActionType.Approve, UIManager.UIType.SalesOrder));
 
         // ===== 阶段3：BOM单处理 =====
-        _steps.Enqueue(new StepData("填写BOM单", "技术部根据订单生成物料清单", "技术员", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.ProductionBOM));
+        _steps.Enqueue(new StepData("填写BOM单", "根据订单生成物料清单；填写 BOM 单并提交", "技术员", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.ProductionBOM));
 
         // ===== 阶段4：财务报价 =====
-        _steps.Enqueue(new StepData("查看BOM单", "财务部查看物料清单", "财务主管", "财务部", Interactables.ActionType.View, UIManager.UIType.ProductionBOM));
-        _steps.Enqueue(new StepData("计算成本并确认价格", "填写销售报价单", "财务主管", "财务部", Interactables.ActionType.Fill, UIManager.UIType.SalesQuotation));
+        _steps.Enqueue(new StepData("查看BOM单", "查看物料清单内容", "财务主管", "财务部", Interactables.ActionType.View, UIManager.UIType.ProductionBOM));
+        _steps.Enqueue(new StepData("计算成本并确认价格", "核算成本，填写销售报价单并提交", "财务主管", "财务部", Interactables.ActionType.Fill, UIManager.UIType.SalesQuotation));
 
         // ===== 阶段5：报价确认 =====
-        _steps.Enqueue(new StepData("查看报价单", "销售员查看财务核算的报价", "销售员", "销售办公室", Interactables.ActionType.View, UIManager.UIType.SalesQuotation));
-        _steps.Enqueue(new StepData("报价给客户", "将报价单发送给客户", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesQuotation));
-        _steps.Enqueue(new StepData("客户确认", "客户确认报价并签订合同", "销售员", "销售办公室", Interactables.ActionType.View));
+        _steps.Enqueue(new StepData("查看报价单", "查看已生成的销售报价单", "销售员", "销售办公室", Interactables.ActionType.View, UIManager.UIType.SalesQuotation));
+        _steps.Enqueue(new StepData("报价给客户", "向客户同步产品报价", "销售员", "销售办公室", Interactables.ActionType.Fill, UIManager.UIType.SalesQuotation));
+        _steps.Enqueue(new StepData("客户确认", "客户确认报价并敲定订单", "销售员", "销售办公室", Interactables.ActionType.View));
 
         // ===== 阶段6：提交PMC =====
-        _steps.Enqueue(new StepData("提交销售订单给PMC", "PMC可查看销售订单", "销售员", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
+        _steps.Enqueue(new StepData("提交销售订单给PMC", "提交订单，供 PMC 查看", "销售员", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.SalesOrder));
 
         // ===== 阶段7：分支选择（生产/采购）=====
         _steps.Enqueue(new StepData(
             "选择后续流程",
-            "请选择要继续的流程分支\n[1]生产流程 [2]采购流程",
+            "选择生产流程或采购流程分支",
             "系统",
             "主界面",
             Interactables.ActionType.View,
@@ -370,6 +370,7 @@ public class CustomSalesFlow : FlowBase
     {
         return _currentStep;
     }
+
 
     public int GetTotalSteps()
     {
