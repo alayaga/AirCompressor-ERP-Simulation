@@ -114,43 +114,43 @@ public class AnimationService : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance == null)
+        // 场景重载时，旧实例持有的 Inspector 引用（viewpoint/animator等）全部失效
+        // 新实例有正确的引用 → 销毁旧实例，新实例接管单例
+        if (_instance != null && _instance != this)
         {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
+            Destroy(_instance.gameObject);
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
-        CacheReferences();
         RecordInitialPositions();
         InitializeSystem();
     }
 
-    private void CacheReferences()
+    /// <summary>
+    /// 每次播放前刷新运行时引用（解决 Start 执行顺序问题 + 场景重载后的失效引用）
+    /// </summary>
+    private void RefreshRuntimeReferences()
     {
-        // CameraController 在同一物体上，自动查找
+        // CameraController 在同一物体上
         if (cameraController == null)
             cameraController = GetComponent<CameraController>();
 
+        // 重新查找玩家相关引用
         var playerObj = ObjectManager.Instance?.GetObject(ObjectManager.ObjectType.Player);
         if (playerObj != null)
         {
             _playerController = playerObj.GetComponent<SimpleFirstPersonController>();
-            _playerModel = playerObj; // 整个Player物体就是玩家的视觉模型
+            _playerModel = playerObj;
         }
 
-        // 尝试多种方式找 CrosshairUI
+        // 重新查找 CrosshairUI
         _crosshairUI = FindObjectOfType<CrosshairUI>();
         if (_crosshairUI == null)
         {
-            // 备选：通过 Canvas 子物体查找
             var canvases = FindObjectsOfType<Canvas>();
             foreach (var c in canvases)
             {
@@ -160,8 +160,6 @@ public class AnimationService : MonoBehaviour
         }
 
         _interactionManager = InteractionManager.Instance;
-
-        Debug.Log($"[AnimationService] 引用缓存: playerController={(_playerController != null)}, crosshairUI={(_crosshairUI != null)}, interactionManager={(_interactionManager != null)}, playerModel={(_playerModel != null)}");
     }
 
     #endregion
@@ -175,6 +173,7 @@ public class AnimationService : MonoBehaviour
     /// <param name="onComplete">动画全部完成后的回调（用于 MarkStepComplete）</param>
     public void PlayWorkshopAnimation(string workshopId, Action onComplete)
     {
+        RefreshRuntimeReferences();
         Debug.Log($"[AnimationService] PlayWorkshopAnimation 开始: {workshopId}");
         if (IsPlayingAnimation)
         {
@@ -219,6 +218,7 @@ public class AnimationService : MonoBehaviour
     /// </summary>
     public void PlayInspectionAnimation(string inspectionType, QualityInspectionManager manager, System.Action onComplete)
     {
+        RefreshRuntimeReferences();
         if (IsPlayingAnimation)
         {
             Debug.LogWarning($"[AnimationService] 动画正在播放中，忽略质检请求: {inspectionType}");
