@@ -353,9 +353,11 @@ public class BillView : MonoBehaviour
             result.Add(Interactables.ActionType.Ship);
         }
 
-        // Sign: Approve/View 模式下角色允许时显示
+        // Sign: Sign/Approve/View 模式下角色允许时显示
         if (roleButtons.Contains(Interactables.ActionType.Sign) &&
-            (stepAction == Interactables.ActionType.Approve || stepAction == Interactables.ActionType.View))
+            (stepAction == Interactables.ActionType.Sign ||
+             stepAction == Interactables.ActionType.Approve ||
+             stepAction == Interactables.ActionType.View))
         {
             result.Add(Interactables.ActionType.Sign);
         }

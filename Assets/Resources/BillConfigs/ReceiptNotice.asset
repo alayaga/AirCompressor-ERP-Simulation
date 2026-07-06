@@ -41,6 +41,8 @@ MonoBehaviour:
   roleSettings:
   - roleName: "\u4F9B\u5E94\u5546"
     visibleButtons: 0700000008000000010000000b000000
+  - roleName: "\u4ED3\u7BA1\u5458"
+    visibleButtons: 0700000008000000010000000b000000
   rolePrefillOverrides:
   - roleName: "\u8DDF\u5355\u5458"
     prefillInputData:
@@ -71,4 +73,35 @@ MonoBehaviour:
       - 500
       - 
     previewTableData: []
-    signHintText: 
+    signHintText: "" ""
+  - roleName: "仓管员"
+    prefillInputData:
+    - SH-20231109-057
+    - PO20231103001
+    - "佛山XX电机厂"
+    - "XX省XX市XX区XX路XX号(仓库物流部]"
+    - "采购入库"
+    prefillTableData:
+    - columns:
+      - MOTOR-100A
+      - "主电机"
+      - 7.5KW/380V
+      - "台"
+      - 30
+      - "含备品1台(见包装清单)"
+    - columns:
+      - VALVE-205
+      - "电磁阀"
+      - "220V/常闭"
+      - "个"
+      - 150
+      -
+    - columns:
+      - SCREW-M10
+      - "镀锌螺栓"
+      - M10*40
+      - "套"
+      - 500
+      -
+    previewTableData: []
+    signHintText: ""

@@ -15,6 +15,13 @@ public abstract class FlowBase
     private FlowRunner _safeRunner;
     protected bool _allowSafeStop = true;
 
+    /// <summary>
+    /// 标记上一次 WaitForBillComplete 是否成功打开了单据面板。
+    /// false = 配置错误（缺BillData/面板/BillView），流程应跳过而非等待重试。
+    /// 由 WaitForBillComplete 内部设置，供子类 FlowCoroutine 的 while 循环检查。
+    /// </summary>
+    protected bool _billOpenSuccess = false;
+
     public bool IsRunning => _isRunning;
 
     public FlowBase()
@@ -183,12 +190,13 @@ public abstract class FlowBase
         Interactables.ActionType stepActionType = Interactables.ActionType.View, bool allowShip = false)
     {
         Debug.Log($"[FlowBase] OPEN BILL: {billType}, 角色: {roleName}, stepAction: {stepActionType}, allowShip: {allowShip}");
+        _billOpenSuccess = false;  // 先默认为失败，后续成功再置 true
 
         // 1. 获取单据配置数据
         var billData = BillDataLoader.GetConfig(billType);
         if (billData == null)
         {
-            Debug.LogError($"[FlowBase] FAIL: 未找到 BillData: {billType}");
+            Debug.LogError($"[FlowBase] FAIL: 未找到 BillData: {billType} — 请在 Resources/BillConfigs 创建 {billType} 的 BillData 资产");
             yield break;
         }
         Debug.Log($"[FlowBase] OK: 配置已加载 [{billData.billName}]");
@@ -203,7 +211,7 @@ public abstract class FlowBase
         // 4. 找到面板
         if (!UIManager.Instance.TryGetUI(billType, out GameObject panel) || panel == null)
         {
-            Debug.LogError($"[FlowBase] FAIL: 面板未注册: {billType} (检查UIManager.uiEntries)");
+            Debug.LogError($"[FlowBase] FAIL: 面板未注册: {billType} — 请在 UIManager.uiEntries 中添加 {billType} 对应的 Panel");
             yield break;
         }
         Debug.Log($"[FlowBase] OK: 面板={panel.name}, active={panel.activeSelf}");
@@ -212,10 +220,13 @@ public abstract class FlowBase
         var billView = panel.GetComponent<BillView>();
         if (billView == null)
         {
-            Debug.LogError($"[FlowBase] FAIL: 面板上没有 BillView 组件! 请替换旧的 BillPanelBase > BillView");
+            Debug.LogError($"[FlowBase] FAIL: 面板 {panel.name} 上没有 BillView 组件! 请在 {billType} 的 Panel Prefab 根节点挂载 BillView 脚本");
             UIManager.Instance.HideUI(billType);
             yield break;
         }
+
+        // ★ 单据面板确认可用，标记打开成功
+        _billOpenSuccess = true;
 
         // 6. 打开单据（设置按钮显隐，传入BillData供弹窗文字使用）
         billView.AllowShip = allowShip;

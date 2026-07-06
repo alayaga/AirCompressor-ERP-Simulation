@@ -135,7 +135,12 @@ public class CustomSalesFlow : FlowBase
                     {
                         _isStepCompleted = false;
                         yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
-                        if (_isStepCompleted)
+                        if (!_billOpenSuccess)
+                        {
+                            Debug.LogError($"[CustomSalesFlow] 单据 {_currentStep.billType} 打开失败，跳过步骤: {_currentStep.stepName}");
+                            stepDone = true;
+                        }
+                        else if (_isStepCompleted)
                             stepDone = true;
                         else
                             yield return new WaitUntil(() => _isStepCompleted);

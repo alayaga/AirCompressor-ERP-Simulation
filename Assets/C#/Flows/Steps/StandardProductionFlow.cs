@@ -65,8 +65,18 @@ public class StandardProductionFlow : FlowBase
 
             if (_currentStep.targetNPC == "系统")
             {
+                // 弹窗提示（如"后续车间同上"）
+                if (TaskGuidePanelNew.Instance != null)
+                {
+                    TaskGuidePanelNew.Instance.UpdateHintText(_currentStep.description);
+                }
                 Debug.Log($"[StandardProductionFlow] 系统步骤自动完成: {_currentStep.stepName}");
                 yield return new WaitForSeconds(3f);
+                // 清除提示
+                if (TaskGuidePanelNew.Instance != null)
+                {
+                    TaskGuidePanelNew.Instance.UpdateHintText("");
+                }
                 _isStepCompleted = true;
             }
             else
@@ -81,7 +91,12 @@ public class StandardProductionFlow : FlowBase
                 {
                     _isStepCompleted = false;
                     yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
-                    if (_isStepCompleted)
+                    if (!_billOpenSuccess)
+                    {
+                        Debug.LogError($"[StandardProductionFlow] 单据 {_currentStep.billType} 打开失败，跳过步骤: {_currentStep.stepName}");
+                        stepDone = true;
+                    }
+                    else if (_isStepCompleted)
                         stepDone = true;
                     else
                         yield return new WaitUntil(() => _isStepCompleted);
@@ -103,8 +118,8 @@ public class StandardProductionFlow : FlowBase
         // targetNPC 使用场景实际命名（1/2/3/4车间），UI描述使用弯管/焊接/配电/总装
 
         // 阶段1：计划与排产（保留 Standard 自身 PMC 步骤）
-        _steps.Enqueue(new StepData("制作一周生产计划", "根据销售计划与库存情况，制作一周生产计划并提交", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.WeeklyProductionPlan));
-        _steps.Enqueue(new StepData("PMC填写每日排产单", "填写每日排产单，点击提交后生产主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.ProductionSchedule));
+        _steps.Enqueue(new StepData("制作一周生产计划", "根据销售计划与库存情况，制作一周生产计划并提交", "PMC主管", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.WeeklyProductionPlan));
+        _steps.Enqueue(new StepData("PMC填写每日排产单", "填写每日排产单，点击提交后生产主管可查看", "PMC主管", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.ProductionSchedule));
 
         // ========================================================
         // 以下复用定制产品生产流程（targetNPC 已对齐场景命名）
@@ -169,7 +184,7 @@ public class StandardProductionFlow : FlowBase
             "1车间工人退料实物送仓库",
             "将生产多余物料退回仓库",
             "1车间工人",
-            "仓库",
+            "1车间-弯管",
             Interactables.ActionType.Deliver
         ));
 
@@ -194,8 +209,8 @@ public class StandardProductionFlow : FlowBase
             "1车间工人签字确认退料",
             "在生产退料入库单上签字",
             "1车间工人",
-            "仓库",
-            Interactables.ActionType.Approve,
+            "1车间-弯管",
+            Interactables.ActionType.Sign,
             UIManager.UIType.ProductionReturn
         ));
 
@@ -248,11 +263,10 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "2车间班组长检查并填写工序汇报单",
-            "焊接车间（2车间）生产完成后检查；填写工序汇报单",
-            "2车间班组长",
-            "2车间-焊接",
-            Interactables.ActionType.Fill,
-            UIManager.UIType.ProcessReport
+            "弯管车间（1车间）已填写工序汇报单，无需重复填写",
+            "系统",
+            "-",
+            Interactables.ActionType.View
         ));
 
         _steps.Enqueue(new StepData(
@@ -295,11 +309,10 @@ public class StandardProductionFlow : FlowBase
 
         _steps.Enqueue(new StepData(
             "3车间班组长检查并填写工序汇报单",
-            "配电车间（3车间）生产完成后检查；填写工序汇报单",
-            "3车间班组长",
-            "3车间-配电",
-            Interactables.ActionType.Fill,
-            UIManager.UIType.ProcessReport
+            "弯管车间（1车间）已填写工序汇报单，无需重复填写",
+            "系统",
+            "-",
+            Interactables.ActionType.View
         ));
 
         _steps.Enqueue(new StepData(

@@ -83,7 +83,12 @@ public class StandardPurchaseFlow : FlowBase
                 {
                     _isStepCompleted = false;
                     yield return WaitForBillComplete(_currentStep.billType.Value, _currentStep.targetNPC, _currentStep.actionType);
-                    if (_isStepCompleted) stepDone = true;
+                    if (!_billOpenSuccess)
+                    {
+                        Debug.LogError($"[StandardPurchaseFlow] 单据 {_currentStep.billType} 打开失败，跳过步骤: {_currentStep.stepName}");
+                        stepDone = true;
+                    }
+                    else if (_isStepCompleted) stepDone = true;
                     else yield return new WaitUntil(() => _isStepCompleted);
                 }
             }
@@ -102,8 +107,8 @@ public class StandardPurchaseFlow : FlowBase
         // ===== 标准产品原料采购流程 v1.3 =====
         // PMC查看BOM单开始，经采购主管审核后，跟单员执行采购到入库的完整流程
 
-        _steps.Enqueue(new StepData("PMC查看BOM单", "PMC查看标准产品的BOM单", "PMC主管", "PMC部", Interactables.ActionType.View, UIManager.UIType.ProductionBOM));
-        _steps.Enqueue(new StepData("PMC制作两周采购计划", "PMC制作两周采购计划；点：提交；采购主管可查看", "PMC主管", "PMC部", Interactables.ActionType.Fill, UIManager.UIType.BiweeklyPurchasePlan));
+        _steps.Enqueue(new StepData("PMC查看BOM单", "PMC查看标准产品的BOM单", "PMC主管", "计划物控中心", Interactables.ActionType.View, UIManager.UIType.ProductionBOM));
+        _steps.Enqueue(new StepData("PMC制作两周采购计划", "PMC制作两周采购计划；点：提交；采购主管可查看", "PMC主管", "计划物控中心", Interactables.ActionType.Fill, UIManager.UIType.BiweeklyPurchasePlan));
         _steps.Enqueue(new StepData("采购主管审核采购计划", "采购主管审核两周采购计划，点击审核后自动下推", "采购主管", "采购部", Interactables.ActionType.Approve, UIManager.UIType.PurchaseRequest));
         _steps.Enqueue(new StepData("跟单员查看采购计划", "跟单员查看采购计划", "跟单员", "采购部", Interactables.ActionType.View, UIManager.UIType.PurchaseRequest));
         _steps.Enqueue(new StepData("跟单员填采购订单", "跟单员填写采购订单并邮件给供应商", "跟单员", "采购部", Interactables.ActionType.Fill, UIManager.UIType.PurchaseOrder));

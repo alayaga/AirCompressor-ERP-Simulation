@@ -15,6 +15,8 @@ public class WorkshopAnimationTrigger : MonoBehaviour
     public string expectedNPCName = "";
     [Tooltip("触发动画的目标位置（与Flow步骤中的 targetLocation 精确匹配）")]
     public string expectedLocation = "";
+    [Tooltip("触发动画的目标Action（可选，None=不限制）。如弯管动画只应在「生产」步骤触发，不应在退料/签字步骤触发")]
+    public Interactables.ActionType expectedActionType = Interactables.ActionType.None;
 
     private Interactables _interactable;
 
@@ -35,13 +37,15 @@ public class WorkshopAnimationTrigger : MonoBehaviour
 
         string currentNPC = GetCurrentStepTargetNPC(flow);
         string currentLocation = GetCurrentStepTargetLocation(flow);
-        Debug.Log($"[WAT-DEBUG] 当前步骤: NPC='{currentNPC}', Location='{currentLocation}'");
-        Debug.Log($"[WAT-DEBUG] 期望匹配: NPC='{expectedNPCName}', Location='{expectedLocation}'");
+        var currentAction = GetCurrentStepActionType(flow);
+        Debug.Log($"[WAT-DEBUG] 当前步骤: NPC='{currentNPC}', Location='{currentLocation}', Action='{currentAction}'");
+        Debug.Log($"[WAT-DEBUG] 期望匹配: NPC='{expectedNPCName}', Location='{expectedLocation}', Action='{expectedActionType}'");
 
         bool match = !string.IsNullOrEmpty(currentNPC)
                   && !string.IsNullOrEmpty(currentLocation)
                   && currentNPC == expectedNPCName
-                  && currentLocation == expectedLocation;
+                  && currentLocation == expectedLocation
+                  && (expectedActionType == Interactables.ActionType.None || currentAction == expectedActionType);
 
         Debug.Log($"[WAT-DEBUG] 匹配结果: {match}");
 
@@ -195,6 +199,59 @@ public class WorkshopAnimationTrigger : MonoBehaviour
             return step?.targetLocation;
         }
         return null;
+    }
+
+    /// <summary>
+    /// 获取当前步骤的 ActionType
+    /// </summary>
+    private Interactables.ActionType GetCurrentStepActionType(FlowBase flow)
+    {
+        if (flow is CustomProductionFlow customProdFlow)
+        {
+            var step = customProdFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        else if (flow is StandardProductionFlow standardProdFlow)
+        {
+            var step = standardProdFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        else if (flow is CustomSalesFlow customSalesFlow)
+        {
+            var step = customSalesFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        else if (flow is StandardSalesFlow standardSalesFlow)
+        {
+            var step = standardSalesFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        else if (flow is StandardDeliveryFlow deliveryFlow)
+        {
+            var step = deliveryFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        else if (flow is StandardSalesBranchFlow salesBranchFlow)
+        {
+            var step = salesBranchFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        else if (flow is CustomPurchaseFlow customPurchaseFlow)
+        {
+            var step = customPurchaseFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        else if (flow is StandardPurchaseFlow purchaseFlow)
+        {
+            var step = purchaseFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        else if (flow is ProductionDeptPurchaseFlow prodDeptPurchaseFlow)
+        {
+            var step = prodDeptPurchaseFlow.GetCurrentStep();
+            return step?.actionType ?? Interactables.ActionType.None;
+        }
+        return Interactables.ActionType.None;
     }
 
     #endregion
