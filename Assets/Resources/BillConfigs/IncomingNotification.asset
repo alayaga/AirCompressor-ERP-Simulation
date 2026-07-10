@@ -34,14 +34,14 @@ MonoBehaviour:
     - "220V/常闭"
     - "个"
     - 150
-    -
+    - ""
   - columns:
     - SCREW-M10
     - "镀锌螺栓"
     - M10*40
     - "套"
     - 500
-    -
+    - ""
   previewTableData: []
   fillAttachmentSprite: {fileID: 0}
   tableColumnHeaders:
@@ -61,9 +61,9 @@ MonoBehaviour:
   shipAllowed: 0
   shipFailAlertText: "条件不满足，无法发货"
   signBannerText: "已签名！"
-  signHintText:
+  signHintText: ""
   showSignHintOnFill: 0
-  fillSignFixedContent:
+  fillSignFixedContent: ""
   roleSettings:
   - roleName: "跟单员"
     visibleButtons: 0700000008000000010000000b000000
@@ -91,13 +91,13 @@ MonoBehaviour:
       - "220V/常闭"
       - "个"
       - 150
-      -
+      - ""
     - columns:
       - SCREW-M10
       - "镀锌螺栓"
       - M10*40
       - "套"
       - 500
-      -
+      - ""
     previewTableData: []
     signHintText: ""
